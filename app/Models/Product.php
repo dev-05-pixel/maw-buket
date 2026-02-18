@@ -13,7 +13,15 @@ class Product extends Model
     protected $keyType = 'string';
 
     protected $fillable = [
-        'name','description','price','image','slug','is_active'
+        'name',
+        'slug',
+        'price',
+        'stock',
+        'sold_count',
+        'description',
+        'image',
+        'category_id',
+        'is_active'
     ];
 
     protected static function boot()
@@ -24,5 +32,10 @@ class Product extends Model
             $model->uid = (string) Str::uuid();
             $model->slug = Str::slug($model->name) . '-' . substr(Str::uuid(), 0, 5);
         });
+    }
+
+    public function category()
+    {
+        return $this->belongsTo(Category::class);
     }
 }
