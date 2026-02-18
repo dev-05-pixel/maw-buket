@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\CartController;
 
 /*
 |--------------------------------------------------------------------------
@@ -17,5 +18,9 @@ use App\Http\Controllers\ProductController;
 Route::get('/', [ProductController::class, 'index'])
     ->name('home');
 
-Route::get('/product/{slug}', [ProductController::class, 'show'])
-    ->name('product.show');
+Route::get('/', [ProductController::class, 'index'])->name('home');
+Route::get('/product/{slug}', [ProductController::class, 'show'])->name('product.show');
+
+Route::post('/cart/add/{id}', [CartController::class, 'add'])->name('cart.add');
+Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
+Route::post('/checkout', [ProductController::class, 'checkout'])->name('checkout');
