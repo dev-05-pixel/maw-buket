@@ -52,6 +52,7 @@ Sistem ini memungkinkan pelanggan untuk memesan buket bunga secara online dan ad
 
 ## 🏗️ Struktur Project
 
+```
 MAW-BUCKET/
 │
 ├── app/
@@ -171,3 +172,4 @@ MAW-BUCKET/
 ├── composer.json
 ├── composer.lock
 └── package.json
+```
