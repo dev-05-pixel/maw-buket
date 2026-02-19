@@ -26,6 +26,8 @@ class AdminPanelProvider extends PanelProvider
             ->default()
             ->id('admin')
             ->path('admin')
+            ->brandName('Maw Bucket Admin')
+            ->favicon(asset('assets/icons8-flower-96.png'))
             ->login()
             ->colors([
                 'primary' => Color::Amber,
