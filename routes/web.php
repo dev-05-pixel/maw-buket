@@ -18,9 +18,10 @@ use App\Http\Controllers\CartController;
 Route::get('/', [ProductController::class, 'index'])
     ->name('home');
 
-Route::get('/', [ProductController::class, 'index'])->name('home');
 Route::get('/product/{slug}', [ProductController::class, 'show'])->name('product.show');
 
-Route::post('/cart/add/{id}', [CartController::class, 'add'])->name('cart.add');
 Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
-Route::post('/checkout', [ProductController::class, 'checkout'])->name('checkout');
+
+Route::post('/cart/add/{product}', [CartController::class, 'add'])->name('cart.add');
+Route::post('/cart/update/{product}', [CartController::class, 'update'])->name('cart.update');
+Route::delete('/cart/remove/{product}', [CartController::class, 'remove'])->name('cart.remove');
