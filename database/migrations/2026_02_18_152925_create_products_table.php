@@ -12,14 +12,24 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('products', function (Blueprint $table) {
-            $table->uuid('uid')->primary();
+            $table->char('uid', 36)->primary();
+
             $table->string('name');
-            $table->text('description');
-            $table->decimal('price', 12, 2);
-            $table->string('image');
             $table->string('slug')->unique();
+            $table->decimal('price', 15, 2);
+
+            $table->integer('stock')->default(0);
+            $table->integer('sold_count')->default(0);
             $table->boolean('is_active')->default(true);
+
+            $table->char('category_id', 36);
+
             $table->timestamps();
+
+            $table->foreign('category_id')
+                ->references('uid')
+                ->on('categories')
+                ->cascadeOnDelete();
         });
     }
 
