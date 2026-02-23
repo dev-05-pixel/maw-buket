@@ -4,43 +4,17 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Str;
 
 class Product extends Model
 {
-    protected $primaryKey = 'uid';
-    public $incrementing = false;
-    protected $keyType = 'string';
+    use HasFactory;
 
     protected $fillable = [
-        'name',
-        'slug',
-        'price',
-        'stock',
-        'sold_count',
-        'description',
-        'image',
-        'category_id',
-        'is_active'
+        'name', 'slug', 'description', 'price', 'stock', 'is_active', 'image'
     ];
 
-    protected static function boot()
-    {
-        parent::boot();
-
-        static::creating(function ($model) {
-            $model->uid = (string) Str::uuid();
-            $model->slug = Str::slug($model->name) . '-' . substr(Str::uuid(), 0, 5);
-        });
-    }
-
-    public function category()
-    {
-        return $this->belongsTo(Category::class, 'category_id', 'uid');
-    }
-
-    public function getRouteKeyName()
-    {
-        return 'uid';
-    }
+    protected $casts = [
+        'is_active' => 'boolean',
+        'price' => 'decimal:2',
+    ];
 }

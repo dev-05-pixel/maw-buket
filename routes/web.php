@@ -1,27 +1,22 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Admin\AuthController;
+use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProductController;
-use App\Http\Controllers\CartController;
+use App\Http\Controllers\ContactController;
 
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider and all of them will
-| be assigned to the "web" middleware group. Make something great!
-|
-*/
+// Halaman publik
+Route::get('/', [HomeController::class, 'index'])->name('home');
+Route::get('/products', [ProductController::class, 'index'])->name('products.index');
+Route::get('/products/{product:slug}', [ProductController::class, 'show'])->name('products.show');
+Route::get('/contact', [ContactController::class, 'index'])->name('contact');
 
-Route::get('/', [ProductController::class, 'index'])
-    ->name('home');
-
-Route::get('/product/{slug}', [ProductController::class, 'show'])->name('product.show');
-
-Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
-
-Route::post('/cart/add/{product}', [CartController::class, 'add'])->name('cart.add');
-Route::post('/cart/update/{product}', [CartController::class, 'update'])->name('cart.update');
-Route::delete('/cart/remove/{product}', [CartController::class, 'remove'])->name('cart.remove');
+// Admin auth routes - gunakan nama route yang sesuai dengan yang diharapkan Filament
+Route::prefix('admin')->name('filament.admin.auth.')->group(function () {
+    Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
+    Route::post('/login', [AuthController::class, 'login'])->name('login.post');
+    Route::get('/forgot-password', [AuthController::class, 'showForgotPasswordForm'])->name('password-request');
+    Route::post('/forgot-password', [AuthController::class, 'sendResetLink'])->name('password-request.post');
+    Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+});
