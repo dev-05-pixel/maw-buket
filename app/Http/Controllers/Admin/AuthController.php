@@ -81,7 +81,6 @@ class AuthController extends Controller
         if ($response->failed()) {
 
             $data = $response->json();
-
             $message = $data['error']['message']
                 ?? 'Email tidak ditemukan dalam sistem kami.';
 
@@ -93,6 +92,58 @@ class AuthController extends Controller
         return back()
             ->with('success', 'Tautan reset password telah dikirim ke email Anda.')
             ->with('email', $request->email);
+    }
+
+    public function showResetForm(Request $request)
+    {
+        $oobCode = $request->query('oobCode');
+
+        if (!$oobCode) {
+            abort(404);
+        }
+
+        // Verifikasi token ke Firebase
+        $apiKey = config('services.firebase.api_key');
+
+        $response = Http::post(
+            "https://identitytoolkit.googleapis.com/v1/accounts:resetPassword?key={$apiKey}",
+            [
+                'oobCode' => $oobCode,
+            ]
+        );
+
+        if ($response->failed()) {
+            abort(404);
+        }
+
+        return view('admin.auth.reset-password', [
+            'oobCode' => $oobCode,
+        ]);
+    }
+
+    public function updatePassword(Request $request)
+    {
+        $request->validate([
+            'password' => 'required|min:6|confirmed',
+            'oobCode' => 'required'
+        ]);
+
+        $apiKey = config('services.firebase.api_key');
+
+        $response = Http::post(
+            "https://identitytoolkit.googleapis.com/v1/accounts:resetPassword?key={$apiKey}",
+            [
+                'oobCode' => $request->oobCode,
+                'newPassword' => $request->password,
+            ]
+        );
+
+        if ($response->failed()) {
+            return back()->with('error', 'Token reset tidak valid atau sudah kadaluarsa.');
+        }
+
+        return redirect('/admin/login')
+            ->with('success', 'Password berhasil diperbarui. Silakan login.');
     }
 
     public function logout()

@@ -634,19 +634,6 @@
 
         <div class="fp-card" role="main">
 
-            {{-- Step indicator --}}
-            <div class="fp-steps" aria-label="Langkah reset password">
-                <div class="fp-step active" aria-current="step">
-                    <span class="fp-step-num">1</span>
-                    <span>Email</span>
-                </div>
-                <div class="fp-step-sep" aria-hidden="true"></div>
-                <div class="fp-step">
-                    <span class="fp-step-num">2</span>
-                    <span>Reset Password</span>
-                </div>
-            </div>
-
             {{-- Icon --}}
             <div class="fp-icon-wrap" aria-hidden="true">
                 <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"

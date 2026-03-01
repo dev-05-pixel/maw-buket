@@ -19,6 +19,8 @@ Route::prefix('admin')->name('filament.admin.auth.')->group(function () {
     Route::post('/login', [AuthController::class, 'login'])->name('login.post');
     Route::get('/forgot-password', [AuthController::class, 'showForgotPasswordForm'])->name('password-request');
     Route::post('/forgot-password', [AuthController::class, 'sendResetLink'])->name('password-request.post');
+    Route::get('/reset-password', [AuthController::class, 'showResetForm'])->name('reset-password');
+    Route::post('/reset-password', [AuthController::class, 'updatePassword'])->name('reset-password.post');
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 });
 
