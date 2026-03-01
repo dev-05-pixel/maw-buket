@@ -7,7 +7,12 @@ use Illuminate\Database\Eloquent\Model;
 
 class Admin extends Model
 {
-    use HasFactory;
+    protected $primaryKey = 'uid';
+    public $incrementing = false;
+    protected $keyType = 'string';
 
-    protected $fillable = ['email'];
+    protected $fillable = [
+        'uid',
+        'email',
+    ];
 }
