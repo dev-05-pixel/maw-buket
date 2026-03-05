@@ -117,6 +117,7 @@
 </div>
 
 <!-- Cursor Animation Script -->
+<!-- Cursor Animation Script -->
 <script>
     const ring = document.querySelector('.cursor-ring');
     const dot = document.querySelector('.cursor-dot');
@@ -146,7 +147,6 @@
 
     animate();
 
-    // Hover effect (lebih professional, tidak terlalu besar)
     document.querySelectorAll('a, button, input, select, textarea').forEach(el => {
         el.addEventListener('mouseenter', () => {
             ring.style.transform = 'translate(-50%, -50%) scale(1.6)';
@@ -158,5 +158,5 @@
     });
 </script>
 
-</body>
-</html>
+@stack('scripts')
+

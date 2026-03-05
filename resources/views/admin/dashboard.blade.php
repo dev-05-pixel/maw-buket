@@ -13,21 +13,6 @@
             {{ \App\Models\Product::count() }}
         </h2>
     </div>
-
-    <div class="bg-white p-6 rounded-xl shadow-sm border">
-        <p class="text-sm text-muted">Produk Aktif</p>
-        <h2 class="text-3xl font-semibold mt-2">
-            {{ \App\Models\Product::where('is_active', true)->count() }}
-        </h2>
-    </div>
-
-    <div class="bg-white p-6 rounded-xl shadow-sm border">
-        <p class="text-sm text-muted">Stok Habis</p>
-        <h2 class="text-3xl font-semibold mt-2">
-            {{ \App\Models\Product::where('stock', 0)->count() }}
-        </h2>
-    </div>
-
 </div>
 
 <div class="mt-10 bg-white p-8 rounded-xl shadow-sm border">
