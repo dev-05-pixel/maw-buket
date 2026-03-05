@@ -10,9 +10,8 @@ class ProductController extends Controller
 {
     public function index()
     {
-        $products = Product::where('is_active', true)->paginate(12);
-        $settings = Setting::pluck('value', 'key')->toArray();
-        return view('products.index', compact('products', 'settings'));
+        $products = Product::paginate(12);
+        return view('products.index', compact('products'));
     }
 
     public function show(Product $product)

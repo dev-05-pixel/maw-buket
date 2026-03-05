@@ -10,10 +10,13 @@ use Illuminate\Support\Facades\Storage;
 
 class ProductController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $products = Product::latest()->paginate(10);
-        return view('admin.products.index', compact('products'));
+        $perPage = $request->get('per_page', 10);
+
+        $products = Product::latest()->paginate($perPage)->withQueryString();
+
+        return view('admin.products.index', compact('products', 'perPage'));
     }
 
     public function create()
@@ -24,21 +27,15 @@ class ProductController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'name'        => 'required|max:255',
-            'description' => 'nullable|string',
-            'price'       => 'required|numeric',
-            'stock'       => 'nullable|integer',
-            'is_active'   => 'required|boolean',
-            'image'       => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+            'name'     => 'required|max:255',
+            'category' => 'required|in:Buket Segar,Buket Kering,Pampas,Mini Bouquet',
+            'price'    => 'required|numeric|min:1000',
+            'image'    => 'required|image|mimes:jpg,jpeg,png|max:20480',
+            'description' => 'nullable|string'
         ]);
 
-        // Generate ID 12 karakter (uppercase)
         $id = strtoupper(Str::random(12));
 
-        // Generate slug dari nama
-        $slug = Str::slug($request->name);
-
-        // Handle upload image
         $imagePath = null;
         if ($request->hasFile('image')) {
             $imagePath = $request->file('image')->store('products', 'public');
@@ -47,16 +44,66 @@ class ProductController extends Controller
         Product::create([
             'id'          => $id,
             'name'        => $request->name,
-            'slug'        => $slug,
+            'category'    => $request->category,
             'description' => $request->description,
             'price'       => $request->price,
-            'stock'       => $request->stock,
-            'is_active'   => $request->is_active,
             'image'       => $imagePath,
         ]);
 
         return redirect()
             ->route('admin.products.index')
             ->with('success', 'Produk berhasil ditambahkan.');
+    }
+
+    public function edit(Product $product)
+    {
+        return view('admin.products.edit', compact('product'));
+    }
+
+    public function update(Request $request, Product $product)
+    {
+        $request->validate([
+            'name'     => 'required|max:255',
+            'category' => 'required|in:Buket Segar,Buket Kering,Pampas,Mini Bouquet',
+            'price'    => 'required|numeric|min:1000',
+            'image'    => 'nullable|image|mimes:jpg,jpeg,png|max:20480',
+            'description' => 'nullable|string'
+        ]);
+
+        $imagePath = $product->image;
+
+        if ($request->hasFile('image')) {
+
+            if ($product->image) {
+                Storage::disk('public')->delete($product->image);
+            }
+
+            $imagePath = $request->file('image')->store('products', 'public');
+        }
+
+        $product->update([
+            'name'        => $request->name,
+            'category'    => $request->category,
+            'description' => $request->description,
+            'price'       => $request->price,
+            'image'       => $imagePath,
+        ]);
+
+        return redirect()
+            ->route('admin.products.index')
+            ->with('success', 'Produk berhasil diperbarui.');
+    }
+
+    public function destroy(Product $product)
+    {
+        if ($product->image) {
+            Storage::disk('public')->delete($product->image);
+        }
+
+        $product->delete();
+
+        return redirect()
+            ->route('admin.products.index')
+            ->with('success', 'Produk berhasil dihapus.');
     }
 }

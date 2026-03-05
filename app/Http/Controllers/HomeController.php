@@ -10,8 +10,8 @@ class HomeController extends Controller
 {
     public function index()
     {
-        $products = Product::where('is_active', true)->latest()->take(6)->get();
-        $settings = Setting::pluck('value', 'key')->toArray();
-        return view('home', compact('products', 'settings'));
+        $products = Product::latest()->take(6)->get();
+
+        return view('home', compact('products'));
     }
 }
