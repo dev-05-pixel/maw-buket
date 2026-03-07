@@ -5,8 +5,8 @@
 @push('styles')
     <style>
         /* ================================================================
-       CSS VARIABLES (ROOT)
-    ================================================================ */
+               CSS VARIABLES (ROOT)
+            ================================================================ */
         :root {
             --cream: #f8f3ec;
             --cream-dark: #f0e8de;
@@ -29,8 +29,8 @@
         }
 
         /* ----------------------------------------------------------------
-       BASE RESET / UTILITY CLASSES
-    ---------------------------------------------------------------- */
+               BASE RESET / UTILITY CLASSES
+            ---------------------------------------------------------------- */
         * {
             margin: 0;
             padding: 0;
@@ -159,12 +159,12 @@
         }
 
         /* ================================================================
-       HOME PAGE STYLES
-    ================================================================ */
+               HOME PAGE STYLES
+            ================================================================ */
 
         /* ----------------------------------------------------------------
-       HERO induk
-    ---------------------------------------------------------------- */
+               HERO induk
+            ---------------------------------------------------------------- */
         .hero {
             position: relative;
             min-height: 100svh;
@@ -300,6 +300,7 @@
             transform: translateY(24px);
             animation: fadeUp 0.9s 2.6s var(--ease-out-expo) forwards;
         }
+
         /* gulir ke bawah */
         .hero-scroll-hint {
             position: absolute;
@@ -313,7 +314,8 @@
             opacity: 0;
             animation: fadeUp 0.8s 3s var(--ease-out-expo) forwards;
             justify-content: center;
-            z-index: 10; /* tambahkan ini */
+            z-index: 10;
+            /* tambahkan ini */
         }
 
         .hero-scroll-hint span {
@@ -323,6 +325,7 @@
             text-transform: uppercase;
             color: var(--warm-grey);
         }
+
         /* gulir ke bawah */
         .scroll-arrow {
             width: 24px;
@@ -469,8 +472,8 @@
         }
 
         /* ----------------------------------------------------------------
-       MARQUEE / TICKER
-    ---------------------------------------------------------------- */
+               MARQUEE / TICKER
+            ---------------------------------------------------------------- */
         .marquee-section {
             background: var(--charcoal);
             padding: 18px 0;
@@ -527,8 +530,8 @@
         }
 
         /* ----------------------------------------------------------------
-       ABOUT / INTRO SECTION
-    ---------------------------------------------------------------- */
+               ABOUT / INTRO SECTION
+            ---------------------------------------------------------------- */
         .about-section {
             padding: var(--section-gap) clamp(24px, 6vw, 100px);
             display: grid;
@@ -636,8 +639,8 @@
         }
 
         /* ----------------------------------------------------------------
-       PRODUCTS PREVIEW / FEATURED
-    ---------------------------------------------------------------- */
+               PRODUCTS PREVIEW / FEATURED
+            ---------------------------------------------------------------- */
         .products-section {
             padding: var(--section-gap) clamp(24px, 6vw, 100px);
             background: var(--ivory);
@@ -814,8 +817,8 @@
         }
 
         /* ----------------------------------------------------------------
-       CATEGORIES SECTION
-    ---------------------------------------------------------------- */
+               CATEGORIES SECTION
+            ---------------------------------------------------------------- */
         .categories-section {
             padding: var(--section-gap) clamp(24px, 6vw, 100px);
         }
@@ -910,8 +913,8 @@
         }
 
         /* ----------------------------------------------------------------
-       PROCESS / HOW TO ORDER
-    ---------------------------------------------------------------- */
+               PROCESS / HOW TO ORDER
+            ---------------------------------------------------------------- */
         .process-section {
             padding: var(--section-gap) clamp(24px, 6vw, 100px);
             background: var(--charcoal);
@@ -1053,8 +1056,8 @@
         }
 
         /* ----------------------------------------------------------------
-       TESTIMONIALS
-    ---------------------------------------------------------------- */
+               TESTIMONIALS
+            ---------------------------------------------------------------- */
         .testimonials-section {
             padding: var(--section-gap) clamp(24px, 6vw, 100px);
             background: var(--cream-dark);
@@ -1173,8 +1176,8 @@
         }
 
         /* ----------------------------------------------------------------
-       CTA BANNER
-    ---------------------------------------------------------------- */
+               CTA BANNER
+            ---------------------------------------------------------------- */
         .cta-section {
             padding: clamp(80px, 10vw, 140px) clamp(24px, 8vw, 120px);
             background: var(--cream);
@@ -1241,8 +1244,8 @@
         }
 
         /* ----------------------------------------------------------------
-       RESPONSIVE
-    ---------------------------------------------------------------- */
+               RESPONSIVE
+            ---------------------------------------------------------------- */
         @media (max-width: 1100px) {
             .hero {
                 grid-template-columns: 1fr;
@@ -1337,61 +1340,70 @@
                 grid-template-columns: repeat(3, 1fr);
                 gap: 12px;
             }
+
             .product-card {
-        padding: 0 8px;
-    }
+                padding: 0 8px;
+            }
         }
 
         @media (max-width: 768px) {
-    .hero-left {
-        padding: 60px 24px 80px;
-        text-align: center;
-        align-items: center;
-    }
+            .hero-left {
+                padding: 60px 24px 80px;
+                text-align: center;
+                align-items: center;
+            }
 
-    .hero-desc {
-        max-width: 100%;
-    }
+            .hero-desc {
+                max-width: 100%;
+            }
 
-    .hero-actions {
-        justify-content: center;
-    }
+            .hero-actions {
+                justify-content: center;
+            }
 
-    .hero-scroll-hint{
-    bottom: 60px;
-}
+            .hero-scroll-hint {
+                bottom: 60px;
+            }
 
-    .hero-scroll-hint span {
-        font-size: 9px;
-        letter-spacing: 0.25em;
-    }
+            .hero-scroll-hint span {
+                font-size: 9px;
+                letter-spacing: 0.25em;
+            }
 
-    .about-img-accent {
-        position: relative;
-        bottom: auto;
-        right: auto;
-        width: 70%;
-        margin: -60px auto 0;
-        display: block;
-    }
-    .cta-actions {
-        width: 100%;
-    }
+            .about-img-accent {
+                position: relative;
+                bottom: auto;
+                right: auto;
+                width: 70%;
+                margin: -60px auto 0;
+                display: block;
+            }
 
-    .cta-actions a {
-        width: 100%;
-        justify-content: center;
-    }
-}
-@media (max-width: 600px) {
-    .process-step {
-        padding: 0 12px;
-    }
+            .cta-actions {
+                width: 100%;
+            }
 
-    .process-step-desc {
-        font-size: 15px;
-    }
-}
+            .cta-actions a {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .process-step {
+                padding: 0 12px;
+            }
+
+            .process-step-desc {
+                font-size: 15px;
+            }
+        }
+
+        @media (min-width:1024px) {
+            .mobile-nav {
+                display: none !important;
+            }
+        }
     </style>
 @endpush
 
@@ -1400,56 +1412,53 @@
     {{-- ================================================================
      HERO
 ================================================================ --}}
-   <section class="hero" aria-label="Hero section">
+    <section class="hero" aria-label="Hero section">
 
-    <div class="hero-deco-circle hero-deco-1" aria-hidden="true"></div>
-    <div class="hero-deco-circle hero-deco-2" aria-hidden="true"></div>
+        <div class="hero-deco-circle hero-deco-1" aria-hidden="true"></div>
+        <div class="hero-deco-circle hero-deco-2" aria-hidden="true"></div>
 
-    <div class="hero-left">
-        <div class="hero-eyebrow" aria-hidden="true">
-            <span class="hero-eyebrow-line"></span>
-            <span class="hero-eyebrow-text">Handcrafted Bouquets</span>
+        <div class="hero-left">
+            <div class="hero-eyebrow" aria-hidden="true">
+                <span class="hero-eyebrow-line"></span>
+                <span class="hero-eyebrow-text">Handcrafted Bouquets</span>
+            </div>
+
+            <h1 class="hero-title">
+                <span class="hero-title-line"><span class="hero-title-inner">Rangkai</span></span>
+                <span class="hero-title-line"><span class="hero-title-inner"><em>Cinta</em> dalam</span></span>
+                <span class="hero-title-line"><span class="hero-title-inner">Setiap Bunga</span></span>
+            </h1>
+
+            <p class="hero-desc">
+                Setiap buket adalah cerita yang menunggu untuk disampaikan. Kami merangkai keindahan alam menjadi ekspresi
+                perasaan terdalam Anda — untuk ulang tahun, pernikahan, atau sekadar mengucapkan "aku peduli."
+            </p>
+
+            <div class="hero-actions">
+                <a href="{{ url('/products') }}" class="btn-primary">
+                    <span>Lihat Koleksi</span>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M5 12h14M12 5l7 7-7 7" />
+                    </svg>
+                </a>
+                <a href="{{ url('/contact') }}" class="btn-outline">Hubungi Kami</a>
+            </div>
         </div>
 
-        <h1 class="hero-title">
-            <span class="hero-title-line"><span class="hero-title-inner">Rangkai</span></span>
-            <span class="hero-title-line"><span class="hero-title-inner"><em>Cinta</em> dalam</span></span>
-            <span class="hero-title-line"><span class="hero-title-inner">Setiap Bunga</span></span>
-        </h1>
-
-        <p class="hero-desc">
-            Setiap buket adalah cerita yang menunggu untuk disampaikan. Kami merangkai keindahan alam menjadi ekspresi
-            perasaan terdalam Anda — untuk ulang tahun, pernikahan, atau sekadar mengucapkan "aku peduli."
-        </p>
-
-        <div class="hero-actions">
-            <a href="{{ url('/products') }}" class="btn-primary">
-                <span>Lihat Koleksi</span>
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M5 12h14M12 5l7 7-7 7"/>
-                </svg>
-            </a>
-            <a href="{{ url('/contact') }}" class="btn-outline">Hubungi Kami</a>
+        <div class="hero-right">
+            <img src="https://picsum.photos/seed/bouquet-hero/900/1200" alt="Beautiful fresh flower bouquet"
+                class="hero-img-main" loading="eager" fetchpriority="high" />
+            <div class="hero-img-overlay" aria-hidden="true"></div>
         </div>
-    </div>
 
-    <div class="hero-right">
-        <img src="https://picsum.photos/seed/bouquet-hero/900/1200"
-            alt="Beautiful fresh flower bouquet"
-            class="hero-img-main"
-            loading="eager"
-            fetchpriority="high" />
-        <div class="hero-img-overlay" aria-hidden="true"></div>
-    </div>
+        <!-- PINDAH KE SINI -->
+        <div class="hero-scroll-hint" aria-hidden="true">
+            <div class="scroll-arrow"></div>
+            <span>Gulir ke bawah</span>
+        </div>
 
-    <!-- PINDAH KE SINI -->
-    <div class="hero-scroll-hint" aria-hidden="true">
-        <div class="scroll-arrow"></div>
-        <span>Gulir ke bawah</span>
-    </div>
-
-</section>
+    </section>
 
     {{-- ================================================================
      MARQUEE TICKER

@@ -60,7 +60,7 @@ resources\views\layouts\app.blade.php
             font-size: 16px;
             scroll-behavior: smooth;
             max-width: 100%;
-    overflow-x: hidden;
+            overflow-x: hidden;
         }
 
         body {
@@ -72,7 +72,7 @@ resources\views\layouts\app.blade.php
             overflow-x: hidden;
             cursor: none;
             max-width: 100%;
-    overflow-x: hidden;
+            overflow-x: hidden;
         }
 
         ::selection {
@@ -350,13 +350,17 @@ resources\views\layouts\app.blade.php
             justify-content: center;
             gap: 40px;
             opacity: 0;
+            transform: translateY(-40px);
             pointer-events: none;
-            transition: opacity 0.5s var(--ease-out-expo);
+            transition:
+                opacity 0.5s cubic-bezier(0.19, 1, 0.22, 1),
+                transform 0.6s cubic-bezier(0.19, 1, 0.22, 1);
         }
 
         #mobile-nav.open {
             opacity: 1;
-            pointer-events: all;
+            pointer-events: auto;
+            transform: translateY(0)scale(1);
         }
 
         #mobile-nav a {
@@ -365,11 +369,55 @@ resources\views\layouts\app.blade.php
             font-weight: 300;
             letter-spacing: 0.08em;
             color: var(--cream);
-            transition: color 0.3s ease;
+
+            opacity: 0;
+            transform: translateY(20px);
+
+            transition:
+                transform 0.6s cubic-bezier(0.19, 1, 0.22, 1),
+                opacity 0.6s cubic-bezier(0.19, 1, 0.22, 1);
+        }
+
+        #mobile-nav.open a {
+            opacity: 1;
+            transform: translateY(0);
         }
 
         #mobile-nav a:hover {
             color: var(--rose-light);
+        }
+
+        /* animasi keluar mobile menu saat kembali ke desktop */
+        #mobile-nav.closing {
+            animation: mobileMenuClose 0.45s cubic-bezier(0.19, 1, 0.22, 1) forwards;
+        }
+
+        @keyframes mobileMenuClose {
+            from {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+
+            to {
+                opacity: 0;
+                transform: translateY(-60px) scale(0.96);
+            }
+        }
+
+        #mobile-nav.open a:nth-child(1) {
+            transition-delay: .1s;
+        }
+
+        #mobile-nav.open a:nth-child(2) {
+            transition-delay: .18s;
+        }
+
+        #mobile-nav.open a:nth-child(3) {
+            transition-delay: .26s;
+        }
+
+        #mobile-nav.open a:nth-child(4) {
+            transition-delay: .34s;
         }
 
         /* ============================================================
@@ -747,6 +795,12 @@ resources\views\layouts\app.blade.php
             }
         }
 
+        /* @media (min-width: 901px) {
+            #mobile-nav {
+                display: none !important;
+            }
+        } */
+
         @media (max-width: 600px) {
             .footer-grid {
                 grid-template-columns: 1fr;
@@ -917,7 +971,7 @@ resources\views\layouts\app.blade.php
                             <path
                                 d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.7 12.4 19.79 19.79 0 01.67 3.82 2 2 0 012.64 1.64h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L7.09 9a16 16 0 006 6l.92-.91a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z" />
                         </svg>
-                        <p class="footer-contact-text">+62 8xx-xxxx-xxxx</p>
+                        <p class="footer-contact-text">+62 888-888-8888</p>
                     </div>
                     <div class="footer-contact-item">
                         <svg class="footer-contact-icon" viewBox="0 0 24 24" fill="none"
@@ -945,43 +999,6 @@ resources\views\layouts\app.blade.php
                 </p>
                 <p class="footer-made">Dibuat dengan <span>&#9825;</span> untuk setiap momen spesial</p>
             </div>
-
-            <div class="reveal delay-2">
-                <p class="footer-col-title">Navigasi</p>
-                <ul class="footer-links">
-                    <li><a href="{{ url('/') }}">Beranda</a></li>
-                    <li><a href="{{ url('/products') }}">Koleksi Buket</a></li>
-                    <li><a href="{{ url('/contact') }}">Hubungi Kami</a></li>
-                    <li><a href="https://wa.me/6282333000472" target="_blank" rel="noopener">Pesan via WA</a></li>
-                </ul>
-            </div>
-
-            <div class="reveal delay-3">
-                <p class="footer-col-title">Hubungi Kami</p>
-                <div class="footer-contact-item">
-                    <svg class="footer-contact-icon" viewBox="0 0 24 24" fill="none" stroke="rgba(248,243,236,0.5)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                        <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.7 12.4 19.79 19.79 0 01.67 3.82 2 2 0 012.64 1.64h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L7.09 9a16 16 0 006 6l.92-.91a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z"/>
-                    </svg>
-                    <p class="footer-contact-text">+62 8xx-xxxx-xxxx</p>
-                </div>
-                <div class="footer-contact-item">
-                    <svg class="footer-contact-icon" viewBox="0 0 24 24" fill="none" stroke="rgba(248,243,236,0.5)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                        <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/>
-                    </svg>
-                    <p class="footer-contact-text">hello@mawbouquet.id</p>
-                </div>
-                <div class="footer-contact-item">
-                    <svg class="footer-contact-icon" viewBox="0 0 24 24" fill="none" stroke="rgba(248,243,236,0.5)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/>
-                    </svg>
-                    <p class="footer-contact-text">Jakarta Selatan, Indonesia</p>
-                </div>
-            </div>
-        </div>
-
-        <div class="footer-bottom">
-            <p class="footer-copy">&copy; {{ date('Y') }} Maw Bouquet. Seluruh hak dilindungi undang-undang.</p>
-            <p class="footer-made">Developed by DFX Union</p>
         </div>
     </footer>
 
@@ -1057,6 +1074,32 @@ resources\views\layouts\app.blade.php
         hamburger.addEventListener('click', () => toggleMenu());
         mobileLinks.forEach(link => {
             link.addEventListener('click', () => toggleMenu(false));
+        });
+
+        // RESET MOBILE MENU JIKA LAYAR BESAR
+        window.addEventListener('resize', () => {
+
+            if (window.innerWidth > 900 && menuOpen) {
+
+                mobileNav.classList.add('closing');
+
+                setTimeout(() => {
+
+                    mobileNav.classList.remove('open');
+                    mobileNav.classList.remove('closing');
+
+                    hamburger.classList.remove('open');
+
+                    menuOpen = false;
+                    document.body.style.overflow = '';
+
+                }, 450);
+
+            }
+
+        });
+        window.addEventListener('orientationchange', () => {
+            toggleMenu(false);
         });
 
         // ================================================================
