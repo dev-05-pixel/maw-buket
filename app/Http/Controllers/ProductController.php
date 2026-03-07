@@ -67,6 +67,21 @@ class ProductController extends Controller
 
     public function show(Product $product)
     {
-        return view('products.show', compact('product'));
+        $relatedProducts = Product::where('category', $product->category)
+            ->where('id', '!=', $product->id)
+            ->latest()
+            ->take(4)
+            ->get();
+
+        $cleanDescription = str_replace(
+            ['<p><br></p>', '<span class="ql-cursor">﻿</span>'],
+            '',
+            $product->description
+        );
+        return view('products.show', compact(
+            'product',
+            'cleanDescription',
+            'relatedProducts'
+        ));
     }
 }

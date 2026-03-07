@@ -5,14 +5,21 @@
 @push('styles')
     <style>
         /* ================================================================
-                           PRODUCT DETAIL / SHOW PAGE
-                        ================================================================ */
+                                                   PRODUCT DETAIL / SHOW PAGE
+                                                ================================================================ */
 
         /* ----------------------------------------------------------------
-                           BREADCRUMB STRIP
-                        ---------------------------------------------------------------- */
+                                                   BREADCRUMB STRIP
+                                                ---------------------------------------------------------------- */
+
+        html,
+        body {
+            overflow-x: hidden;
+            overflow-y: auto;
+        }
+
         .product-cta .nav-cta {
-            width: 89%;
+            width: 85%;
             justify-content: center;
         }
 
@@ -51,18 +58,19 @@
         }
 
         /* ----------------------------------------------------------------
-                           PRODUCT LAYOUT
-                        ---------------------------------------------------------------- */
+                                                   PRODUCT LAYOUT
+                                                ---------------------------------------------------------------- */
         .product-detail {
-            display: grid;
+            display: flex;
             grid-template-columns: 1fr 1fr;
-            gap: 0;
-            min-height: 80vh;
+            gap: 60px;
+            min-height: calc(100vh - var(--nav-height));
+            align-items: start;
         }
 
         /* ----------------------------------------------------------------
-                           GALLERY SIDE
-                        ---------------------------------------------------------------- */
+                                                   GALLERY SIDE
+                                                ---------------------------------------------------------------- */
         .gallery-side {
             position: sticky;
             top: var(--nav-height);
@@ -189,17 +197,16 @@
         }
 
         /* ----------------------------------------------------------------
-                           INFO SIDE
-                        ---------------------------------------------------------------- */
+                                                   INFO SIDE
+                                                ---------------------------------------------------------------- */
         .info-side {
             padding: clamp(30px, 4vw, 60px) clamp(24px, 6vw, 100px) clamp(30px, 4vw, 60px) 48px;
+            padding-top: 10px;
             display: flex;
             flex-direction: column;
             justify-content: center;
-            overflow-y: auto;
-            max-height: calc(100vh - var(--nav-height));
             position: sticky;
-            top: var(--nav-height);
+            top: calc(var(--nav-height) + 24px);
         }
 
         .product-category-tag {
@@ -226,10 +233,11 @@
             font-family: var(--font-display);
             font-size: clamp(36px, 4vw, 58px);
             font-weight: 300;
-            line-height: 1.05;
+            line-height: 1.15;
             color: var(--charcoal);
             letter-spacing: -0.01em;
-            margin-bottom: 20px;
+            margin-top: 10px;
+            margin-bottom: 12px;
         }
 
         .product-rating-row {
@@ -269,15 +277,17 @@
         }
 
         .product-price-block {
+            margin: 20px 0 28px;
             margin-bottom: 28px;
             padding-bottom: 28px;
             border-bottom: 1px solid rgba(44, 36, 33, 0.08);
         }
 
         .product-price {
+            display: block;
             font-family: var(--font-display);
             font-size: clamp(32px, 3.5vw, 48px);
-            font-weight: 300;
+            font-weight: 600;
             color: var(--charcoal);
             line-height: 1;
             margin-bottom: 8px;
@@ -293,9 +303,10 @@
         }
 
         .product-price-note {
-            font-size: 12px;
+            font-size: 14px;
             color: var(--warm-grey);
             font-weight: 300;
+            line-height: 1.6;
         }
 
         /* Description */
@@ -593,8 +604,8 @@
         }
 
         /* ----------------------------------------------------------------
-                           RELATED PRODUCTS
-                        ---------------------------------------------------------------- */
+                                                   RELATED PRODUCTS
+                                                ---------------------------------------------------------------- */
         .related-section {
             padding: var(--section-gap) clamp(24px, 6vw, 100px);
             background: var(--ivory);
@@ -684,8 +695,8 @@
         }
 
         /* ----------------------------------------------------------------
-                           RESPONSIVE
-                        ---------------------------------------------------------------- */
+                                                   RESPONSIVE
+                                                ---------------------------------------------------------------- */
         @media (max-width: 1100px) {
             .product-detail {
                 grid-template-columns: 1fr;
@@ -782,7 +793,6 @@
                 <img id="gallery-main" src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->name }}"
                     class="gallery-main-img" loading="eager">
 
-<<<<<<< Updated upstream
                 <div class="gallery-zoom-hint" aria-hidden="true">
                     <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
                         aria-hidden="true">
@@ -790,106 +800,6 @@
                         <line x1="21" y1="21" x2="16.65" y2="16.65" />
                         <line x1="11" y1="8" x2="11" y2="14" />
                         <line x1="8" y1="11" x2="14" y2="11" />
-=======
-        <h1 class="product-name">{{ $product->name ?? 'Blushing Garden' }}</h1>
-
-        <div class="product-rating-row">
-            <div class="rating-stars" aria-label="Rating 4.9 dari 5">
-                @for ($i = 0; $i < 5; $i++)
-                <svg viewBox="0 0 24 24" aria-hidden="true">
-                    <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
-                </svg>
-                @endfor
-            </div>
-            <span class="rating-score">4.9</span>
-            <div class="rating-sep" aria-hidden="true"></div>
-            <span class="rating-count">24 ulasan</span>
-            <div class="rating-sep" aria-hidden="true"></div>
-            <span class="rating-count" style="color: var(--sage);">Tersedia</span>
-        </div>
-
-        <div class="product-price-block">
-            <div>
-                <span class="product-price">Rp 185.000
-                    <span class="product-price-old">Rp 220.000</span>
-                </span>
-            </div>
-            <p class="product-price-note">Harga belum termasuk ongkos kirim. Pengiriman same-day tersedia.</p>
-        </div>
-
-        <p class="product-desc">
-            Blushing Garden adalah perwujudan keindahan taman di musim semi — lembut, mewah, dan memesona. Rangkaian ini menggunakan mawar premium pilihan dengan gradasi warna nude-to-blush yang memukau, dipadukan dengan baby breath dan dedaunan hijau segar sebagai aksen. Setiap tangkai dipilih dengan teliti untuk menciptakan harmoni yang sempurna.
-        </p>
-
-        {{-- SIZE OPTIONS --}}
-        <div class="option-group">
-            <p class="option-label">
-                Ukuran
-                <span>— Standar (M) dipilih</span>
-            </p>
-            <div class="size-options" role="group" aria-label="Pilih ukuran">
-                @php
-                $sizes = [
-                    ['label' => 'Mini (S)',     'price' => '+Rp 0',       'disabled' => false],
-                    ['label' => 'Standar (M)',  'price' => '+Rp 30.000',  'disabled' => false],
-                    ['label' => 'Besar (L)',    'price' => '+Rp 65.000',  'disabled' => false],
-                    ['label' => 'Grand (XL)',   'price' => '+Rp 120.000', 'disabled' => false],
-                ];
-                @endphp
-                @foreach ($sizes as $i => $size)
-                <button
-                    class="size-btn {{ $i === 1 ? 'active' : '' }} {{ $size['disabled'] ? 'disabled' : '' }}"
-                    data-price="{{ $size['price'] }}"
-                    aria-pressed="{{ $i === 1 ? 'true' : 'false' }}"
-                    aria-label="{{ $size['label'] }} {{ $size['price'] }}"
-                >
-                    {{ $size['label'] }}
-                </button>
-                @endforeach
-            </div>
-        </div>
-
-        {{-- COLOR OPTIONS --}}
-        <div class="option-group">
-            <p class="option-label">
-                Warna Dominan
-                <span>— Blush Pink dipilih</span>
-            </p>
-            <div class="color-options" role="group" aria-label="Pilih warna">
-                @php
-                $productColors = [
-                    ['hex' => '#e8a0a0', 'name' => 'Blush Pink',   'active' => true],
-                    ['hex' => '#d4b8d4', 'name' => 'Lavender',     'active' => false],
-                    ['hex' => '#f5deb3', 'name' => 'Cream White',  'active' => false],
-                    ['hex' => '#c2f0c2', 'name' => 'Sage Green',   'active' => false],
-                    ['hex' => '#f5a06a', 'name' => 'Peach Coral',  'active' => false],
-                ];
-                @endphp
-                @foreach ($productColors as $color)
-                <button
-                    class="color-opt {{ $color['active'] ? 'active' : '' }}"
-                    style="background: {{ $color['hex'] }};"
-                    aria-label="{{ $color['name'] }}"
-                    title="{{ $color['name'] }}"
-                    aria-pressed="{{ $color['active'] ? 'true' : 'false' }}"
-                ></button>
-                @endforeach
-            </div>
-        </div>
-
-        {{-- CTA --}}
-        <div class="product-cta">
-            <div class="product-cta-btns">
-                <a
-                    href="https://wa.me/682333000473?text=Halo, saya ingin memesan {{ urlencode($product->name ?? 'Blushing Garden') }}"
-                    target="_blank"
-                    rel="noopener"
-                    class="cta-wa-btn"
-                    aria-label="Pesan via WhatsApp"
-                >
-                    <svg viewBox="0 0 24 24" aria-hidden="true">
-                        <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 00-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z M12 0C5.373 0 0 5.373 0 12c0 2.127.558 4.122 1.532 5.853L.054 23.704a.5.5 0 00.609.637l5.99-1.514A11.94 11.94 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22a9.956 9.956 0 01-5.193-1.458l-.37-.22-3.833.968.985-3.77-.242-.389A9.966 9.966 0 012 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/>
->>>>>>> Stashed changes
                     </svg>
                     Perbesar
                 </div>
@@ -916,13 +826,15 @@
                         Rp {{ number_format($product->price, 0, ',', '.') }}
                     </span>
                 </div>
-                <p class="product-price-note">Harga belum termasuk ongkos kirim. Pengiriman same-day tersedia.</p>
+                <p class="product-price-note">
+                    Harga belum termasuk ongkos kirim. Pengiriman same-day tersedia.
+                </p>
             </div>
 
             @if ($product->description)
-                <p class="product-desc">
-                    {{ $product->description }}
-                </p>
+                <div class="product-desc">
+                    {!! $cleanDescription !!}
+                </div>
             @else
                 <p class="product-desc" style="color:#9ca3af;">
                     Tidak ada deskripsi produk.
@@ -932,8 +844,7 @@
             {{-- SIZE OPTIONS --}}
             <div class="option-group">
                 <p class="option-label">
-                    Ukuran
-                    <span>— Standar (M) dipilih</span>
+                    Ukuran — <span id="selected-size">Standar (M)</span> dipilih
                 </p>
                 <div class="size-options" role="group" aria-label="Pilih ukuran">
                     @php
@@ -958,7 +869,7 @@
             <div class="option-group">
                 <p class="option-label">
                     Warna Dominan
-                    <span>— Blush Pink dipilih</span>
+                    <span id="selected-color">Blush Pink</span>
                 </p>
                 <div class="color-options" role="group" aria-label="Pilih warna">
                     @php
@@ -982,7 +893,7 @@
             {{-- CTA --}}
             <div class="product-cta">
                 <div class="product-cta-btns">
-                    <a href="https://wa.me/6282333000472" target="_blank" rel="noopener" class="nav-cta">
+                    <a id="wa-order" href="#" target="_blank" class="nav-cta">
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
                             <path
                                 d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 00-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z" />
@@ -1052,16 +963,26 @@
                 ];
             @endphp
 
-            @foreach ($related as $i => $p)
-                <a href="{{ url('/products/' . ($i + 10)) }}" class="product-card reveal delay-{{ $i + 1 }}"
-                    aria-label="{{ $p['name'] }}">
+            @foreach ($relatedProducts as $item)
+                <a href="{{ route('products.show', $item->id) }}" class="product-card">
+
                     <div class="product-card-img-wrap">
-                        <img src="https://picsum.photos/seed/{{ $p['seed'] }}/480/640" alt="{{ $p['name'] }}"
-                            class="product-card-img" loading="lazy" />
+                        <img src="{{ asset('storage/' . $item->image) }}" class="product-card-img"
+                            alt="{{ $item->name }}">
                     </div>
-                    <p class="product-card-category">{{ $p['cat'] }}</p>
-                    <h3 class="product-card-name">{{ $p['name'] }}</h3>
-                    <p class="product-card-price">{{ $p['price'] }}</p>
+
+                    <p class="product-card-category">
+                        {{ $item->category }}
+                    </p>
+
+                    <h3 class="product-card-name">
+                        {{ $item->name }}
+                    </h3>
+
+                    <p class="product-card-price">
+                        Rp {{ number_format($item->price, 0, ',', '.') }}
+                    </p>
+
                 </a>
             @endforeach
         </div>
@@ -1074,6 +995,84 @@
         // ================================================================
         //  GALLERY SWITCHING
         // ================================================================
+        const waBtn = document.getElementById("wa-order");
+
+        waBtn.addEventListener("click", function() {
+
+            let productName = "{{ $product->name }}";
+            let price = "Rp {{ number_format($product->price, 0, ',', '.') }}";
+            let productLink = window.location.href;
+
+            let size = document.querySelector(".size-btn.active")?.innerText || "-";
+            let color = document.querySelector(".color-opt.active")?.title || "-";
+
+            // Variasi kalimat pembuka
+            const greetings = [
+                "Halo Maw Bouquet 🌸",
+                "Hai Maw Bouquet 👋",
+                "Halo kak, Maw Bouquet 🌷",
+                "Permisi Maw Bouquet 😊",
+                "Selamat siang Maw Bouquet 🌼"
+            ];
+
+            // Variasi kalimat penutup
+            const closings = [
+                "Apakah produknya masih tersedia?",
+                "Apakah masih ready?",
+                "Bisa dipesan hari ini?",
+                "Masih available kah?",
+                "Boleh minta info ketersediaannya?"
+            ];
+
+            // Ambil random
+            let greeting = greetings[Math.floor(Math.random() * greetings.length)];
+            let closing = closings[Math.floor(Math.random() * closings.length)];
+
+            let message =
+                `${greeting}
+
+                Saya tertarik dengan produk berikut:
+
+                🪷 Produk : ${productName}
+                💰 Harga : ${price}
+                📏 Ukuran : ${size}
+                🎨 Warna Dominan : ${color}
+
+                Link Produk:
+                ${productLink}
+
+                ${closing}`;
+
+            let url = "https://wa.me/6282333000472?text=" + encodeURIComponent(message);
+
+            this.href = url;
+        });
+
+        const colorBtns = document.querySelectorAll(".color-opt");
+        const colorLabel = document.getElementById("selected-color");
+
+        colorBtns.forEach(btn => {
+            btn.addEventListener("click", () => {
+
+                colorBtns.forEach(b => b.classList.remove("active"));
+                btn.classList.add("active");
+
+                colorLabel.textContent = btn.title;
+            });
+        });
+
+        const sizeButtons = document.querySelectorAll(".size-btn");
+        const sizeLabel = document.getElementById("selected-size");
+
+        sizeButtons.forEach(btn => {
+            btn.addEventListener("click", () => {
+
+                sizeButtons.forEach(b => b.classList.remove("active"));
+                btn.classList.add("active");
+
+                sizeLabel.textContent = btn.textContent.trim();
+            });
+        });
         const mainImg = document.getElementById('gallery-main');
         const thumbs = document.querySelectorAll('.gallery-thumb');
         const dots = document.querySelectorAll('.gallery-nav-dot');
