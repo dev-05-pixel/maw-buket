@@ -243,7 +243,7 @@
                 </div>
                 <div class="form-group">
                     <label class="form-label" for="phone">No. WhatsApp <span class="required" aria-label="wajib">*</span></label>
-                    <input type="tel" id="phone" name="phone" class="form-input" placeholder="08xx-xxxx-xxxx" required autocomplete="tel" />
+                    <input type="tel" id="phone" name="phone" class="form-input" placeholder="0823-3300-0473" required autocomplete="tel" />
                 </div>
             </div>
             <div class="form-group">
