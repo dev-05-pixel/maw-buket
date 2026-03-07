@@ -812,7 +812,7 @@
 
         <div class="footer-bottom">
             <p class="footer-copy">&copy; {{ date('Y') }} Maw Bouquet. Seluruh hak dilindungi undang-undang.</p>
-            <p class="footer-made">Dibuat dengan <span>&#9825;</span> untuk setiap momen spesial</p>
+            <p class="footer-made">Developed by DFX Union</p>
         </div>
     </footer>
 

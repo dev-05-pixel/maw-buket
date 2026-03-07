@@ -11,7 +11,7 @@ use App\Http\Controllers\Admin\ProductController as AdminProductController;
 // Halaman publik
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/products', [ProductController::class, 'index'])->name('products.index');
-Route::get('/products/{product:slug}', [ProductController::class, 'show'])->name('products.show');
+Route::get('/products/{product}', [ProductController::class, 'show'])->name('products.show');
 Route::get('/contact', [ContactController::class, 'index'])->name('contact');
 
 // Admin auth routes - gunakan nama route yang sesuai dengan yang diharapkan Filament
