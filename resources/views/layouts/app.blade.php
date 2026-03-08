@@ -1,4 +1,3 @@
-resources\views\layouts\app.blade.php
 <!DOCTYPE html>
 <html lang="id" class="scroll-smooth">
 

@@ -133,7 +133,25 @@
         <script>
             var quill = new Quill('#editor', {
                 theme: 'snow',
-                placeholder: 'Tulis deskripsi produk...'
+                placeholder: 'Tulis deskripsi produk...',
+                modules: {
+                    toolbar: [
+                        [{
+                            'header': [1, 2, 3, false]
+                        }],
+                        ['bold', 'italic', 'underline', 'strike'],
+                        [{
+                            'align': []
+                        }],
+                        [{
+                            'list': 'ordered'
+                        }, {
+                            'list': 'bullet'
+                        }],
+                        ['link'],
+                        ['clean']
+                    ]
+                }
             });
 
             var oldDescription = document.getElementById('oldDescription').value;

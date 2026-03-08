@@ -5,12 +5,12 @@
 @push('styles')
     <style>
         /* ================================================================
-                                                   PRODUCT DETAIL / SHOW PAGE
-                                                ================================================================ */
+                                                                                                           PRODUCT DETAIL / SHOW PAGE
+                                                                                                        ================================================================ */
 
         /* ----------------------------------------------------------------
-                                                   BREADCRUMB STRIP
-                                                ---------------------------------------------------------------- */
+                                                                                                           BREADCRUMB STRIP
+                                                                                                        ---------------------------------------------------------------- */
 
         html,
         body {
@@ -58,19 +58,19 @@
         }
 
         /* ----------------------------------------------------------------
-                                                   PRODUCT LAYOUT
-                                                ---------------------------------------------------------------- */
+                                                                                                           PRODUCT LAYOUT
+                                                                                                        ---------------------------------------------------------------- */
         .product-detail {
-            display: flex;
-            grid-template-columns: 1fr 1fr;
+            display: grid;
+            grid-template-columns: 55% 45%;
             gap: 60px;
             min-height: calc(100vh - var(--nav-height));
             align-items: start;
         }
 
         /* ----------------------------------------------------------------
-                                                   GALLERY SIDE
-                                                ---------------------------------------------------------------- */
+                                                                                                           GALLERY SIDE
+                                                                                                        ---------------------------------------------------------------- */
         .gallery-side {
             position: sticky;
             top: var(--nav-height);
@@ -197,16 +197,19 @@
         }
 
         /* ----------------------------------------------------------------
-                                                   INFO SIDE
-                                                ---------------------------------------------------------------- */
+                                                                                                           INFO SIDE
+                                                                                                        ---------------------------------------------------------------- */
         .info-side {
             padding: clamp(30px, 4vw, 60px) clamp(24px, 6vw, 100px) clamp(30px, 4vw, 60px) 48px;
             padding-top: 10px;
+            margin-left: -30px;
             display: flex;
             flex-direction: column;
-            justify-content: center;
+            justify-content: flex-start;
             position: sticky;
             top: calc(var(--nav-height) + 24px);
+            max-height: calc(100vh - var(--nav-height) - 40px);
+            overflow-y: auto;
         }
 
         .product-category-tag {
@@ -315,8 +318,81 @@
             font-weight: 300;
             color: var(--charcoal-mid);
             line-height: 1.9;
-            margin-bottom: 28px;
+            margin-bottom: 10px;
         }
+
+        /* kondisi dipotong */
+        .product-desc.collapsed {
+            max-height: 200px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* fade bawah */
+        .product-desc.collapsed::after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 40px;
+            background: linear-gradient(transparent, var(--ivory));
+        }
+
+        .product-desc.expanded {
+            max-height: 420px;
+            overflow-y: auto;
+        }
+
+        .desc-toggle {
+            margin-top: 10px;
+            font-size: 13px;
+            border: none;
+            background: none;
+            color: var(--rose);
+            cursor: pointer;
+            font-weight: 500;
+        }
+
+        /* =========================
+                                                   QUILL CONTENT STYLE
+                                                ========================= */
+
+        .product-desc p {
+            margin-bottom: 12px;
+        }
+
+        .product-desc strong {
+            font-weight: 600;
+        }
+
+        .product-desc em {
+            font-style: italic;
+        }
+
+        .product-desc .ql-align-center {
+            text-align: center;
+        }
+
+        .product-desc .ql-align-right {
+            text-align: right;
+        }
+
+        .product-desc .ql-align-justify {
+            text-align: justify;
+        }
+
+        .product-desc ul {
+            padding-left: 20px;
+            list-style: disc;
+        }
+
+        .product-desc ol {
+            padding-left: 20px;
+            list-style: decimal;
+        }
+
+
 
         /* Options */
         .option-group {
@@ -604,8 +680,8 @@
         }
 
         /* ----------------------------------------------------------------
-                                                   RELATED PRODUCTS
-                                                ---------------------------------------------------------------- */
+                                                                                                           RELATED PRODUCTS
+                                                                                                        ---------------------------------------------------------------- */
         .related-section {
             padding: var(--section-gap) clamp(24px, 6vw, 100px);
             background: var(--ivory);
@@ -695,8 +771,8 @@
         }
 
         /* ----------------------------------------------------------------
-                                                   RESPONSIVE
-                                                ---------------------------------------------------------------- */
+                                                                                                           RESPONSIVE
+                                                                                                        ---------------------------------------------------------------- */
         @media (max-width: 1100px) {
             .product-detail {
                 grid-template-columns: 1fr;
@@ -710,9 +786,16 @@
             }
 
             .info-side {
-                position: static;
-                max-height: none;
-                padding: 32px clamp(24px, 6vw, 100px) 60px;
+                padding: clamp(30px, 4vw, 60px) clamp(24px, 6vw, 100px) clamp(30px, 4vw, 60px) 48px;
+                padding-top: 10px;
+                display: flex;
+                flex-direction: column;
+                justify-content: flex-start;
+                position: sticky;
+                top: calc(var(--nav-height) + 24px);
+
+                max-height: calc(100vh - var(--nav-height) - 40px);
+                overflow-y: auto;
             }
 
             .related-grid {
@@ -777,35 +860,22 @@
         <div class="gallery-side reveal-left">
             <div class="gallery-thumbs" id="gallery-thumbs" role="list" aria-label="Thumbnail gambar">
                 @php
-                    $seeds = ['detail-main', 'detail-2', 'detail-3', 'detail-4'];
+                    $images = [$product->image];
                 @endphp
-                @foreach ($seeds as $i => $seed)
-                    <img src="https://picsum.photos/seed/{{ $seed }}/160/160"
-                        alt="Tampilan buket {{ $i + 1 }}" class="gallery-thumb {{ $i === 0 ? 'active' : '' }}"
-                        data-full="https://picsum.photos/seed/{{ $seed }}/900/1200" data-index="{{ $i }}"
-                        role="listitem" loading="{{ $i === 0 ? 'eager' : 'lazy' }}" />
+                @foreach ($images as $i => $img)
+                    <img src="{{ asset('storage/' . $img) }}" alt="Tampilan buket {{ $i + 1 }}"
+                        class="gallery-thumb {{ $i === 0 ? 'active' : '' }}" data-full="{{ asset('storage/' . $img) }}"
+                        data-index="{{ $i }}" role="listitem" loading="lazy" />
                 @endforeach
             </div>
 
             <div class="gallery-main-wrap">
-                <span class="gallery-badge-overlay">Terlaris</span>
 
                 <img id="gallery-main" src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->name }}"
                     class="gallery-main-img" loading="eager">
 
-                <div class="gallery-zoom-hint" aria-hidden="true">
-                    <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
-                        aria-hidden="true">
-                        <circle cx="11" cy="11" r="8" />
-                        <line x1="21" y1="21" x2="16.65" y2="16.65" />
-                        <line x1="11" y1="8" x2="11" y2="14" />
-                        <line x1="8" y1="11" x2="14" y2="11" />
-                    </svg>
-                    Perbesar
-                </div>
-
                 <div class="gallery-nav-btns" id="gallery-dots" aria-hidden="true">
-                    @foreach ($seeds as $i => $seed)
+                    @foreach ($images as $i => $img)
                         <button class="gallery-nav-dot {{ $i === 0 ? 'active' : '' }}" data-index="{{ $i }}"
                             aria-label="Gambar {{ $i + 1 }}"></button>
                     @endforeach
@@ -832,9 +902,20 @@
             </div>
 
             @if ($product->description)
-                <div class="product-desc">
+                @php
+                    $cleanDescription = $product->description;
+                    $plain = trim(strip_tags($cleanDescription));
+                    $showToggle = strlen($plain) > 200;
+                @endphp
+
+                <div class="product-desc {{ $showToggle ? 'collapsed' : '' }}" id="product-desc">
                     {!! $cleanDescription !!}
                 </div>
+
+                @if ($showToggle)
+                    <div class="desc-fade"></div>
+                    <button id="desc-toggle" class="desc-toggle">Lihat Selengkapnya</button>
+                @endif
             @else
                 <p class="product-desc" style="color:#9ca3af;">
                     Tidak ada deskripsi produk.
@@ -923,8 +1004,6 @@
                     Custom warna & ukuran tersedia. Hubungi kami untuk konsultasi gratis.
                 </p>
             </div>
-
-
         </div>
     </div>
 
@@ -992,6 +1071,28 @@
 
 @push('scripts')
     <script>
+        // ================================================================
+        // DESCRIPTION TOGGLE
+        // ================================================================
+
+        const descToggle = document.getElementById("desc-toggle");
+        const descBox = document.getElementById("product-desc");
+
+        if (descToggle && descBox) {
+
+            descToggle.addEventListener("click", () => {
+
+                descBox.classList.toggle("collapsed");
+
+                if (descBox.classList.contains("collapsed")) {
+                    descToggle.textContent = "Lihat Selengkapnya";
+                } else {
+                    descToggle.textContent = "Tampilkan Lebih Sedikit";
+                }
+
+            });
+
+        }
         // ================================================================
         //  GALLERY SWITCHING
         // ================================================================
