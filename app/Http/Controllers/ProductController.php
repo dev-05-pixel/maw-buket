@@ -73,15 +73,53 @@ class ProductController extends Controller
             ->take(4)
             ->get();
 
+        // AI Recommendation
+        $recommendedProducts = $this->getRecommendedProducts($product);
+
         $cleanDescription = str_replace(
             ['<p><br></p>', '<span class="ql-cursor">﻿</span>'],
             '',
             $product->description
         );
+
         return view('products.show', compact(
             'product',
             'cleanDescription',
-            'relatedProducts'
+            'relatedProducts',
+            'recommendedProducts'
         ));
+    }
+
+    private function getRecommendedProducts(Product $product)
+    {
+        $products = Product::where('id', '!=', $product->id)->get();
+
+        $scoredProducts = $products->map(function ($item) use ($product) {
+
+            $score = 0;
+
+            if ($item->category == $product->category) {
+                $score += 5;
+            }
+
+            $priceDiff = abs($item->price - $product->price);
+            $score += max(0, 5 - ($priceDiff / 20000));
+
+            similar_text(
+                strtolower(strip_tags($product->description)),
+                strtolower(strip_tags($item->description)),
+                $percent
+            );
+
+            $score += $percent / 20;
+
+            $item->score = $score;
+
+            return $item;
+        });
+
+        return $scoredProducts
+            ->sortByDesc('score')
+            ->take(4);
     }
 }
