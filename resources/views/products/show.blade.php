@@ -5,8 +5,8 @@
 @push('styles')
     <style>
         /* ----------------------------------------------------------------
-       AI RECOMMENDATION SECTION
-    ---------------------------------------------------------------- */
+                       AI RECOMMENDATION SECTION
+                    ---------------------------------------------------------------- */
 
         .ai-recommendation {
             padding: var(--section-gap) clamp(24px, 6vw, 100px);
@@ -22,12 +22,12 @@
         }
 
         /* ================================================================
-                                                                                                               PRODUCT DETAIL / SHOW PAGE
-                                                                                                            ================================================================ */
+                                                                                                                               PRODUCT DETAIL / SHOW PAGE
+                                                                                                                            ================================================================ */
 
         /* ----------------------------------------------------------------
-                                                                                                               BREADCRUMB STRIP
-                                                                                                            ---------------------------------------------------------------- */
+                                                                                                                               BREADCRUMB STRIP
+                                                                                                                            ---------------------------------------------------------------- */
 
         html,
         body {
@@ -75,8 +75,8 @@
         }
 
         /* ----------------------------------------------------------------
-                                                                                                               PRODUCT LAYOUT
-                                                                                                            ---------------------------------------------------------------- */
+                                                                                                                               PRODUCT LAYOUT
+                                                                                                                            ---------------------------------------------------------------- */
         .product-detail {
             display: grid;
             grid-template-columns: 55% 45%;
@@ -86,8 +86,8 @@
         }
 
         /* ----------------------------------------------------------------
-                                                                                                               GALLERY SIDE
-                                                                                                            ---------------------------------------------------------------- */
+                                                                                                                               GALLERY SIDE
+                                                                                                                            ---------------------------------------------------------------- */
         .gallery-side {
             position: sticky;
             top: var(--nav-height);
@@ -214,8 +214,8 @@
         }
 
         /* ----------------------------------------------------------------
-                                                                                                               INFO SIDE
-                                                                                                            ---------------------------------------------------------------- */
+                                                                                                                               INFO SIDE
+                                                                                                                            ---------------------------------------------------------------- */
         .info-side {
             padding: clamp(30px, 4vw, 60px) clamp(24px, 6vw, 100px) clamp(30px, 4vw, 60px) 48px;
             padding-top: 10px;
@@ -372,8 +372,8 @@
         }
 
         /* =========================
-                                                       QUILL CONTENT STYLE
-                                                    ========================= */
+                                                                       QUILL CONTENT STYLE
+                                                                    ========================= */
 
         .product-desc p {
             margin-bottom: 12px;
@@ -697,8 +697,8 @@
         }
 
         /* ----------------------------------------------------------------
-                                                                                                               RELATED PRODUCTS
-                                                                                                            ---------------------------------------------------------------- */
+                                                                                                                               RELATED PRODUCTS
+                                                                                                                            ---------------------------------------------------------------- */
         .related-section {
             padding: var(--section-gap) clamp(24px, 6vw, 100px);
             background: var(--ivory);
@@ -788,8 +788,8 @@
         }
 
         /* ----------------------------------------------------------------
-                                                                                                               RESPONSIVE
-                                                                                                            ---------------------------------------------------------------- */
+                                                                                                                               RESPONSIVE
+                                                                                                                            ---------------------------------------------------------------- */
         @media (max-width: 1100px) {
             .product-detail {
                 grid-template-columns: 1fr;
@@ -1164,46 +1164,45 @@
             let size = document.querySelector(".size-btn.active")?.innerText || "-";
             let color = document.querySelector(".color-opt.active")?.title || "-";
 
-            // Variasi kalimat pembuka
             const greetings = [
-                "Halo Maw Bouquet 🌸",
-                "Hai Maw Bouquet 👋",
-                "Halo kak, Maw Bouquet 🌷",
-                "Permisi Maw Bouquet 😊",
-                "Selamat siang Maw Bouquet 🌼"
+                "Halo Maw Bouquet,",
+                "Permisi kak,"
             ];
 
-            // Variasi kalimat penutup
+            const openings = [
+                "Saya tertarik dengan salah satu produk ini.",
+                "Saya menemukan produk berikut dan tertarik untuk memesannya.",
+                "Saya ingin menanyakan ketersediaan produk berikut:",
+                "Saya tertarik dengan produk ini:"
+            ];
+
             const closings = [
-                "Apakah produknya masih tersedia?",
-                "Apakah masih ready?",
-                "Bisa dipesan hari ini?",
-                "Masih available kah?",
-                "Boleh minta info ketersediaannya?"
+                "Apakah buket ini masih tersedia untuk dipesan?",
+                "Apakah produk ini masih available?",
+                "Boleh dibantu informasi ketersediaannya?",
+                "Apakah buket ini bisa dipesan untuk hari ini?"
             ];
 
-            // Ambil random
             let greeting = greetings[Math.floor(Math.random() * greetings.length)];
+            let opening = openings[Math.floor(Math.random() * openings.length)];
             let closing = closings[Math.floor(Math.random() * closings.length)];
 
             let message =
-                `${greeting}
-
-                Saya tertarik dengan produk berikut:
-
-                🪷 Produk : ${productName}
-                💰 Harga : ${price}
-                📏 Ukuran : ${size}
-                🎨 Warna Dominan : ${color}
-
-                Link Produk:
-                ${productLink}
-
-                ${closing}`;
+                greeting + "\n\n" +
+                opening + "\n\n" +
+                "*Detail Produk*\n" +
+                "Produk : " + productName + "\n" +
+                "Harga  : " + price + "\n" +
+                "Ukuran : " + size + "\n" +
+                "Warna  : " + color + "\n\n" +
+                "Link produk:\n" +
+                productLink + "\n\n" +
+                closing + "\nTerima kasih.";
 
             let url = "https://wa.me/6282333000472?text=" + encodeURIComponent(message);
 
             this.href = url;
+
         });
 
         const colorBtns = document.querySelectorAll(".color-opt");

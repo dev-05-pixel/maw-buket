@@ -5,12 +5,12 @@
 @push('styles')
     <style>
         /* ================================================================
-                                                                                                               PRODUCTS INDEX PAGE
-                                                                                                            ================================================================ */
+                                                                                                                           PRODUCTS INDEX PAGE
+                                                                                                                        ================================================================ */
 
         /* ----------------------------------------------------------------
-                                                                                                               PAGE HERO / BANNER
-                                                                                                            ---------------------------------------------------------------- */
+                                                                                                                           PAGE HERO / BANNER
+                                                                                                                        ---------------------------------------------------------------- */
         .page-hero {
             min-height: 52vh;
             display: flex;
@@ -168,8 +168,8 @@
         }
 
         /* ----------------------------------------------------------------
-                                                                                                               FILTER & SORT BAR
-                                                                                                            ---------------------------------------------------------------- */
+                                                                                                                           FILTER & SORT BAR
+                                                                                                                        ---------------------------------------------------------------- */
         .filter-bar {
             background: var(--ivory);
             border-bottom: 1px solid rgba(44, 36, 33, 0.08);
@@ -307,8 +307,8 @@
         }
 
         /* ----------------------------------------------------------------
-                                                                                                               PRODUCTS MAIN LAYOUT
-                                                                                                            ---------------------------------------------------------------- */
+                                                                                                                           PRODUCTS MAIN LAYOUT
+                                                                                                                        ---------------------------------------------------------------- */
         .products-main {
             padding: clamp(40px, 5vw, 80px) clamp(24px, 6vw, 100px);
             display: grid;
@@ -318,8 +318,8 @@
         }
 
         /* ----------------------------------------------------------------
-                                                                                                               SIDEBAR FILTERS
-                                                                                                            ---------------------------------------------------------------- */
+                                                                                                                           SIDEBAR FILTERS
+                                                                                                                        ---------------------------------------------------------------- */
         .sidebar {
             position: sticky;
             top: calc(var(--nav-height) + 64px);
@@ -478,8 +478,8 @@
         }
 
         /* ----------------------------------------------------------------
-                                                                                                               PRODUCTS GRID AREA
-                                                                                                            ---------------------------------------------------------------- */
+                                                                                                                           PRODUCTS GRID AREA
+                                                                                                                        ---------------------------------------------------------------- */
         .products-area {}
 
         .products-result-info {
@@ -782,8 +782,8 @@
         }
 
         /* ----------------------------------------------------------------
-                                                                                                               PAGINATION
-                                                                                                            ---------------------------------------------------------------- */
+                                                                                                                           PAGINATION
+                                                                                                                        ---------------------------------------------------------------- */
         .pagination-wrap {
             display: flex;
             justify-content: center;
@@ -839,8 +839,8 @@
         }
 
         /* ----------------------------------------------------------------
-                                                                                                               EMPTY STATE
-                                                                                                            ---------------------------------------------------------------- */
+                                                                                                                           EMPTY STATE
+                                                                                                                        ---------------------------------------------------------------- */
         .empty-state {
             grid-column: 1 / -1;
             text-align: center;
@@ -916,8 +916,8 @@
         }
 
         /* ----------------------------------------------------------------
-                                                                                                               RESPONSIVE
-                                                                                                            ---------------------------------------------------------------- */
+                                                                                                                           RESPONSIVE
+                                                                                                                        ---------------------------------------------------------------- */
         @media (max-width: 1100px) {
             .products-main {
                 grid-template-columns: 200px 1fr;
@@ -1209,10 +1209,10 @@
                             </a>
 
                             <div class="product-card-quick">
-                                <a href="https://wa.me/628xxxxxxxxxx?text=Halo, saya ingin memesan {{ urlencode($product->name) }}"
-                                    target="_blank" rel="noopener" class="product-quick-btn">
-
-                                    Pesan via WA
+                                <a href="#" class="product-quick-btn wa-order" data-name="{{ $product->name }}"
+                                    data-price="{{ number_format($product->price, 0, ',', '.') }}"
+                                    data-url="{{ route('products.show', $product->id) }}">
+                                    Pesan via WhatsApp
                                 </a>
                             </div>
 
@@ -1295,6 +1295,43 @@
 
 @push('scripts')
     <script>
+        // ================================================================
+        // WHATSAPP ORDER MESSAGE (VARIATIVE)
+        // ================================================================
+
+        document.querySelectorAll(".wa-order").forEach(btn => {
+
+            btn.addEventListener("click", function(e) {
+
+                e.preventDefault();
+
+                let name = this.dataset.name;
+                let price = this.dataset.price;
+                let link = this.dataset.url;
+
+                const messages = [
+
+                    `Halo Maw Bouquet, saya tertarik dengan produk ${name} dengan harga Rp ${price} ini. Apakah produk ini masih tersedia untuk dipesan? Berikut link produknya: ${link}`,
+
+                    `Halo kak, saya menemukan produk ${name} di website Maw Bouquet dengan harga Rp ${price} dan tertarik untuk memesannya. Apakah produk ini masih tersedia? Berikut link produk yang saya lihat: ${link}`,
+
+                    `Permisi kak, saya tertarik dengan ${name} dengan harga Rp ${price} yang ada di website. Apakah buket ini masih bisa dipesan? Berikut link produknya: ${link}`,
+
+                    `Halo Maw Bouquet, saya melihat produk ${name} dengan harga Rp ${price} di website dan tertarik untuk memesannya. Boleh dibantu informasi apakah produk ini masih tersedia? Link produk: ${link}`,
+                ];
+
+                let message = messages[Math.floor(Math.random() * messages.length)];
+
+                let phone = "6282333000472";
+
+                let url = "https://wa.me/" + phone + "?text=" + encodeURIComponent(message);
+
+                window.open(url, "_blank");
+
+            });
+
+        });
+
         // ================================================================
         //  FILTER TABS (client-side demo)
         // ================================================================

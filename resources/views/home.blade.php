@@ -5,8 +5,8 @@
 @push('styles')
     <style>
         /* ================================================================
-               CSS VARIABLES (ROOT)
-            ================================================================ */
+                       CSS VARIABLES (ROOT)
+                    ================================================================ */
         :root {
             --cream: #f8f3ec;
             --cream-dark: #f0e8de;
@@ -29,8 +29,8 @@
         }
 
         /* ----------------------------------------------------------------
-               BASE RESET / UTILITY CLASSES
-            ---------------------------------------------------------------- */
+                       BASE RESET / UTILITY CLASSES
+                    ---------------------------------------------------------------- */
         * {
             margin: 0;
             padding: 0;
@@ -159,12 +159,12 @@
         }
 
         /* ================================================================
-               HOME PAGE STYLES
-            ================================================================ */
+                       HOME PAGE STYLES
+                    ================================================================ */
 
         /* ----------------------------------------------------------------
-               HERO induk
-            ---------------------------------------------------------------- */
+                       HERO induk
+                    ---------------------------------------------------------------- */
         .hero {
             position: relative;
             min-height: 100svh;
@@ -472,8 +472,8 @@
         }
 
         /* ----------------------------------------------------------------
-               MARQUEE / TICKER
-            ---------------------------------------------------------------- */
+                       MARQUEE / TICKER
+                    ---------------------------------------------------------------- */
         .marquee-section {
             background: var(--charcoal);
             padding: 18px 0;
@@ -530,8 +530,8 @@
         }
 
         /* ----------------------------------------------------------------
-               ABOUT / INTRO SECTION
-            ---------------------------------------------------------------- */
+                       ABOUT / INTRO SECTION
+                    ---------------------------------------------------------------- */
         .about-section {
             padding: var(--section-gap) clamp(24px, 6vw, 100px);
             display: grid;
@@ -639,8 +639,8 @@
         }
 
         /* ----------------------------------------------------------------
-               PRODUCTS PREVIEW / FEATURED
-            ---------------------------------------------------------------- */
+                       PRODUCTS PREVIEW / FEATURED
+                    ---------------------------------------------------------------- */
         .products-section {
             padding: var(--section-gap) clamp(24px, 6vw, 100px);
             background: var(--ivory);
@@ -817,8 +817,8 @@
         }
 
         /* ----------------------------------------------------------------
-               CATEGORIES SECTION
-            ---------------------------------------------------------------- */
+                       CATEGORIES SECTION
+                    ---------------------------------------------------------------- */
         .categories-section {
             padding: var(--section-gap) clamp(24px, 6vw, 100px);
         }
@@ -913,8 +913,8 @@
         }
 
         /* ----------------------------------------------------------------
-               PROCESS / HOW TO ORDER
-            ---------------------------------------------------------------- */
+                       PROCESS / HOW TO ORDER
+                    ---------------------------------------------------------------- */
         .process-section {
             padding: var(--section-gap) clamp(24px, 6vw, 100px);
             background: var(--charcoal);
@@ -1056,8 +1056,8 @@
         }
 
         /* ----------------------------------------------------------------
-               TESTIMONIALS
-            ---------------------------------------------------------------- */
+                       TESTIMONIALS
+                    ---------------------------------------------------------------- */
         .testimonials-section {
             padding: var(--section-gap) clamp(24px, 6vw, 100px);
             background: var(--cream-dark);
@@ -1176,8 +1176,8 @@
         }
 
         /* ----------------------------------------------------------------
-               CTA BANNER
-            ---------------------------------------------------------------- */
+                       CTA BANNER
+                    ---------------------------------------------------------------- */
         .cta-section {
             padding: clamp(80px, 10vw, 140px) clamp(24px, 8vw, 120px);
             background: var(--cream);
@@ -1244,8 +1244,8 @@
         }
 
         /* ----------------------------------------------------------------
-               RESPONSIVE
-            ---------------------------------------------------------------- */
+                       RESPONSIVE
+                    ---------------------------------------------------------------- */
         @media (max-width: 1100px) {
             .hero {
                 grid-template-columns: 1fr;
@@ -1564,55 +1564,23 @@
         </div>
 
         <div class="products-grid">
-            @php
-                $featured = [
-                    [
-                        'seed' => 'bouquet-1',
-                        'name' => 'Blushing Garden',
-                        'category' => 'Buket Segar',
-                        'price' => 'Rp 185.000',
-                        'badge' => 'Terlaris',
-                    ],
-                    [
-                        'seed' => 'bouquet-2',
-                        'name' => 'Eternal Rose',
-                        'category' => 'Buket Kering',
-                        'price' => 'Rp 220.000',
-                        'badge' => 'Baru',
-                    ],
-                    [
-                        'seed' => 'bouquet-3',
-                        'name' => 'Soft Pampas Dream',
-                        'category' => 'Buket Pampas',
-                        'price' => 'Rp 195.000',
-                        'badge' => null,
-                    ],
-                ];
-            @endphp
 
-            @foreach ($featured as $i => $product)
+            @foreach ($featuredProducts as $i => $product)
                 <article class="product-card reveal delay-{{ $i + 1 }}">
-                    <a href="{{ url('/products/1') }}" aria-label="Lihat detail {{ $product['name'] }}">
+                    <a href="{{ url('/products/' . $product->id) }}">
                         <div class="product-card-img-wrap">
-                            @if ($product['badge'])
-                                <span class="product-card-badge">{{ $product['badge'] }}</span>
-                            @endif
-                            <img src="https://picsum.photos/seed/{{ $product['seed'] }}/600/800"
-                                alt="{{ $product['name'] }}" class="product-card-img" loading="lazy" />
-                            <div class="product-card-quick">
-                                <span class="product-quick-btn">
-                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"
-                                        aria-hidden="true">
-                                        <path
-                                            d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 00-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z M12 0C5.373 0 0 5.373 0 12c0 2.127.558 4.122 1.532 5.853L.054 23.704a.5.5 0 00.609.637l5.99-1.514A11.94 11.94 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22a9.956 9.956 0 01-5.193-1.458l-.37-.22-3.833.968.985-3.77-.242-.389A9.966 9.966 0 012 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z" />
-                                    </svg>
-                                    Pesan via WA
-                                </span>
-                            </div>
+                            <img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->name }}"
+                                class="product-card-img" loading="lazy" />
                         </div>
-                        <p class="product-card-category">{{ $product['category'] }}</p>
-                        <h3 class="product-card-name">{{ $product['name'] }}</h3>
-                        <p class="product-card-price">{{ $product['price'] }}</p>
+                        <p class="product-card-category">
+                            {{ $product->category }}
+                        </p>
+                        <h3 class="product-card-name">
+                            {{ $product->name }}
+                        </h3>
+                        <p class="product-card-price">
+                            Rp {{ number_format($product->price, 0, ',', '.') }}
+                        </p>
                     </a>
                 </article>
             @endforeach
