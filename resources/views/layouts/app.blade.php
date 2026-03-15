@@ -214,7 +214,7 @@
             z-index: 1000;
             display: flex;
             align-items: center;
-            padding: 0 clamp(24px, 5vw, 80px);
+            padding: 0 clamp(12px, 2vw, 32px);
             justify-content: space-between;
             transition: background 0.5s ease, box-shadow 0.5s ease, backdrop-filter 0.5s ease;
         }
@@ -224,6 +224,12 @@
             backdrop-filter: blur(16px);
             -webkit-backdrop-filter: blur(16px);
             box-shadow: 0 1px 0 rgba(44, 36, 33, 0.08);
+        }
+
+        #navbar .container {
+            max-width: 100%;
+            padding-left: clamp(32px, 4vw, 56px);
+            padding-right: clamp(32px, 4vw, 56px);
         }
 
         .nav-logo {

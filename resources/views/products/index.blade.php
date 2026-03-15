@@ -1187,27 +1187,14 @@
 
             <div class="products-listing" id="products-listing" role="list">
 
-
                 @foreach ($products as $i => $product)
                     <article class="product-card reveal delay-{{ min(($i % 3) + 1, 6) }}" role="listitem">
 
                         <div class="product-card-img-wrap">
-
-                            <button class="product-card-wish"
-                                onclick="event.stopPropagation(); this.classList.toggle('wished')">
-
-                                <svg viewBox="0 0 24 24">
-                                    <path
-                                        d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
-                                </svg>
-
-                            </button>
-
                             <a href="{{ route('products.show', $product->id) }}">
                                 <img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->name }}"
                                     class="product-card-img" loading="lazy" />
                             </a>
-
                             <div class="product-card-quick">
                                 <a href="#" class="product-quick-btn wa-order" data-name="{{ $product->name }}"
                                     data-price="{{ number_format($product->price, 0, ',', '.') }}"
@@ -1215,7 +1202,6 @@
                                     Pesan via WhatsApp
                                 </a>
                             </div>
-
                         </div>
 
                         <div class="product-card-meta">
