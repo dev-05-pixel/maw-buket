@@ -452,6 +452,12 @@
             overflow: hidden;
         }
 
+        footer .container {
+            max-width: 100%;
+            padding-left: clamp(44px, 6vw, 88px);
+            padding-right: clamp(44px, 6vw, 88px);
+        }
+
         footer::before {
             content: '';
             position: absolute;

@@ -15,7 +15,7 @@
 
             <div class="flex items-center gap-4">
 
-                <form method="GET">
+                <form method="GET
                     <select name="per_page" onchange="this.form.submit()" class="border rounded-lg px-3 py-2 text-sm">
 
                         <option value="5" {{ $perPage == 5 ? 'selected' : '' }}>5</option>
