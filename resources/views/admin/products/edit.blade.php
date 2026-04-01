@@ -2,171 +2,188 @@
 
 @section('title', 'Edit Produk')
 @section('header', 'Edit Produk')
+@section('subheader', 'Perbarui informasi produk')
 
 @section('content')
 
-    <div class="max-w-4xl bg-white p-10 rounded-2xl shadow-sm border">
+    @if ($errors->any())
+        <div class="mb-5 p-4 bg-red-50 border border-red-100 rounded-xl">
+            <ul class="space-y-1">
+                @foreach ($errors->all() as $error)
+                    <li class="text-sm text-red-600 flex items-center gap-2">
+                        <span class="w-1 h-1 bg-red-400 rounded-full flex-shrink-0"></span>{{ $error }}
+                    </li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
 
-        <form action="{{ route('admin.products.update', $product->id) }}" method="POST" enctype="multipart/form-data">
+    <div class="max-w-3xl">
+        <div class="bg-white rounded-2xl border border-cream-d p-8">
 
-            @csrf
-            @method('PUT')
+            <form action="{{ route('admin.products.update', $product->id) }}" method="POST" enctype="multipart/form-data">
+                @csrf @method('PUT')
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
 
-                <!-- Nama Produk -->
-                <div class="md:col-span-2">
-
-                    <label class="block text-sm mb-2 font-medium">
-                        Nama Produk
-                    </label>
-
-                    <input type="text" name="name" value="{{ old('name', $product->name) }}"
-                        class="w-full border rounded-lg px-4 py-3 focus:ring-2 focus:ring-accent outline-none">
-
-                </div>
-
-
-                <!-- Harga -->
-                <div>
-
-                    <label class="block text-sm mb-2 font-medium">
-                        Harga
-                    </label>
-
-                    <input type="number" name="price" value="{{ old('price', $product->price) }}"
-                        class="w-full border rounded-lg px-4 py-3 focus:ring-2 focus:ring-accent outline-none">
-
-                </div>
-
-
-                <!-- Kategori -->
-                <div>
-
-                    <label class="block text-sm mb-2 font-medium">
-                        Kategori
-                    </label>
-
-                    <select name="category"
-                        class="w-full border rounded-lg px-4 py-3 focus:ring-2 focus:ring-accent outline-none">
-
-                        <option value="">-- Pilih Kategori --</option>
-
-                        <option value="Buket Segar" {{ $product->category == 'Buket Segar' ? 'selected' : '' }}>
-                            Buket Segar
-                        </option>
-
-                        <option value="Buket Kering" {{ $product->category == 'Buket Kering' ? 'selected' : '' }}>
-                            Buket Kering
-                        </option>
-
-                        <option value="Pampas" {{ $product->category == 'Pampas' ? 'selected' : '' }}>
-                            Pampas
-                        </option>
-
-                        <option value="Mini Bouquet" {{ $product->category == 'Mini Bouquet' ? 'selected' : '' }}>
-                            Mini Bouquet
-                        </option>
-
-                    </select>
-
-                </div>
-
-
-                <!-- Upload Gambar -->
-                <div>
-
-                    <label class="block text-sm mb-2 font-medium">
-                        Gambar Produk
-                    </label>
-
-                    @if ($product->image)
-                        <img src="{{ asset('storage/' . $product->image) }}" class="w-24 mb-3 rounded-lg border">
-                    @endif
-
-                    <input type="file" name="image" class="w-full border rounded-lg px-4 py-3">
-
-                </div>
-
-
-                <!-- DESKRIPSI -->
-                <div class="md:col-span-2">
-
-                    <label class="block text-sm mb-2 font-medium">
-                        Deskripsi
-                    </label>
-
-                    <div class="bg-white border rounded-lg overflow-hidden">
-                        <div id="editor" style="height:200px;"></div>
+                    {{-- Nama --}}
+                    <div class="md:col-span-2">
+                        <label class="block text-xs font-semibold text-brown tracking-wide uppercase mb-2">Nama Produk <span
+                                class="text-rose">*</span></label>
+                        <input type="text" name="name" value="{{ old('name', $product->name) }}"
+                            class="w-full border border-cream-d rounded-xl px-4 py-3 text-sm text-brown focus:outline-none focus:ring-2 focus:ring-rose/30 focus:border-rose/50 transition @error('name') border-red-300 @enderror">
+                        @error('name')
+                            <p class="text-xs text-red-500 mt-1.5">{{ $message }}</p>
+                        @enderror
                     </div>
 
-                    <input type="hidden" name="description" id="description">
+                    {{-- Harga --}}
+                    <div>
+                        <label class="block text-xs font-semibold text-brown tracking-wide uppercase mb-2">Harga (Rp) <span
+                                class="text-rose">*</span></label>
+                        <div class="relative">
+                            <span class="absolute left-4 top-1/2 -translate-y-1/2 text-sm text-muted">Rp</span>
+                            <input type="number" name="price" value="{{ old('price', $product->price) }}" step="1000"
+                                min="1000"
+                                class="w-full border border-cream-d rounded-xl pl-10 pr-4 py-3 text-sm text-brown focus:outline-none focus:ring-2 focus:ring-rose/30 focus:border-rose/50 transition @error('price') border-red-300 @enderror">
+                        </div>
+                        @error('price')
+                            <p class="text-xs text-red-500 mt-1.5">{{ $message }}</p>
+                        @enderror
+                    </div>
 
-                    <textarea id="oldDescription" hidden>{!! $product->description !!}</textarea>
+                    {{-- Kategori --}}
+                    <div>
+                        <label class="block text-xs font-semibold text-brown tracking-wide uppercase mb-2">Kategori <span
+                                class="text-rose">*</span></label>
+                        <select name="category"
+                            class="w-full border border-cream-d rounded-xl px-4 py-3 text-sm text-brown focus:outline-none focus:ring-2 focus:ring-rose/30 focus:border-rose/50 transition bg-white @error('category') border-red-300 @enderror">
+                            <option value="">— Pilih Kategori —</option>
+                            @foreach (['Buket Segar', 'Buket Kering', 'Pampas', 'Mini Bouquet'] as $cat)
+                                <option value="{{ $cat }}"
+                                    {{ old('category', $product->category) == $cat ? 'selected' : '' }}>{{ $cat }}
+                                </option>
+                            @endforeach
+                        </select>
+                        @error('category')
+                            <p class="text-xs text-red-500 mt-1.5">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    {{-- Gambar --}}
+                    <div>
+                        <label class="block text-xs font-semibold text-brown tracking-wide uppercase mb-2">Gambar
+                            Produk</label>
+                        @if ($product->image)
+                            <div class="mb-3 flex items-center gap-3">
+                                <img src="{{ asset('storage/' . $product->image) }}" id="img-preview"
+                                    class="w-20 h-20 rounded-xl object-cover border border-cream-d">
+                                <p class="text-xs text-muted">Gambar saat ini.<br>Upload baru untuk mengganti.</p>
+                            </div>
+                        @endif
+                        <label id="drop-zone"
+                            class="block border-2 border-dashed border-cream-d rounded-xl p-4 text-center cursor-pointer hover:border-rose/40 hover:bg-rose/[0.02] transition">
+                            <div id="new-preview-wrap" class="hidden mb-2">
+                                <img id="new-preview" class="mx-auto max-h-24 rounded-lg object-cover">
+                            </div>
+                            <div id="upload-icon">
+                                <p class="text-xs text-muted">Klik untuk upload gambar baru</p>
+                                <p class="text-[10px] text-muted/70 mt-0.5">JPG, PNG — maks. 20MB</p>
+                            </div>
+                            <input type="file" name="image" id="image-input" class="hidden"
+                                accept="image/jpeg,image/png">
+                        </label>
+                        @error('image')
+                            <p class="text-xs text-red-500 mt-1.5">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    {{-- Deskripsi --}}
+                    <div class="md:col-span-2">
+                        <label class="block text-xs font-semibold text-brown tracking-wide uppercase mb-2">Deskripsi</label>
+                        <div
+                            class="border border-cream-d rounded-xl overflow-hidden focus-within:ring-2 focus-within:ring-rose/30 focus-within:border-rose/50 transition">
+                            <div id="editor" style="height:180px;"></div>
+                        </div>
+                        <input type="hidden" name="description" id="description">
+                        <textarea id="oldDescription" hidden>{!! $product->description !!}</textarea>
+                    </div>
 
                 </div>
 
-            </div>
-
-
-            <div class="flex justify-end gap-4 mt-10">
-
-                <a href="{{ route('admin.products.index') }}" class="px-6 py-3 rounded-lg border hover:bg-gray-100 text-sm">
-                    Batal
-                </a>
-
-                <button type="submit" class="bg-brown text-white px-8 py-3 rounded-lg hover:opacity-90 transition text-sm">
-                    Update Produk
-                </button>
-
-            </div>
-
-        </form>
-
+                <div class="flex items-center justify-end gap-3 mt-8 pt-6 border-t border-cream-d">
+                    <a href="{{ route('admin.products.index') }}"
+                        class="px-5 py-2.5 border border-cream-d rounded-xl text-sm text-brown-m hover:bg-cream transition">
+                        Batal
+                    </a>
+                    <button type="submit"
+                        class="px-6 py-2.5 bg-brown text-white rounded-xl text-sm hover:opacity-90 transition inline-flex items-center gap-2">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2.5" stroke-linecap="round">
+                            <polyline points="20 6 9 17 4 12" />
+                        </svg>
+                        Update Produk
+                    </button>
+                </div>
+            </form>
+        </div>
     </div>
 
     @push('scripts')
         <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
-
         <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
+        <style>
+            .ql-toolbar {
+                border: none !important;
+                border-bottom: 1px solid #EDE6DC !important;
+            }
 
+            .ql-container {
+                border: none !important;
+                font-family: 'DM Sans', sans-serif;
+            }
+
+            .ql-editor {
+                min-height: 140px;
+                font-size: 14px;
+            }
+
+            .ql-editor.ql-blank::before {
+                color: #9E8E84;
+                font-style: normal;
+            }
+        </style>
         <script>
             var quill = new Quill('#editor', {
                 theme: 'snow',
                 placeholder: 'Tulis deskripsi produk...',
                 modules: {
                     toolbar: [
-                        [{
-                            'header': [1, 2, 3, false]
-                        }],
-                        ['bold', 'italic', 'underline', 'strike'],
-                        [{
-                            'align': []
-                        }],
-                        [{
-                            'list': 'ordered'
-                        }, {
-                            'list': 'bullet'
-                        }],
+                        ['bold', 'italic', 'underline'],
                         ['link'],
                         ['clean']
                     ]
                 }
             });
-
-            var oldDescription = document.getElementById('oldDescription').value;
-
-            if (oldDescription) {
-                quill.root.innerHTML = oldDescription;
-                document.getElementById('description').value = oldDescription;
+            var old = document.getElementById('oldDescription').value;
+            if (old) {
+                quill.root.innerHTML = old;
+                document.getElementById('description').value = old;
             }
+            quill.on('text-change', () => document.getElementById('description').value = quill.root.innerHTML);
+            document.querySelector('form').addEventListener('submit', () => document.getElementById('description').value = quill
+                .root.innerHTML);
 
-            quill.on('text-change', function() {
-                document.getElementById('description').value = quill.root.innerHTML;
-            });
-
-            document.querySelector('form').addEventListener('submit', function() {
-                document.getElementById('description').value = quill.root.innerHTML;
+            document.getElementById('image-input').addEventListener('change', function() {
+                const file = this.files[0];
+                if (!file) return;
+                const reader = new FileReader();
+                reader.onload = e => {
+                    document.getElementById('new-preview').src = e.target.result;
+                    document.getElementById('new-preview-wrap').classList.remove('hidden');
+                    document.getElementById('upload-icon').classList.add('hidden');
+                };
+                reader.readAsDataURL(file);
             });
         </script>
     @endpush

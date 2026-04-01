@@ -1,174 +1,188 @@
+{{-- CREATE: resources/views/admin/products/create.blade.php --}}
 @extends('admin.layouts.app')
 
 @section('title', 'Tambah Produk')
 @section('header', 'Tambah Produk')
+@section('subheader', 'Tambahkan produk baru ke katalog')
 
 @section('content')
 
     @if ($errors->any())
-        <div class="mb-6 p-4 bg-red-100 text-red-700 rounded-lg">
-            <ul class="list-disc pl-5 text-sm">
+        <div class="mb-5 p-4 bg-red-50 border border-red-100 rounded-xl">
+            <ul class="space-y-1">
                 @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
+                    <li class="text-sm text-red-600 flex items-center gap-2">
+                        <span class="w-1 h-1 bg-red-400 rounded-full flex-shrink-0"></span>{{ $error }}
+                    </li>
                 @endforeach
             </ul>
         </div>
     @endif
 
-    <div class="max-w-4xl bg-white p-10 rounded-2xl shadow-sm border">
+    <div class="max-w-3xl">
+        <div class="bg-white rounded-2xl border border-cream-d p-8">
 
-        <form action="{{ route('admin.products.store') }}" method="POST" enctype="multipart/form-data">
-            @csrf
+            <form action="{{ route('admin.products.store') }}" method="POST" enctype="multipart/form-data">
+                @csrf
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
 
-                <!-- Nama Produk -->
-                <div class="md:col-span-2">
-                    <label class="block text-sm mb-2 font-medium">
-                        Nama Produk
-                    </label>
-                    <input type="text" name="name" value="{{ old('name') }}" placeholder="Masukkan nama produk"
-                        class="w-full border rounded-lg px-4 py-3 focus:ring-2 focus:ring-accent outline-none
-@error('name') border-red-500 @enderror"
-                        required @error('name') border-red-500 @enderror" required>
-
-                    @error('name')
-                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-                    @enderror
-                </div>
-
-                <!-- Harga -->
-                <div>
-                    <label class="block text-sm mb-2 font-medium">
-                        Harga (Rp)
-                    </label>
-                    <input type="number" name="price" value="{{ old('price') }}" placeholder="Masukkan harga produk"
-                        step="1000" min="1000"
-                        class="w-full border rounded-lg px-4 py-3 focus:ring-2 focus:ring-accent outline-none
-@error('price') border-red-500 @enderror"
-                        required @error('price') border-red-500 @enderror" required>
-
-                    @error('price')
-                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-                    @enderror
-                </div>
-
-                <!-- Kategori -->
-                <div>
-                    <label class="block text-sm mb-2 font-medium">
-                        Kategori
-                    </label>
-                    <select name="category"
-                        class="w-full border rounded-lg px-4 py-3 focus:ring-2 focus:ring-accent outline-none
-    @error('category') border-red-500 @enderror"
-                        required>
-
-                        <option value="">-- Pilih Kategori --</option>
-                        <option value="Buket Segar" {{ old('category') == 'Buket Segar' ? 'selected' : '' }}>Buket Segar
-                        </option>
-                        <option value="Buket Kering" {{ old('category') == 'Buket Kering' ? 'selected' : '' }}>Buket Kering
-                        </option>
-                        <option value="Pampas" {{ old('category') == 'Pampas' ? 'selected' : '' }}>Pampas</option>
-                        <option value="Mini Bouquet" {{ old('category') == 'Mini Bouquet' ? 'selected' : '' }}>Mini Bouquet
-                        </option>
-                    </select>
-
-                    @error('category')
-                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-                    @enderror
-                </div>
-
-                <!-- Upload Gambar -->
-                <div>
-                    <label class="block text-sm mb-2 font-medium">
-                        Gambar Produk
-                    </label>
-                    <p class="text-xs text-gray-500 mb-2">
-                        Format: JPG / PNG, maksimal 20MB
-                    </p>
-                    <input type="file" name="image"
-                        class="w-full border rounded-lg px-4 py-3 bg-white
-    @error('image') border-red-500 @enderror"
-                        required>
-
-                    @error('image')
-                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-                    @enderror
-                </div>
-
-                <!-- Deskripsi -->
-                <div class="md:col-span-2">
-                    <label class="block text-sm mb-2 font-medium">
-                        Deskripsi
-                    </label>
-                    <div class="bg-white border rounded-lg overflow-hidden">
-                        <div id="editor" style="height:200px;"></div>
+                    {{-- Nama --}}
+                    <div class="md:col-span-2">
+                        <label class="block text-xs font-semibold text-brown tracking-wide uppercase mb-2">Nama Produk <span
+                                class="text-rose">*</span></label>
+                        <input type="text" name="name" value="{{ old('name') }}"
+                            placeholder="Contoh: Buket Mawar Merah Premium"
+                            class="w-full border border-cream-d rounded-xl px-4 py-3 text-sm text-brown placeholder:text-muted focus:outline-none focus:ring-2 focus:ring-rose/30 focus:border-rose/50 transition @error('name') border-red-300 bg-red-50/50 @enderror">
+                        @error('name')
+                            <p class="text-xs text-red-500 mt-1.5">{{ $message }}</p>
+                        @enderror
                     </div>
-                    <input type="hidden" name="description" id="description">
 
-                    @error('description')
-                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-                    @enderror
+                    {{-- Harga --}}
+                    <div>
+                        <label class="block text-xs font-semibold text-brown tracking-wide uppercase mb-2">Harga (Rp) <span
+                                class="text-rose">*</span></label>
+                        <div class="relative">
+                            <span class="absolute left-4 top-1/2 -translate-y-1/2 text-sm text-muted">Rp</span>
+                            <input type="number" name="price" value="{{ old('price') }}" placeholder="150000"
+                                step="1000" min="1000"
+                                class="w-full border border-cream-d rounded-xl pl-10 pr-4 py-3 text-sm text-brown placeholder:text-muted focus:outline-none focus:ring-2 focus:ring-rose/30 focus:border-rose/50 transition @error('price') border-red-300 bg-red-50/50 @enderror">
+                        </div>
+                        @error('price')
+                            <p class="text-xs text-red-500 mt-1.5">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    {{-- Kategori --}}
+                    <div>
+                        <label class="block text-xs font-semibold text-brown tracking-wide uppercase mb-2">Kategori <span
+                                class="text-rose">*</span></label>
+                        <select name="category"
+                            class="w-full border border-cream-d rounded-xl px-4 py-3 text-sm text-brown focus:outline-none focus:ring-2 focus:ring-rose/30 focus:border-rose/50 transition bg-white @error('category') border-red-300 @enderror">
+                            <option value="">— Pilih Kategori —</option>
+                            @foreach (['Buket Segar', 'Buket Kering', 'Pampas', 'Mini Bouquet'] as $cat)
+                                <option value="{{ $cat }}" {{ old('category') == $cat ? 'selected' : '' }}>
+                                    {{ $cat }}</option>
+                            @endforeach
+                        </select>
+                        @error('category')
+                            <p class="text-xs text-red-500 mt-1.5">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    {{-- Gambar --}}
+                    <div>
+                        <label class="block text-xs font-semibold text-brown tracking-wide uppercase mb-2">Gambar Produk
+                            <span class="text-rose">*</span></label>
+                        <label id="drop-zone"
+                            class="block border-2 border-dashed border-cream-d rounded-xl p-6 text-center cursor-pointer hover:border-rose/40 hover:bg-rose/[0.02] transition group">
+                            <div id="preview-wrap" class="hidden mb-3">
+                                <img id="img-preview" class="mx-auto max-h-32 rounded-lg object-cover">
+                            </div>
+                            <div id="upload-icon">
+                                <svg class="mx-auto mb-2 text-muted group-hover:text-rose transition" width="24"
+                                    height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4" />
+                                    <polyline points="17 8 12 3 7 8" />
+                                    <line x1="12" y1="3" x2="12" y2="15" />
+                                </svg>
+                                <p class="text-xs text-muted">Klik atau seret gambar ke sini</p>
+                                <p class="text-[10px] text-muted/70 mt-1">JPG, PNG — maks. 20MB</p>
+                            </div>
+                            <input type="file" name="image" id="image-input" class="hidden"
+                                accept="image/jpeg,image/png" required>
+                        </label>
+                        @error('image')
+                            <p class="text-xs text-red-500 mt-1.5">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    {{-- Deskripsi --}}
+                    <div class="md:col-span-2">
+                        <label class="block text-xs font-semibold text-brown tracking-wide uppercase mb-2">Deskripsi</label>
+                        <div
+                            class="border border-cream-d rounded-xl overflow-hidden focus-within:ring-2 focus-within:ring-rose/30 focus-within:border-rose/50 transition">
+                            <div id="editor" style="height:180px;"></div>
+                        </div>
+                        <input type="hidden" name="description" id="description">
+                        @error('description')
+                            <p class="text-xs text-red-500 mt-1.5">{{ $message }}</p>
+                        @enderror
+                    </div>
+
                 </div>
 
-            </div>
-
-            <!-- Action Buttons -->
-            <div class="flex justify-end gap-4 mt-10">
-
-                <a href="{{ route('admin.products.index') }}"
-                    class="px-6 py-3 rounded-lg border hover:bg-gray-100 text-sm">
-                    Batal
-                </a>
-
-                <button type="submit" class="bg-brown text-white px-8 py-3 rounded-lg hover:opacity-90 transition text-sm">
-                    Simpan Produk
-                </button>
-            </div>
-        </form>
+                <div class="flex items-center justify-end gap-3 mt-8 pt-6 border-t border-cream-d">
+                    <a href="{{ route('admin.products.index') }}"
+                        class="px-5 py-2.5 border border-cream-d rounded-xl text-sm text-brown-m hover:bg-cream transition">
+                        Batal
+                    </a>
+                    <button type="submit"
+                        class="px-6 py-2.5 bg-brown text-white rounded-xl text-sm hover:opacity-90 transition inline-flex items-center gap-2">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2.5" stroke-linecap="round">
+                            <polyline points="20 6 9 17 4 12" />
+                        </svg>
+                        Simpan Produk
+                    </button>
+                </div>
+            </form>
+        </div>
     </div>
 
     @push('scripts')
         <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
         <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
-
         <style>
+            .ql-toolbar {
+                border: none !important;
+                border-bottom: 1px solid #EDE6DC !important;
+            }
+
+            .ql-container {
+                border: none !important;
+                font-family: 'DM Sans', sans-serif;
+            }
+
             .ql-editor {
-                height: 160px;
-                overflow-y: auto;
+                min-height: 140px;
+                font-size: 14px;
+            }
+
+            .ql-editor.ql-blank::before {
+                color: #9E8E84;
+                font-style: normal;
             }
         </style>
-
         <script>
             var quill = new Quill('#editor', {
                 theme: 'snow',
                 placeholder: 'Tulis deskripsi produk...',
                 modules: {
                     toolbar: [
-                        [{
-                            'header': [1, 2, 3, false]
-                        }],
-                        ['bold', 'italic', 'underline', 'strike'],
-                        [{
-                            'align': []
-                        }],
-                        [{
-                            'list': 'ordered'
-                        }, {
-                            'list': 'bullet'
-                        }],
+                        ['bold', 'italic', 'underline'],
                         ['link'],
                         ['clean']
                     ]
                 }
             });
+            quill.on('text-change', () => document.getElementById('description').value = quill.root.innerHTML);
+            document.querySelector('form').addEventListener('submit', () => document.getElementById('description').value = quill
+                .root.innerHTML);
 
-            quill.on('text-change', function() {
-                document.getElementById('description').value = quill.root.innerHTML;
-            });
-
-            document.querySelector('form').addEventListener('submit', function() {
-                document.getElementById('description').value = quill.root.innerHTML;
+            // Image preview
+            document.getElementById('image-input').addEventListener('change', function() {
+                const file = this.files[0];
+                if (!file) return;
+                const reader = new FileReader();
+                reader.onload = e => {
+                    document.getElementById('img-preview').src = e.target.result;
+                    document.getElementById('preview-wrap').classList.remove('hidden');
+                    document.getElementById('upload-icon').classList.add('hidden');
+                };
+                reader.readAsDataURL(file);
             });
         </script>
     @endpush
