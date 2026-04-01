@@ -17,6 +17,7 @@ class ContactMessage extends Model
         'purpose',
         'color_pref',
         'message',
+        'is_read',
     ];
 
     protected static function boot(): void
