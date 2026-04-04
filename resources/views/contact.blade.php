@@ -74,6 +74,8 @@
         .contact-hero-title-overflow {
             overflow: hidden;
             display: block;
+            padding-bottom: 0.15em;
+            margin-bottom: -0.15em;
         }
 
         .contact-hero-title-line {
