@@ -395,7 +395,7 @@
     {{-- Overlay fixed ke viewport, modal selalu di tengah layar --}}
     <div id="global-delete-modal" class="modal-overlay" onclick="handleModalOverlayClick(event)">
         <div class="modal-box p-6">
-            <div class="w-12 h-12 bg-red-50 rounded-xl flex items-center justify-center mb-4">
+            <div class="w-12 h-12 bg-red-50 rounded-xl flex items-center justify-center mb-4 mx-auto">
                 <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#EF4444"
                     stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
                     <polyline points="3 6 5 6 21 6" />
