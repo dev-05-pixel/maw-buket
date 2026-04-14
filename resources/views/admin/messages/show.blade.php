@@ -6,7 +6,7 @@
 
 @section('content')
 
-    <div class="max-w-2xl space-y-5">
+    <div class="space-y-5">
 
         <a href="/admin/messages"
             class="inline-flex items-center gap-2 text-sm text-muted hover:text-brown transition-colors">
