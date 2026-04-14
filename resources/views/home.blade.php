@@ -5,8 +5,8 @@
 @push('styles')
     <style>
         /* ================================================================
-                               CSS VARIABLES (ROOT)
-                            ================================================================ */
+                                                   CSS VARIABLES (ROOT)
+                                                ================================================================ */
         :root {
             --cream: #f8f3ec;
             --cream-dark: #f0e8de;
@@ -29,8 +29,8 @@
         }
 
         /* ----------------------------------------------------------------
-                               BASE RESET / UTILITY CLASSES
-                            ---------------------------------------------------------------- */
+                                                   BASE RESET / UTILITY CLASSES
+                                                ---------------------------------------------------------------- */
         * {
             margin: 0;
             padding: 0;
@@ -54,8 +54,8 @@
             background: var(--rose);
             color: var(--white);
             border: none;
-            padding: 16px 36px;
-            font-size: 13px;
+            padding: 12px 28px;
+            font-size: 12px;
             font-weight: 500;
             letter-spacing: 0.12em;
             text-transform: uppercase;
@@ -77,8 +77,8 @@
             background: transparent;
             color: var(--charcoal);
             border: 1px solid var(--charcoal);
-            padding: 15px 34px;
-            font-size: 13px;
+            padding: 11px 26px;
+            font-size: 12px;
             font-weight: 500;
             letter-spacing: 0.12em;
             text-transform: uppercase;
@@ -159,20 +159,20 @@
         }
 
         /* ================================================================
-                               HOME PAGE STYLES
-                            ================================================================ */
+                                                   HOME PAGE STYLES
+                                                ================================================================ */
 
         /* ----------------------------------------------------------------
-                               HERO induk
-                            ---------------------------------------------------------------- */
+                                                   HERO induk
+                                                ---------------------------------------------------------------- */
         .hero {
             position: relative;
-            min-height: 100svh;
+            height: calc(100svh - 70px);
             display: grid;
-            grid-template-columns: 1fr 1fr;
+            grid-template-columns: 38fr 62fr;
             overflow: hidden;
             background: var(--cream);
-            padding-bottom: 80px;
+            padding-bottom: 0;
         }
 
         .hero-left {
@@ -180,8 +180,9 @@
             display: flex;
             flex-direction: column;
             justify-content: center;
-            padding: clamp(40px, 6vw, 100px) clamp(30px, 5vw, 80px);
-            padding-right: 40px;
+            padding: clamp(28px, 4vw, 72px) clamp(24px, 4vw, 64px);
+            padding-left: clamp(80px, 6vw, 120px);
+            padding-right: 32px;
             z-index: 2;
         }
 
@@ -194,7 +195,7 @@
             letter-spacing: 0.4em;
             text-transform: uppercase;
             color: var(--rose);
-            margin-bottom: 28px;
+            margin-bottom: 16px;
             overflow: hidden;
         }
 
@@ -229,12 +230,12 @@
 
         .hero-title {
             font-family: var(--font-display);
-            font-size: clamp(52px, 7.5vw, 110px);
+            font-size: clamp(28px, 3.8vw, 56px);
             font-weight: 300;
             line-height: 1.25;
             letter-spacing: -0.01em;
             color: var(--charcoal);
-            margin-bottom: 32px;
+            margin-bottom: 14px;
             padding-bottom: 0.1em;
         }
 
@@ -275,12 +276,12 @@
         }
 
         .hero-desc {
-            font-size: clamp(14px, 1.4vw, 16px);
+            font-size: clamp(12px, 1vw, 14px);
             font-weight: 300;
             color: var(--charcoal-mid);
             max-width: 380px;
-            line-height: 1.9;
-            margin-bottom: 44px;
+            line-height: 1.65;
+            margin-bottom: 20px;
             opacity: 0;
             transform: translateY(24px);
             animation: fadeUp 0.9s 2.4s var(--ease-out-expo) forwards;
@@ -306,10 +307,9 @@
         /* gulir ke bawah */
         .hero-scroll-hint {
             position: absolute;
-            bottom: 20px;
+            bottom: 16px;
             left: 50%;
             transform: translateX(-50%);
-            /* left: clamp(30px, 5vw, 80px); */
             display: flex;
             align-items: center;
             gap: 10px;
@@ -317,7 +317,6 @@
             animation: fadeUp 0.8s 3s var(--ease-out-expo) forwards;
             justify-content: center;
             z-index: 10;
-            /* tambahkan ini */
         }
 
         .hero-scroll-hint span {
@@ -378,6 +377,7 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
+            object-position: center;
             transform: scale(1.08);
             animation: heroImgReveal 1.6s 1.6s var(--ease-out-expo) forwards;
         }
@@ -391,7 +391,7 @@
         .hero-img-overlay {
             position: absolute;
             inset: 0;
-            background: linear-gradient(105deg, var(--cream) 0%, transparent 40%);
+            background: linear-gradient(to right, var(--cream) 0%, rgba(248, 243, 236, 0.6) 18%, transparent 45%);
             z-index: 1;
         }
 
@@ -474,8 +474,8 @@
         }
 
         /* ----------------------------------------------------------------
-                               MARQUEE / TICKER
-                            ---------------------------------------------------------------- */
+                                                   MARQUEE / TICKER
+                                                ---------------------------------------------------------------- */
         .marquee-section {
             background: var(--charcoal);
             padding: 18px 0;
@@ -532,8 +532,8 @@
         }
 
         /* ----------------------------------------------------------------
-                               ABOUT / INTRO SECTION
-                            ---------------------------------------------------------------- */
+                                                   ABOUT / INTRO SECTION
+                                                ---------------------------------------------------------------- */
         .about-section {
             padding: var(--section-gap) clamp(24px, 6vw, 100px);
             display: grid;
@@ -641,8 +641,8 @@
         }
 
         /* ----------------------------------------------------------------
-                               PRODUCTS PREVIEW / FEATURED
-                            ---------------------------------------------------------------- */
+                                                   PRODUCTS PREVIEW / FEATURED
+                                                ---------------------------------------------------------------- */
         .products-section {
             padding: var(--section-gap) clamp(24px, 6vw, 100px);
             background: var(--ivory);
@@ -819,8 +819,8 @@
         }
 
         /* ----------------------------------------------------------------
-                               CATEGORIES SECTION
-                            ---------------------------------------------------------------- */
+                                                   CATEGORIES SECTION
+                                                ---------------------------------------------------------------- */
         .categories-section {
             padding: var(--section-gap) clamp(24px, 6vw, 100px);
         }
@@ -915,8 +915,8 @@
         }
 
         /* ----------------------------------------------------------------
-                               PROCESS / HOW TO ORDER
-                            ---------------------------------------------------------------- */
+                                                   PROCESS / HOW TO ORDER
+                                                ---------------------------------------------------------------- */
         .process-section {
             padding: var(--section-gap) clamp(24px, 6vw, 100px);
             background: var(--charcoal);
@@ -1058,8 +1058,8 @@
         }
 
         /* ----------------------------------------------------------------
-                               TESTIMONIALS
-                            ---------------------------------------------------------------- */
+                                                   TESTIMONIALS
+                                                ---------------------------------------------------------------- */
         .testimonials-section {
             padding: var(--section-gap) clamp(24px, 6vw, 100px);
             background: var(--cream-dark);
@@ -1178,8 +1178,8 @@
         }
 
         /* ----------------------------------------------------------------
-                               CTA BANNER
-                            ---------------------------------------------------------------- */
+                                                   CTA BANNER
+                                                ---------------------------------------------------------------- */
         .cta-section {
             padding: clamp(80px, 10vw, 140px) clamp(24px, 8vw, 120px);
             background: var(--cream);
@@ -1246,8 +1246,8 @@
         }
 
         /* ----------------------------------------------------------------
-                               RESPONSIVE
-                            ---------------------------------------------------------------- */
+                                                   RESPONSIVE
+                                                ---------------------------------------------------------------- */
         @media (max-width: 1100px) {
             .hero {
                 grid-template-columns: 1fr;
@@ -1449,15 +1449,9 @@
         </div>
 
         <div class="hero-right">
-            <img src="https://picsum.photos/seed/bouquet-hero/900/1200" alt="Beautiful fresh flower bouquet"
-                class="hero-img-main" loading="eager" fetchpriority="high" />
+            <img src="{{ asset('assets/main banner.svg') }}" alt="Beautiful fresh flower bouquet" class="hero-img-main"
+                loading="eager" fetchpriority="high" />
             <div class="hero-img-overlay" aria-hidden="true"></div>
-        </div>
-
-        <!-- PINDAH KE SINI -->
-        <div class="hero-scroll-hint" aria-hidden="true">
-            <div class="scroll-arrow"></div>
-            <span>Gulir ke bawah</span>
         </div>
 
     </section>
@@ -1491,10 +1485,10 @@
 ================================================================ --}}
     <section class="about-section" aria-label="About Maw Bouquet">
         <div class="about-img-wrap reveal-left">
-            <img src="https://picsum.photos/seed/maw-about/640/780" alt="Florist arranging fresh flowers"
-                class="about-img-main" loading="lazy" />
-            <img src="https://picsum.photos/seed/maw-about-2/480/520" alt="Close up of flower arrangement"
-                class="about-img-accent" loading="lazy" />
+            <img src="{{ asset('assets/about1.png') }}" alt="Florist arranging fresh flowers" class="about-img-main"
+                loading="lazy" />
+            <img src="{{ asset('assets/about2.png') }}" alt="Close up of flower arrangement" class="about-img-accent"
+                loading="lazy" />
             <span class="about-img-tag">Est. 2020</span>
         </div>
 
@@ -1602,23 +1596,27 @@
 
         <div class="categories-grid">
             @php
-                $categories = [
-                    ['seed' => 'cat-fresh', 'name' => 'Buket Segar', 'count' => '12 Produk'],
-                    ['seed' => 'cat-dried', 'name' => 'Buket Kering', 'count' => '8 Produk'],
-                    ['seed' => 'cat-pampas', 'name' => 'Pampas & Dried', 'count' => '10 Produk'],
-                    ['seed' => 'cat-mini', 'name' => 'Mini Bouquet', 'count' => '6 Produk'],
+                $exploreImages = [
+                    asset('assets/explore1.png'),
+                    asset('assets/explore2.png'),
+                    asset('assets/explore3.png'),
+                    asset('assets/explore4.png'),
                 ];
+                $exploreCategories = array_keys($categoryCounts);
             @endphp
 
-            @foreach ($categories as $i => $cat)
-                <a href="{{ url('/products?category=' . Str::slug($cat['name'])) }}"
-                    class="category-card reveal delay-{{ $i + 1 }}" aria-label="{{ $cat['name'] }}">
-                    <img src="https://picsum.photos/seed/{{ $cat['seed'] }}/{{ $i === 0 ? '600/900' : '600/400' }}"
-                        alt="{{ $cat['name'] }}" class="category-img" loading="lazy" />
+            @foreach ($exploreCategories as $i => $catName)
+                @if ($i >= 4)
+                    @break
+                @endif
+                <a href="{{ route('products.index', ['category' => $catName]) }}"
+                    class="category-card reveal delay-{{ $i + 1 }}" aria-label="{{ $catName }}">
+                    <img src="{{ $exploreImages[$i] }}" alt="{{ $catName }}" class="category-img"
+                        loading="lazy" />
                     <div class="category-overlay" aria-hidden="true"></div>
                     <div class="category-content">
-                        <p class="category-name">{{ $cat['name'] }}</p>
-                        <p class="category-count">{{ $cat['count'] }}</p>
+                        <p class="category-name">{{ $catName }}</p>
+                        <p class="category-count">{{ $categoryCounts[$catName] }} Produk</p>
                         <span class="category-arrow">
                             Lihat semua
                             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
@@ -1745,7 +1743,6 @@
             @endforeach
         </div>
     </section>
-
     {{-- ================================================================
      CTA BANNER
     ================================================================ --}}
