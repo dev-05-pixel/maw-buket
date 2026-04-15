@@ -5,12 +5,12 @@
 @push('styles')
     <style>
         /* ================================================================
-                                                                                                                           PRODUCTS INDEX PAGE
-                                                                                                                        ================================================================ */
+                                                                                                                                   PRODUCTS INDEX PAGE
+                                                                                                                                ================================================================ */
 
         /* ----------------------------------------------------------------
-                                                                                                                           PAGE HERO / BANNER
-                                                                                                                        ---------------------------------------------------------------- */
+                                                                                                                                   PAGE HERO / BANNER
+                                                                                                                                ---------------------------------------------------------------- */
         .page-hero {
             min-height: 52vh;
             display: flex;
@@ -168,8 +168,8 @@
         }
 
         /* ----------------------------------------------------------------
-                                                                                                                           FILTER & SORT BAR
-                                                                                                                        ---------------------------------------------------------------- */
+                                                                                                                                   FILTER & SORT BAR
+                                                                                                                                ---------------------------------------------------------------- */
         .filter-bar {
             background: var(--ivory);
             border-bottom: 1px solid rgba(44, 36, 33, 0.08);
@@ -307,8 +307,8 @@
         }
 
         /* ----------------------------------------------------------------
-                                                                                                                           PRODUCTS MAIN LAYOUT
-                                                                                                                        ---------------------------------------------------------------- */
+                                                                                                                                   PRODUCTS MAIN LAYOUT
+                                                                                                                                ---------------------------------------------------------------- */
         .products-main {
             padding: clamp(40px, 5vw, 80px) clamp(24px, 6vw, 100px);
             display: grid;
@@ -318,8 +318,8 @@
         }
 
         /* ----------------------------------------------------------------
-                                                                                                                           SIDEBAR FILTERS
-                                                                                                                        ---------------------------------------------------------------- */
+                                                                                                                                   SIDEBAR FILTERS
+                                                                                                                                ---------------------------------------------------------------- */
         .sidebar {
             position: sticky;
             top: calc(var(--nav-height) + 64px);
@@ -478,8 +478,8 @@
         }
 
         /* ----------------------------------------------------------------
-                                                                                                                           PRODUCTS GRID AREA
-                                                                                                                        ---------------------------------------------------------------- */
+                                                                                                                                   PRODUCTS GRID AREA
+                                                                                                                                ---------------------------------------------------------------- */
         .products-area {}
 
         .products-result-info {
@@ -782,8 +782,8 @@
         }
 
         /* ----------------------------------------------------------------
-                                                                                                                           PAGINATION
-                                                                                                                        ---------------------------------------------------------------- */
+                                                                                                                                   PAGINATION
+                                                                                                                                ---------------------------------------------------------------- */
         .pagination-wrap {
             display: flex;
             justify-content: center;
@@ -839,8 +839,8 @@
         }
 
         /* ----------------------------------------------------------------
-                                                                                                                           EMPTY STATE
-                                                                                                                        ---------------------------------------------------------------- */
+                                                                                                                                   EMPTY STATE
+                                                                                                                                ---------------------------------------------------------------- */
         .empty-state {
             grid-column: 1 / -1;
             text-align: center;
@@ -916,8 +916,8 @@
         }
 
         /* ----------------------------------------------------------------
-                                                                                                                           RESPONSIVE
-                                                                                                                        ---------------------------------------------------------------- */
+                                                                                                                                   RESPONSIVE
+                                                                                                                                ---------------------------------------------------------------- */
         @media (max-width: 1100px) {
             .products-main {
                 grid-template-columns: 200px 1fr;
@@ -978,9 +978,11 @@
      PAGE HERO
 ================================================================ --}}
     <header class="page-hero" aria-label="Products page hero">
-        <img src="https://picsum.photos/seed/products-hero/1600/800" alt="Collection of beautiful bouquets"
-            class="page-hero-bg" loading="eager" fetchpriority="high" />
-        <div class="page-hero-overlay" aria-hidden="true"></div>
+        <img src="{{ asset('assets/collection banner.svg') }}" alt="Collection of beautiful bouquets" class="page-hero-bg"
+            loading="eager" fetchpriority="high" style="opacity: 1; object-fit: cover; object-position: center;" />
+        <div class="page-hero-overlay" aria-hidden="true"
+            style="background: linear-gradient(90deg, rgba(44,36,33,0.97) 0%, rgba(44,36,33,0.97) 38%, rgba(44,36,33,0.3) 58%, rgba(44,36,33,0.0) 100%);">
+        </div>
 
         <div class="page-hero-content">
             <p class="page-hero-label"></p>

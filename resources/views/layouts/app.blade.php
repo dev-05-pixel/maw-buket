@@ -940,7 +940,7 @@
                 <div class="reveal">
                     <p class="footer-brand-name">Maw <span>Bouquet</span></p>
                     <p class="footer-tagline">
-                        Setiap rangkaian adalah karya seni yang tumbuh dari hati — untuk momen yang tak terlupakan dalam
+                        Setiap rangkaian adalah karya seni yang tumbuh dari hati untuk momen yang tak terlupakan dalam
                         hidup Anda.
                     </p>
                     <div class="footer-socials">

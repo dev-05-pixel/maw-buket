@@ -6,12 +6,15 @@
     <style>
         .contact-hero {
             background: var(--charcoal);
-            padding: clamp(100px, 14vw, 180px) clamp(24px, 6vw, 100px) clamp(60px, 8vw, 100px);
+            min-height: 52vh;
+            height: 52vh;
+            max-height: 52vh;
+            padding: 0 clamp(24px, 6vw, 100px) clamp(48px, 7vw, 90px);
             position: relative;
             overflow: hidden;
             display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 60px;
+            grid-template-columns: 1.2fr 0.8fr;
+            gap: 32px;
             align-items: end;
         }
 
@@ -59,7 +62,7 @@
 
         .contact-hero-title {
             font-family: var(--font-display);
-            font-size: clamp(48px, 7vw, 100px);
+            font-size: clamp(32px, 4.5vw, 64px);
             font-weight: 300;
             line-height: .95;
             color: var(--cream);
@@ -103,18 +106,22 @@
         }
 
         .contact-hero-right {
-            position: relative;
-            z-index: 1;
+            mposition: absolute;
+            bottom: -30px;
+            left: -80%;
+            max-width: 300px;
+
+            z-index: 2;
             opacity: 0;
             transform: translateY(24px);
             animation: fadeUpIn .9s 2.4s var(--ease-out-expo) forwards;
         }
 
         .contact-hero-desc {
-            font-size: clamp(14px, 1.4vw, 16px);
+            font-size: 13px;
             font-weight: 300;
             color: rgba(248, 243, 236, .65);
-            line-height: 1.9;
+            line-height: 1.7;
             max-width: 400px;
             margin-bottom: 40px;
         }
@@ -758,6 +765,11 @@
 @section('content')
 
     <header class="contact-hero" aria-label="Contact hero">
+        <img src="{{ asset('assets/contact banner.svg') }}" alt="Contact hero background"
+            style="position:absolute; inset:0; width:100%; height:100%; object-fit:cover; object-position:center right; opacity:1; z-index:0;" />
+        <div
+            style="position:absolute; inset:0; z-index:0; background: linear-gradient(90deg, rgba(44,36,33,1) 0%, rgba(44,36,33,1) 50%, rgba(44,36,33,0.4) 75%, rgba(44,36,33,0.0) 100%);">
+        </div>
         <div style="position:relative;z-index:1;">
             <p class="contact-hero-label">Hubungi Kami</p>
             <h1 class="contact-hero-title">
@@ -768,7 +780,7 @@
             </h1>
         </div>
 
-        <div class="contact-hero-right">
+        <div class="contact-hero-right" style="position:relative;z-index:1;">
             <p class="contact-hero-desc">Punya pertanyaan, ingin memesan, atau sekadar ingin tahu lebih banyak? Kami selalu
                 siap membantu Anda menemukan buket yang sempurna.</p>
             <div class="contact-hero-channels" role="list">
