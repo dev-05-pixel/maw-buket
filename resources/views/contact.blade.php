@@ -6,9 +6,9 @@
     <style>
         .contact-hero {
             background: var(--charcoal);
-            min-height: 52vh;
-            height: 52vh;
-            max-height: 52vh;
+            min-height: 59vh;
+            height: 59vh;
+            max-height: 59vh;
             padding: 0 clamp(24px, 6vw, 100px) clamp(48px, 7vw, 90px);
             position: relative;
             overflow: hidden;
