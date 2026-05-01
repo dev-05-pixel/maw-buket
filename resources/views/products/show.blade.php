@@ -4,30 +4,6 @@
 
 @push('styles')
     <style>
-        /* ----------------------------------------------------------------
-                       AI RECOMMENDATION SECTION
-                    ---------------------------------------------------------------- */
-
-        .ai-recommendation {
-            padding: var(--section-gap) clamp(24px, 6vw, 100px);
-            background: var(--ivory);
-        }
-
-        .ai-recommendation h2 {
-            font-family: var(--font-display);
-            font-size: clamp(32px, 4vw, 52px);
-            font-weight: 300;
-            color: var(--charcoal);
-            margin-bottom: 40px;
-        }
-
-        /* ================================================================
-                                                                                                                               PRODUCT DETAIL / SHOW PAGE
-                                                                                                                            ================================================================ */
-
-        /* ----------------------------------------------------------------
-                                                                                                                               BREADCRUMB STRIP
-                                                                                                                            ---------------------------------------------------------------- */
 
         html,
         body {
@@ -1023,46 +999,6 @@
             </div>
         </div>
     </div>
-
-    <section class="ai-recommendation">
-
-        <div class="related-header reveal">
-            <div>
-                <span class="section-label">AI Recommendation</span>
-                <h2 class="related-title">
-                    Rekomendasi <em>Untuk Anda</em>
-                </h2>
-            </div>
-        </div>
-
-        <div class="related-grid">
-
-            @foreach ($recommendedProducts as $item)
-                <a href="{{ route('products.show', $item->id) }}" class="product-card">
-
-                    <div class="product-card-img-wrap">
-                        <img src="{{ asset('storage/' . $item->image) }}" class="product-card-img"
-                            alt="{{ $item->name }}">
-                    </div>
-
-                    <p class="product-card-category">
-                        {{ $item->category }}
-                    </p>
-
-                    <h3 class="product-card-name">
-                        {{ $item->name }}
-                    </h3>
-
-                    <p class="product-card-price">
-                        Rp {{ number_format($item->price, 0, ',', '.') }}
-                    </p>
-
-                </a>
-            @endforeach
-
-        </div>
-
-    </section>
 
     {{-- ================================================================
      RELATED PRODUCTS

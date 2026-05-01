@@ -73,53 +73,45 @@ class ProductController extends Controller
             ->take(4)
             ->get();
 
-        // AI Recommendation
-        $recommendedProducts = $this->getRecommendedProducts($product);
-
         $cleanDescription = str_replace(
             ['<p><br></p>', '<span class="ql-cursor">﻿</span>'],
             '',
             $product->description
         );
 
+        $recommendedProducts = $this->getFuzzyRecommendedProducts($product);
+
         return view('products.show', compact(
             'product',
             'cleanDescription',
-            'relatedProducts',
-            'recommendedProducts'
+            'relatedProducts'
         ));
     }
 
-    private function getRecommendedProducts(Product $product)
+    private function getFuzzyRecommendedProducts(Product $product)
     {
         $products = Product::where('id', '!=', $product->id)->get();
 
-        $scoredProducts = $products->map(function ($item) use ($product) {
+        return $products->map(function ($item) use ($product) {
 
-            $score = 0;
+            $categoryScore = ($item->category == $product->category) ? 1 : 0.5;
+            $priceDiff = abs($item->price - $product->price);
 
-            if ($item->category == $product->category) {
-                $score += 5;
+            if ($priceDiff < 20000) {
+                $priceScore = 1;
+            } elseif ($priceDiff < 50000) {
+                $priceScore = 0.7;
+            } elseif ($priceDiff < 100000) {
+                $priceScore = 0.4;
+            } else {
+                $priceScore = 0.1;
             }
 
-            $priceDiff = abs($item->price - $product->price);
-            $score += max(0, 5 - ($priceDiff / 20000));
+            $finalScore = (0.6 * $categoryScore) + (0.4 * $priceScore);
 
-            similar_text(
-                strtolower(strip_tags($product->description)),
-                strtolower(strip_tags($item->description)),
-                $percent
-            );
-
-            $score += $percent / 20;
-
-            $item->score = $score;
+            $item->score = $finalScore;
 
             return $item;
-        });
-
-        return $scoredProducts
-            ->sortByDesc('score')
-            ->take(4);
+        })->sortByDesc('score')->take(4);
     }
 }
