@@ -79,39 +79,10 @@ class ProductController extends Controller
             $product->description
         );
 
-        $recommendedProducts = $this->getFuzzyRecommendedProducts($product);
-
         return view('products.show', compact(
             'product',
             'cleanDescription',
             'relatedProducts'
         ));
-    }
-
-    private function getFuzzyRecommendedProducts(Product $product)
-    {
-        $products = Product::where('id', '!=', $product->id)->get();
-
-        return $products->map(function ($item) use ($product) {
-
-            $categoryScore = ($item->category == $product->category) ? 1 : 0.5;
-            $priceDiff = abs($item->price - $product->price);
-
-            if ($priceDiff < 20000) {
-                $priceScore = 1;
-            } elseif ($priceDiff < 50000) {
-                $priceScore = 0.7;
-            } elseif ($priceDiff < 100000) {
-                $priceScore = 0.4;
-            } else {
-                $priceScore = 0.1;
-            }
-
-            $finalScore = (0.6 * $categoryScore) + (0.4 * $priceScore);
-
-            $item->score = $finalScore;
-
-            return $item;
-        })->sortByDesc('score')->take(4);
     }
 }
