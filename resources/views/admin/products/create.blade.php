@@ -98,6 +98,48 @@
                     @enderror
                 </div>
 
+                {{-- Warna --}}
+                <div>
+                    <label class="block text-xs font-semibold text-brown tracking-wide uppercase mb-2">
+                        Warna <span class="text-rose">*</span>
+                    </label>
+
+                    <input list="color-list" name="color" value="{{ old('color') }}"
+                        placeholder="Contoh: Pink, Dusty Pink, Peach"
+                        class="w-full border border-cream-d rounded-xl px-4 py-3 text-sm text-brown @error('color') border-red-300 bg-red-50 @enderror">
+
+                    <datalist id="color-list">
+                        @foreach ($colors ?? [] as $c)
+                            <option value="{{ $c }}">
+                        @endforeach
+                    </datalist>
+
+                    @error('color')
+                        <p class="text-xs text-red-500 mt-1.5">{{ $message }}</p>
+                    @enderror
+                </div>
+
+                {{-- Size --}}
+                <div>
+                    <label class="block text-xs font-semibold text-brown tracking-wide uppercase mb-2">
+                        Ukuran <span class="text-rose">*</span>
+                    </label>
+
+                    <select name="size"
+                        class="w-full border border-cream-d rounded-xl px-4 py-3 text-sm text-brown @error('size') border-red-300 @enderror">
+                        <option value="">— Pilih Ukuran —</option>
+                        @foreach (['S', 'M', 'L'] as $size)
+                            <option value="{{ $size }}" {{ old('size') == $size ? 'selected' : '' }}>
+                                {{ $size }}
+                            </option>
+                        @endforeach
+                    </select>
+
+                    @error('size')
+                        <p class="text-xs text-red-500 mt-1.5">{{ $message }}</p>
+                    @enderror
+                </div>
+
                 {{-- Deskripsi --}}
                 <div class="md:col-span-2">
                     <label class="block text-xs font-semibold text-brown tracking-wide uppercase mb-2">Deskripsi</label>
