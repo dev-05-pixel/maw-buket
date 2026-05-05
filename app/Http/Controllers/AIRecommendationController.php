@@ -9,21 +9,26 @@ class AIRecommendationController extends Controller
 {
     public function process(Request $request)
     {
-        $products = Product::all();
+        $products = Product::query();
 
-        // contoh logika AI sederhana (rule-based / scoring)
-        $filtered = $products->filter(function ($p) use ($request) {
+        $products->where(function ($query) use ($request) {
+            $query->where('price', '<=', $request->budget)
+                ->orWhere('color', $request->color)
+                ->orWhere('size', $request->size);
+        });
+
+        $filtered = $products->get()->filter(function ($p) use ($request) {
 
             $score = 0;
 
-            if ($p->price <= $request->budget) $score += 1;
-            if ($p->color == $request->color) $score += 1;
-            if ($p->flower == $request->flower) $score += 1;
+            if ($p->price <= $request->budget) $score++;
+            if ($p->color == $request->color) $score++;
+            if ($p->size == $request->size) $score++;
 
-            return $score >= 2; // threshold
+            return $score >= 2;
         });
 
-        return view('ai.result', [
+        return view('ai.recommendation', [
             'products' => $filtered
         ]);
     }
