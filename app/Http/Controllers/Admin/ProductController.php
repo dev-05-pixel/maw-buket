@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
-
+use Illuminate\Support\Str;
 class ProductController extends Controller
 {
     public function index(Request $request)
@@ -39,6 +39,8 @@ class ProductController extends Controller
             'size'        => 'required|in:S,M,L',
         ]);
 
+        $id = strtoupper(Str::random(12));
+
         // Normalisasi warna (rapikan spasi + kapitalisasi)
         $color = preg_replace('/\s+/', ' ', $request->color);
         $color = trim(ucwords(strtolower($color)));
@@ -56,6 +58,7 @@ class ProductController extends Controller
         }
 
         Product::create([
+            'id'          => $id,
             'name'        => $request->name,
             'price'       => $request->price,
             'category'    => $request->category,

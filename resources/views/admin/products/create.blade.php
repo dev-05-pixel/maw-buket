@@ -106,7 +106,9 @@
 
                     <input list="color-list" name="color" value="{{ old('color') }}"
                         placeholder="Contoh: Pink, Dusty Pink, Peach"
-                        class="w-full border border-cream-d rounded-xl px-4 py-3 text-sm text-brown @error('color') border-red-300 bg-red-50 @enderror">
+                        class="w-full border border-cream-d rounded-xl px-4 py-3 text-sm text-brown placeholder:text-muted
+                        focus:outline-none focus:ring-2 focus:ring-rose/30 focus:border-rose/50 transition
+                        @error('color') border-red-300 bg-red-50 @enderror">
 
                     <datalist id="color-list">
                         @foreach ($colors ?? [] as $c)
@@ -126,7 +128,9 @@
                     </label>
 
                     <select name="size"
-                        class="w-full border border-cream-d rounded-xl px-4 py-3 text-sm text-brown @error('size') border-red-300 @enderror">
+                        class="w-full border border-cream-d rounded-xl px-4 py-3 text-sm text-brown bg-white
+                        focus:outline-none focus:ring-2 focus:ring-rose/30 focus:border-rose/50 transition
+                        @error('size') border-red-300 @enderror">
                         <option value="">— Pilih Ukuran —</option>
                         @foreach (['S', 'M', 'L'] as $size)
                             <option value="{{ $size }}" {{ old('size') == $size ? 'selected' : '' }}>
