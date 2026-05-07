@@ -5,12 +5,12 @@
 @push('styles')
     <style>
         /* ================================================================
-                                                                                                                                   PRODUCTS INDEX PAGE
-                                                                                                                                ================================================================ */
+                                                                                                                                                                           PRODUCTS INDEX PAGE
+                                                                                                                                                                        ================================================================ */
 
         /* ----------------------------------------------------------------
-                                                                                                                                   PAGE HERO / BANNER
-                                                                                                                                ---------------------------------------------------------------- */
+                                                                                                                                                                           PAGE HERO / BANNER
+                                                                                                                                                                        ---------------------------------------------------------------- */
         .page-hero {
             min-height: 52vh;
             display: flex;
@@ -168,8 +168,8 @@
         }
 
         /* ----------------------------------------------------------------
-                                                                                                                                   FILTER & SORT BAR
-                                                                                                                                ---------------------------------------------------------------- */
+                                                                                                                                                                           FILTER & SORT BAR
+                                                                                                                                                                        ---------------------------------------------------------------- */
         .filter-bar {
             background: var(--ivory);
             border-bottom: 1px solid rgba(44, 36, 33, 0.08);
@@ -307,8 +307,8 @@
         }
 
         /* ----------------------------------------------------------------
-                                                                                                                                   PRODUCTS MAIN LAYOUT
-                                                                                                                                ---------------------------------------------------------------- */
+                                                                                                                                                                           PRODUCTS MAIN LAYOUT
+                                                                                                                                                                        ---------------------------------------------------------------- */
         .products-main {
             padding: clamp(40px, 5vw, 80px) clamp(24px, 6vw, 100px);
             display: grid;
@@ -318,8 +318,8 @@
         }
 
         /* ----------------------------------------------------------------
-                                                                                                                                   SIDEBAR FILTERS
-                                                                                                                                ---------------------------------------------------------------- */
+                                                                                                                                                                           SIDEBAR FILTERS
+                                                                                                                                                                        ---------------------------------------------------------------- */
         .sidebar {
             position: sticky;
             top: calc(var(--nav-height) + 64px);
@@ -478,8 +478,8 @@
         }
 
         /* ----------------------------------------------------------------
-                                                                                                                                   PRODUCTS GRID AREA
-                                                                                                                                ---------------------------------------------------------------- */
+                                                                                                                                                                           PRODUCTS GRID AREA
+                                                                                                                                                                        ---------------------------------------------------------------- */
         .products-area {}
 
         .products-result-info {
@@ -782,8 +782,8 @@
         }
 
         /* ----------------------------------------------------------------
-                                                                                                                                   PAGINATION
-                                                                                                                                ---------------------------------------------------------------- */
+                                                                                                                                                                           PAGINATION
+                                                                                                                                                                        ---------------------------------------------------------------- */
         .pagination-wrap {
             display: flex;
             justify-content: center;
@@ -839,8 +839,9 @@
         }
 
         /* ----------------------------------------------------------------
-                                                                                                                                   EMPTY STATE
-                                                                                                                                ---------------------------------------------------------------- */
+                            EMPTY STATE
+                            ---------------------------------------------------------------- */
+
         .empty-state {
             grid-column: 1 / -1;
             text-align: center;
@@ -877,21 +878,177 @@
             margin: 0 auto 32px;
         }
 
+        /* ----------------------------------------------------------------
+                   EMPTY PRODUCTS STATE
+                ---------------------------------------------------------------- */
+
+        .empty-products-state {
+            width: 100%;
+            min-height: 520px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 80px 24px;
+        }
+
+        .empty-products-icon {
+            width: 92px;
+            height: 92px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 28px;
+            border-radius: 50%;
+            background:
+                linear-gradient(135deg,
+                    rgba(232, 160, 160, .12),
+                    rgba(212, 184, 212, .10));
+
+            border:
+                1px solid rgba(44, 36, 33, .06);
+            transition:
+                transform .35s ease,
+                box-shadow .35s ease;
+        }
+
+        .empty-products-state:hover .empty-products-icon {
+            transform: translateY(-4px);
+            box-shadow:
+                0 18px 38px rgba(44, 36, 33, .08);
+        }
+
+        .empty-products-icon svg {
+            width: 42px;
+            height: 42px;
+            stroke: #2c2421;
+            stroke-width: 1.7;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            fill: none;
+            opacity: .9;
+        }
+
+        .empty-products-title {
+            font-family: var(--font-display);
+            font-size: clamp(32px, 4vw, 48px);
+            font-weight: 500;
+            line-height: 1.1;
+            letter-spacing: -0.03em;
+            color: #2c2421;
+            margin-bottom: 18px;
+        }
+
+        .empty-products-text {
+            max-width: 560px;
+            margin: 0 auto 34px;
+            font-size: 16px;
+            font-weight: 300;
+            line-height: 1.9;
+            color: #7d736d;
+        }
+
+        .empty-products-btn {
+            height: 50px;
+            padding: 0 28px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            border-radius: 999px;
+            background: #2c2421;
+            color: #fff;
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 500;
+            letter-spacing: .08em;
+            text-transform: uppercase;
+            transition:
+                transform .3s ease,
+                box-shadow .3s ease,
+                background .3s ease;
+        }
+
+        .empty-products-btn:hover {
+            transform: translateY(-3px);
+            background: #3b312d;
+            box-shadow:
+                0 18px 40px rgba(44, 36, 33, .16);
+        }
+
+        .empty-products-state {
+            grid-column: 1 / -1;
+        }
+
+        @media (max-width: 768px) {
+
+            .empty-products-state {
+                min-height: 420px;
+                padding: 60px 20px;
+            }
+
+            .empty-products-title {
+                font-size: 34px;
+            }
+
+            .empty-products-text {
+                font-size: 15px;
+                line-height: 1.8;
+            }
+
+            .empty-products-icon {
+                width: 78px;
+                height: 78px;
+            }
+
+            .empty-products-icon svg {
+                width: 36px;
+                height: 36px;
+            }
+
+        }
+
+        @media (max-width:768px) {
+
+            .empty-products-state {
+                min-height: 440px;
+                padding: 60px 24px;
+                border-radius: 24px;
+            }
+
+            .empty-products-title {
+                font-size: 28px;
+            }
+
+            .empty-products-text {
+                font-size: 15px;
+                line-height: 1.8;
+            }
+
+            .empty-products-icon {
+                width: 92px;
+                height: 92px;
+            }
+
+            .empty-products-icon svg {
+                width: 38px;
+                height: 38px;
+            }
+
+        }
+
         .filter-chip {
             display: inline-flex;
             align-items: center;
             gap: 10px;
-
             padding: 6px 16px;
             font-size: 13px;
             font-weight: 500;
-
             background: #f3eee8;
             color: #2f2724;
-
             border: 2px solid #3b332f;
             border-radius: 999px;
-
             line-height: 1;
         }
 
@@ -915,9 +1072,74 @@
             opacity: 0.6;
         }
 
+        .catalog-search {
+            margin: 0;
+        }
+
+        .catalog-search-wrap {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .catalog-search-wrap svg {
+            position: absolute;
+            left: 12px;
+            width: 16px;
+            height: 16px;
+            stroke: #8b7d76;
+            fill: none;
+            stroke-width: 2;
+            pointer-events: none;
+            transition:
+                opacity .35s ease,
+                transform .35s ease;
+            transform: translateX(0);
+            opacity: 1;
+        }
+
+        .catalog-search-wrap.active svg {
+            transform: translateX(-10px);
+            opacity: 0;
+        }
+
+        .catalog-search-wrap input {
+            width: 190px;
+            height: 40px;
+            padding: 0 14px 0 38px;
+            border: 1px solid rgba(44, 36, 33, .12);
+            border-radius: 12px;
+            background: #fff;
+            font-size: 13px;
+            color: #2c2421;
+            transition:
+                border-color .25s ease,
+                box-shadow .25s ease,
+                width .3s ease,
+                padding .35s ease;
+        }
+
+        .catalog-search-wrap input::placeholder {
+            color: #9b9088;
+        }
+
+        .catalog-search-wrap.active input {
+            padding-left: 16px;
+            width: 220px;
+        }
+
+        .catalog-search-wrap input:focus {
+            outline: none;
+
+            border-color: #2c2421;
+
+            box-shadow:
+                0 0 0 4px rgba(44, 36, 33, .05);
+        }
+
         /* ----------------------------------------------------------------
-                                                                                                                                   RESPONSIVE
-                                                                                                                                ---------------------------------------------------------------- */
+                                                                                                                                                                           RESPONSIVE
+                                                                                                                                                                        ---------------------------------------------------------------- */
         @media (max-width: 1100px) {
             .products-main {
                 grid-template-columns: 200px 1fr;
@@ -1022,6 +1244,23 @@
                     </a>
                 @endforeach
             </div>
+
+            <form method="GET" class="catalog-search">
+
+                {{-- pertahankan category --}}
+                <input type="hidden" name="category" value="{{ request('category') }}">
+
+                {{-- pertahankan sorting --}}
+                <input type="hidden" name="sort" value="{{ request('sort') }}">
+
+                <div class="catalog-search-wrap">
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M21 21l-4.35-4.35" />
+                        <circle cx="11" cy="11" r="6" />
+                    </svg>
+                    <input type="text" name="search" placeholder="Cari bouquet..." value="{{ request('search') }}">
+                </div>
+            </form>
 
             <div class="filter-right">
                 <div class="sort-select-wrap" aria-label="Urutkan">
@@ -1151,18 +1390,6 @@
                     @endforeach
                 </div>
             </div>
-
-            <div class="sidebar-section reveal delay-4">
-                <p class="sidebar-title">Jenis Bunga</p>
-                <div class="checkbox-group">
-                    @foreach (['Mawar', 'Lily', 'Tulip', 'Sunflower', 'Baby Breath', 'Pampas'] as $flower)
-                        <label class="checkbox-label">
-                            <input type="checkbox" name="flower[]" value="{{ $flower }}" />
-                            {{ $flower }}
-                        </label>
-                    @endforeach
-                </div>
-            </div>
         </aside>
 
         {{-- PRODUCTS LISTING --}}
@@ -1188,44 +1415,82 @@
             </div>
 
             <div class="products-listing" id="products-listing" role="list">
-
-                @foreach ($products as $i => $product)
-                    <article class="product-card reveal delay-{{ min(($i % 3) + 1, 6) }}" role="listitem">
-
-                        <div class="product-card-img-wrap">
-                            <a href="{{ route('products.show', $product->id) }}">
-                                <img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->name }}"
-                                    class="product-card-img" loading="lazy" />
-                            </a>
-                            <div class="product-card-quick">
-                                <a href="#" class="product-quick-btn wa-order" data-name="{{ $product->name }}"
-                                    data-price="{{ number_format($product->price, 0, ',', '.') }}"
-                                    data-url="{{ route('products.show', $product->id) }}">
-                                    Pesan via WhatsApp
-                                </a>
-                            </div>
-                        </div>
-
-                        <div class="product-card-meta">
-
-                            <p class="product-card-category">
-                                {{ $product->category }}
-                            </p>
-
-                            <h2 class="product-card-name">
+                @if ($products->count())
+                    @foreach ($products as $i => $product)
+                        <article class="product-card reveal delay-{{ min(($i % 3) + 1, 6) }}" role="listitem">
+                            <div class="product-card-img-wrap">
                                 <a href="{{ route('products.show', $product->id) }}">
-                                    {{ $product->name }}
+                                    <img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->name }}"
+                                        class="product-card-img" loading="lazy" />
                                 </a>
-                            </h2>
 
-                            <p class="product-card-price">
-                                Rp {{ number_format($product->price, 0, ',', '.') }}
-                            </p>
+                                <div class="product-card-quick">
+                                    <a href="#" class="product-quick-btn wa-order"
+                                        data-name="{{ $product->name }}"
+                                        data-price="{{ number_format($product->price, 0, ',', '.') }}"
+                                        data-url="{{ route('products.show', $product->id) }}">
+                                        Pesan via WhatsApp
+                                    </a>
+                                </div>
+                            </div>
 
+                            <div class="product-card-meta">
+                                <p class="product-card-category">
+                                    {{ $product->category }}
+                                </p>
+                                <h2 class="product-card-name">
+                                    <a href="{{ route('products.show', $product->id) }}">
+                                        {{ $product->name }}
+                                    </a>
+                                </h2>
+                                <p class="product-card-price">
+                                    Rp {{ number_format($product->price, 0, ',', '.') }}
+                                </p>
+                            </div>
+                        </article>
+                    @endforeach
+                @else
+                    @php
+                        $isSearching =
+                            request()->filled('search') || request()->filled('category') || request()->filled('sort');
+                    @endphp
+
+                    <div class="empty-products-state reveal">
+                        <div class="empty-products-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+                                stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="11" cy="11" r="7"></circle>
+                                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                                <path d="M9 10h4"></path>
+                                <path d="M9 14h2"></path>
+                            </svg>
                         </div>
 
-                    </article>
-                @endforeach
+                        @if ($isSearching)
+                            <h3 class="empty-products-title">
+                                Produk tidak ditemukan
+                            </h3>
+                            <p class="empty-products-text">
+                                Maaf, kami belum menemukan bouquet yang sesuai
+                                dengan pencarian atau filter yang kamu pilih.
+                            </p>
+                        @else
+                            <h3 class="empty-products-title">
+                                Belum ada produk tersedia
+                            </h3>
+                            <p class="empty-products-text">
+                                Saat ini produk bouquet belum ditambahkan ke database.
+                                Silakan kembali lagi nanti.
+                            </p>
+                        @endif
+
+                        @if ($isSearching)
+                            <a href="{{ route('products.index') }}" class="empty-products-btn">
+                                Lihat Semua Produk
+                            </a>
+                        @endif
+                    </div>
+                @endif
             </div>
 
             {{-- PAGINATION --}}
@@ -1420,6 +1685,27 @@
 
             if (max < min) {
                 minInput.value = max;
+            }
+
+        });
+
+        // ================================================================
+        // SEARCH ICON ANIMATION
+        // ================================================================
+
+        const searchWrap = document.querySelector('.catalog-search-wrap');
+        const searchInput = searchWrap.querySelector('input');
+
+        searchInput.addEventListener('focus', () => {
+
+            searchWrap.classList.add('active');
+
+        });
+
+        searchInput.addEventListener('blur', () => {
+
+            if (searchInput.value.trim() === '') {
+                searchWrap.classList.remove('active');
             }
 
         });

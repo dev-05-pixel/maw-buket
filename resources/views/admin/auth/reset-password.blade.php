@@ -333,9 +333,6 @@
         <a href="{{ url('/admin/login') }}" class="back">
             ← Kembali ke login
         </a>
-
     </div>
-
 </body>
-
 </html>

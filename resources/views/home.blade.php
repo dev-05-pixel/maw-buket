@@ -5,8 +5,8 @@
 @push('styles')
     <style>
         /* ================================================================
-                                                   CSS VARIABLES (ROOT)
-                                                ================================================================ */
+                                                                                                                           CSS VARIABLES (ROOT)
+                                                                                                                        ================================================================ */
         :root {
             --cream: #f8f3ec;
             --cream-dark: #f0e8de;
@@ -29,8 +29,8 @@
         }
 
         /* ----------------------------------------------------------------
-                                                   BASE RESET / UTILITY CLASSES
-                                                ---------------------------------------------------------------- */
+                                                                                                                           BASE RESET / UTILITY CLASSES
+                                                                                                                        ---------------------------------------------------------------- */
         * {
             margin: 0;
             padding: 0;
@@ -159,12 +159,12 @@
         }
 
         /* ================================================================
-                                                   HOME PAGE STYLES
-                                                ================================================================ */
+                                                                                                                           HOME PAGE STYLES
+                                                                                                                        ================================================================ */
 
         /* ----------------------------------------------------------------
-                                                   HERO induk
-                                                ---------------------------------------------------------------- */
+                                                                                                                           HERO induk
+                                                                                                                        ---------------------------------------------------------------- */
         .hero {
             position: relative;
             height: calc(100svh - 70px);
@@ -474,8 +474,8 @@
         }
 
         /* ----------------------------------------------------------------
-                                                   MARQUEE / TICKER
-                                                ---------------------------------------------------------------- */
+                                                                                                                           MARQUEE / TICKER
+                                                                                                                        ---------------------------------------------------------------- */
         .marquee-section {
             background: var(--charcoal);
             padding: 18px 0;
@@ -532,8 +532,8 @@
         }
 
         /* ----------------------------------------------------------------
-                                                   ABOUT / INTRO SECTION
-                                                ---------------------------------------------------------------- */
+                                                                                                                           ABOUT / INTRO SECTION
+                                                                                                                        ---------------------------------------------------------------- */
         .about-section {
             padding: var(--section-gap) clamp(24px, 6vw, 100px);
             display: grid;
@@ -641,8 +641,8 @@
         }
 
         /* ----------------------------------------------------------------
-                                                   PRODUCTS PREVIEW / FEATURED
-                                                ---------------------------------------------------------------- */
+                                                                                                                           PRODUCTS PREVIEW / FEATURED
+                                                                                                                        ---------------------------------------------------------------- */
         .products-section {
             padding: var(--section-gap) clamp(24px, 6vw, 100px);
             background: var(--ivory);
@@ -819,8 +819,8 @@
         }
 
         /* ----------------------------------------------------------------
-                                                   CATEGORIES SECTION
-                                                ---------------------------------------------------------------- */
+                                                                                                                           CATEGORIES SECTION
+                                                                                                                        ---------------------------------------------------------------- */
         .categories-section {
             padding: var(--section-gap) clamp(24px, 6vw, 100px);
         }
@@ -915,8 +915,8 @@
         }
 
         /* ----------------------------------------------------------------
-                                                   PROCESS / HOW TO ORDER
-                                                ---------------------------------------------------------------- */
+                                                                                                                           PROCESS / HOW TO ORDER
+                                                                                                                        ---------------------------------------------------------------- */
         .process-section {
             padding: var(--section-gap) clamp(24px, 6vw, 100px);
             background: var(--charcoal);
@@ -948,21 +948,21 @@
         .process-label {
             display: inline-flex;
             align-items: center;
-            gap: 12px;
-            font-size: 10px;
-            font-weight: 600;
-            letter-spacing: 0.4em;
+            gap: 16px;
+            font-size: 20px;
+            font-weight: 700;
+            letter-spacing: 0.08em;
             text-transform: uppercase;
             color: var(--rose-light);
-            margin-bottom: 20px;
+            margin-bottom: 24px;
         }
 
         .process-label::before,
         .process-label::after {
             content: '';
             display: block;
-            width: 32px;
-            height: 1px;
+            width: 60px;
+            height: 2px;
             background: var(--rose-light);
             opacity: 0.5;
         }
@@ -1058,8 +1058,8 @@
         }
 
         /* ----------------------------------------------------------------
-                                                   TESTIMONIALS
-                                                ---------------------------------------------------------------- */
+                                                                                                                           TESTIMONIALS
+                                                                                                                        ---------------------------------------------------------------- */
         .testimonials-section {
             padding: var(--section-gap) clamp(24px, 6vw, 100px);
             background: var(--cream-dark);
@@ -1178,8 +1178,8 @@
         }
 
         /* ----------------------------------------------------------------
-                                                   CTA BANNER
-                                                ---------------------------------------------------------------- */
+                                                                                                                           CTA BANNER
+                                                                                                                        ---------------------------------------------------------------- */
         .cta-section {
             padding: clamp(80px, 10vw, 140px) clamp(24px, 8vw, 120px);
             background: var(--cream);
@@ -1245,9 +1245,313 @@
             flex-shrink: 0;
         }
 
+        .testimonial-avatar-letter {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: var(--rose);
+            color: white;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            font-weight: 600;
+            font-size: 18px;
+        }
+
+        /* ================================================================
+                                       TESTIMONIAL FORM PREMIUM
+                                    ================================================================ */
+
+        .testimonial-form-container {
+            margin-top: 90px;
+            max-width: 760px;
+            margin-inline: auto;
+        }
+
+        .testimonial-form-wrap {
+            background: rgba(255, 255, 255, 0.72);
+            backdrop-filter: blur(18px);
+
+            border: 1px solid rgba(255, 255, 255, 0.5);
+
+            border-radius: 10px;
+
+            padding: 52px;
+
+            box-shadow:
+                0 10px 40px rgba(44, 36, 33, 0.04),
+                0 2px 10px rgba(44, 36, 33, 0.03);
+
+            position: relative;
+            overflow: hidden;
+        }
+
+        .testimonial-form-wrap::before {
+            content: '';
+
+            position: absolute;
+
+            width: 320px;
+            height: 320px;
+
+            border-radius: 50%;
+
+            background:
+                radial-gradient(circle,
+                    rgba(212, 132, 122, 0.10) 0%,
+                    transparent 70%);
+
+            top: -160px;
+            right: -120px;
+
+            pointer-events: none;
+        }
+
+        .testimonial-form-header {
+            margin-bottom: 38px;
+        }
+
+        .testimonial-form-title {
+            font-family: var(--font-display);
+            font-size: clamp(34px, 4vw, 44px);
+            font-weight: 400;
+            line-height: 1.1;
+            color: var(--charcoal);
+
+            margin-bottom: 14px;
+        }
+
+        .testimonial-form-subtitle {
+            font-size: 15px;
+            line-height: 1.9;
+            color: var(--warm-grey);
+
+            max-width: 560px;
+        }
+
+        /* ================================================================
+                                       STAR RATING
+                                    ================================================================ */
+
+        .rating-block {
+            margin-bottom: 34px;
+        }
+
+        .rating-label {
+            display: block;
+
+            font-size: 12px;
+            font-weight: 600;
+
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+
+            color: var(--rose);
+
+            margin-bottom: 18px;
+        }
+
+        .star-rating {
+            display: flex;
+            flex-direction: row-reverse;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+
+        .star-rating input {
+            display: none;
+        }
+
+        .star-rating label {
+            cursor: pointer;
+            transition:
+                transform .25s ease,
+                opacity .25s ease;
+        }
+
+        .star-rating label:hover {
+            transform: translateY(-2px) scale(1.08);
+        }
+
+        .star-icon-input {
+            width: 42px;
+            height: 42px;
+
+            fill: #d9d4cf;
+
+            transition:
+                fill .25s ease,
+                filter .25s ease,
+                transform .25s ease;
+        }
+
+        /* hover */
+        .star-rating label:hover .star-icon-input,
+        .star-rating label:hover~label .star-icon-input {
+            fill: #f4b400;
+            filter: drop-shadow(0 4px 10px rgba(244, 180, 0, 0.28));
+        }
+
+        /* active */
+        .star-rating input:checked~label .star-icon-input {
+            fill: #f4b400;
+            filter: drop-shadow(0 4px 10px rgba(244, 180, 0, 0.28));
+        }
+
+        /* ================================================================
+                                       INPUTS
+                                    ================================================================ */
+
+        .testimonial-field {
+            margin-bottom: 22px;
+        }
+
+        .testimonial-input,
+        .testimonial-textarea {
+            width: 100%;
+
+            border: 1px solid #e7ddd3;
+
+            background: rgba(255, 255, 255, 0.92);
+
+            border-radius: 8px;
+
+            padding: 18px 22px;
+
+            font-family: var(--font-body);
+            font-size: 15px;
+
+            color: var(--charcoal);
+
+            transition:
+                border-color .25s ease,
+                box-shadow .25s ease,
+                transform .25s ease;
+
+            outline: none;
+        }
+
+        .testimonial-input::placeholder,
+        .testimonial-textarea::placeholder {
+            color: #a09188;
+        }
+
+        .testimonial-input:focus,
+        .testimonial-textarea:focus {
+            border-color: rgba(212, 132, 122, 0.65);
+
+            box-shadow:
+                0 0 0 5px rgba(212, 132, 122, 0.10);
+
+            transform: translateY(-1px);
+        }
+
+        .testimonial-textarea {
+            min-height: 180px;
+            resize: vertical;
+            line-height: 1.9;
+        }
+
+        /* ================================================================
+                                       SUBMIT BUTTON
+                                    ================================================================ */
+
+        .testimonial-submit {
+            margin-top: 10px;
+        }
+
+        @media (max-width: 768px) {
+
+            .testimonial-form-wrap {
+                padding: 32px 24px;
+                border-radius: 10px;
+            }
+
+            .star-icon-input {
+                width: 36px;
+                height: 36px;
+            }
+
+            .testimonial-input,
+            .testimonial-textarea {
+                border-radius: 8px;
+            }
+        }
+
+        /* ================================================================
+                               RATING WARNING
+                            ================================================================ */
+
+        .rating-row {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            flex-wrap: wrap;
+        }
+
+        .rating-warning {
+            font-size: 13px;
+            color: #d54848;
+
+            opacity: 0;
+            transform: translateY(4px);
+
+            transition:
+                opacity .25s ease,
+                transform .25s ease;
+
+            pointer-events: none;
+        }
+
+        .rating-warning.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* ================================================================
+                               SNACKBAR
+                            ================================================================ */
+
+        .snackbar {
+            position: fixed;
+
+            left: 50%;
+            bottom: 28px;
+
+            transform: translateX(-50%) translateY(120px);
+
+            background: var(--charcoal);
+            color: white;
+
+            padding: 16px 24px;
+
+            border-radius: 8px;
+
+            font-size: 14px;
+            font-weight: 500;
+
+            z-index: 9999;
+
+            box-shadow:
+                0 12px 40px rgba(0, 0, 0, 0.18);
+
+            opacity: 0;
+
+            transition:
+                transform .45s var(--ease-out-expo),
+                opacity .45s ease;
+        }
+
+        .snackbar.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
+
         /* ----------------------------------------------------------------
-                                                   RESPONSIVE
-                                                ---------------------------------------------------------------- */
+                                                                                                                           RESPONSIVE
+                                                                                                                        ---------------------------------------------------------------- */
         @media (max-width: 1100px) {
             .hero {
                 grid-template-columns: 1fr;
@@ -1680,69 +1984,127 @@
     </section>
 
     {{-- ================================================================
-     TESTIMONIALS
+ TESTIMONIALS
 ================================================================ --}}
-    <section class="testimonials-section" aria-label="Customer testimonials">
+    <section id="testimonials" class="testimonials-section" aria-label="Customer testimonials">
         <div class="testimonials-bg-word" aria-hidden="true">Cerita</div>
 
         <div class="testimonials-header reveal">
             <span class="section-label" style="justify-content: center;">Kata Mereka</span>
+
             <h2 class="testimonials-title">
                 Cerita di Balik<br>Setiap <em>Buket</em>
             </h2>
         </div>
 
         <div class="testimonials-grid">
-            @php
-                $testimonials = [
-                    [
-                        'name' => 'Anisa Rahma',
-                        'location' => 'Jakarta Selatan',
-                        'seed' => 'ava-1',
-                        'text' =>
-                            'Buketnya luar biasa indah! Saya memesan untuk ulang tahun ibu, dan beliau sangat terharu. Kualitas bunganya premium dan kemasannya sangat rapi dan elegan.',
-                    ],
-                    [
-                        'name' => 'Dini Putri',
-                        'location' => 'Tangerang Selatan',
-                        'seed' => 'ava-2',
-                        'text' =>
-                            'Pelayanannya ramah banget, langsung direspon dan dikerjakan dengan cepat. Buket keringnya bertahan lama sekali, masih cantik sampai sekarang di meja kerja saya.',
-                    ],
-                    [
-                        'name' => 'Sari Wulandari',
-                        'location' => 'Depok',
-                        'seed' => 'ava-3',
-                        'text' =>
-                            'Saya sudah pesan berkali-kali dan tidak pernah kecewa. Selalu konsisten kualitasnya dan selalu ada yang baru dari setiap kreasi Maw Bouquet. Recommended banget!',
-                    ],
-                ];
-            @endphp
 
             @foreach ($testimonials as $i => $t)
                 <div class="testimonial-card reveal delay-{{ $i + 1 }}">
-                    <div class="testimonial-stars" aria-label="5 bintang">
-                        @for ($s = 0; $s < 5; $s++)
-                            <svg class="star-icon" viewBox="0 0 24 24" aria-hidden="true">
+
+                    <div class="testimonial-stars">
+
+                        @for ($s = 0; $s < $t->rating; $s++)
+                            <svg class="star-icon" viewBox="0 0 24 24">
                                 <path
                                     d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
                             </svg>
                         @endfor
+
                     </div>
-                    <span class="testimonial-quote-mark" aria-hidden="true">&ldquo;</span>
-                    <p class="testimonial-text">{{ $t['text'] }}</p>
+
+                    <span class="testimonial-quote-mark">
+                        &ldquo;
+                    </span>
+
+                    <p class="testimonial-text">
+                        {{ $t->message }}
+                    </p>
+
                     <div class="testimonial-author">
-                        <img src="https://picsum.photos/seed/{{ $t['seed'] }}/80/80" alt="{{ $t['name'] }}"
-                            class="testimonial-avatar" loading="lazy" />
+
+                        <div class="testimonial-avatar-letter">
+                            {{ strtoupper(substr($t->name, 0, 1)) }}
+                        </div>
+
                         <div>
-                            <p class="testimonial-author-name">{{ $t['name'] }}</p>
-                            <p class="testimonial-author-loc">{{ $t['location'] }}</p>
+                            <p class="testimonial-author-name">
+                                {{ $t->name }}
+                            </p>
+
+                            <p class="testimonial-author-loc">
+                                {{ $t->location }}
+                            </p>
                         </div>
                     </div>
                 </div>
             @endforeach
         </div>
+
+        <div style="margin-top:40px; text-align:center;">
+            <a href="{{ route('testimonials.index') }}" class="btn-outline">
+                Lihat Semua
+            </a>
+        </div>
+
+        {{-- FORM TESTIMONI --}}
+        <div class="testimonial-form-container reveal">
+            <div class="testimonial-form-wrap">
+                <div class="testimonial-form-header">
+                    <h3 class="testimonial-form-title">
+                        Bagikan Pengalaman Anda
+                    </h3>
+                    <p class="testimonial-form-subtitle">
+                        Ceritakan pengalaman Anda bersama Maw Bouquet.
+                        Ulasan Anda membantu kami terus menghadirkan rangkaian bunga terbaik.
+                    </p>
+                </div>
+
+                <form id="testimonialForm" action="{{ route('testimonials.store') }}" method="POST" novalidate>
+                    @csrf
+                    {{-- STAR RATING --}}
+                    <div class="rating-block">
+
+                        <span class="rating-label">
+                            Berikan Penilaian
+                        </span>
+
+                        <div class="rating-row">
+                            <div class="star-rating">
+                                @for ($i = 5; $i >= 1; $i--)
+                                    <input type="radio" id="star-{{ $i }}" name="rating"
+                                        value="{{ $i }}">
+                                    <label for="star-{{ $i }}">
+                                        <svg class="star-icon-input" viewBox="0 0 24 24">
+                                            <path
+                                                d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+                                        </svg>
+                                    </label>
+                                @endfor
+                            </div>
+                        </div>
+
+                        <span class="rating-warning" id="ratingWarning">
+                            Pilih rating terlebih dahulu
+                        </span>
+
+                    </div>
+
+                    <div class="testimonial-field">
+                        <input type="text" name="name" placeholder="Nama Anda" required class="testimonial-input">
+                    </div>
+                    <div class="testimonial-field">
+                        <textarea name="message" placeholder="Tulis pengalaman Anda mengenai produk atau layanan kami..." required
+                            class="testimonial-textarea"></textarea>
+                    </div>
+                    <button type="submit" class="btn-primary testimonial-submit">
+                        Kirim Testimoni
+                    </button>
+                </form>
+            </div>
+        </div>
     </section>
+
     {{-- ================================================================
      CTA BANNER
     ================================================================ --}}
@@ -1764,5 +2126,85 @@
             <a href="{{ url('/contact') }}" class="btn-outline">Kirim Email</a>
         </div>
     </section>
+
+    @if (session('testimonial_success'))
+        <div class="snackbar" id="snackbar">
+            Testimoni berhasil dikirim
+        </div>
+    @endif
+
+    @push('scripts')
+        <script>
+            document.addEventListener('DOMContentLoaded', () => {
+
+                const form = document.getElementById('testimonialForm');
+                const warning = document.getElementById('ratingWarning');
+
+                if (form) {
+
+                    form.addEventListener('submit', function(e) {
+
+                        const checkedRating =
+                            document.querySelector('input[name="rating"]:checked');
+
+                        if (!checkedRating) {
+
+                            e.preventDefault();
+
+                            warning.classList.add('show');
+
+                            setTimeout(() => {
+                                warning.classList.remove('show');
+                            }, 2500);
+
+                        }
+
+                    });
+
+                    const stars =
+                        document.querySelectorAll('input[name="rating"]');
+
+                    stars.forEach(star => {
+
+                        star.addEventListener('change', () => {
+                            warning.classList.remove('show');
+                        });
+
+                    });
+
+                }
+
+                // snackbar
+                const snackbar = document.getElementById('snackbar');
+
+                if (snackbar) {
+
+                    setTimeout(() => {
+                        snackbar.classList.add('show');
+                    }, 300);
+
+                    setTimeout(() => {
+                        snackbar.classList.remove('show');
+                    }, 4200);
+
+                    // stay on testimonial section
+                    const testimonialSection =
+                        document.getElementById('testimonials');
+
+                    if (testimonialSection) {
+
+                        setTimeout(() => {
+
+                            testimonialSection.scrollIntoView({
+                                behavior: 'smooth',
+                                block: 'start'
+                            });
+
+                        }, 100);
+                    }
+                }
+            });
+        </script>
+    @endpush
 
 @endsection

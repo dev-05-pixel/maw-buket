@@ -619,6 +619,39 @@
             color: var(--rose);
         }
 
+        .footer-grid-4 {
+            grid-template-columns: 1.2fr 1fr 1fr 1.2fr;
+        }
+
+        .footer-grid,
+        .footer-grid-4 {
+            grid-template-columns: 1fr 1fr;
+        }
+
+        .footer-map-wrap {
+            width: 100%;
+            height: 220px;
+
+            border-radius: 10px;
+            overflow: hidden;
+
+            border: 1px solid rgba(255, 255, 255, .08);
+
+            background: rgba(255, 255, 255, .03);
+
+            box-shadow:
+                0 20px 40px rgba(0, 0, 0, .15);
+        }
+
+        .footer-map-wrap iframe {
+            width: 100%;
+            height: 100%;
+            border: 0;
+
+            filter:
+                grayscale(1) contrast(1.05) brightness(.92);
+        }
+
         /* ============================================================
            SCROLL REVEAL UTILITY
         ============================================================ */
@@ -945,7 +978,7 @@
     <footer id="footer">
         <div class="container">
             <div class="footer-bg-text" aria-hidden="true">Bouquet</div>
-            <div class="footer-grid">
+            <div class="footer-grid footer-grid-4">
                 <div class="reveal">
                     <p class="footer-brand-name">Maw <span>Bouquet</span></p>
                     <p class="footer-tagline">
@@ -1019,6 +1052,18 @@
                             <circle cx="12" cy="10" r="3" />
                         </svg>
                         <p class="footer-contact-text">Jakarta Selatan, Indonesia</p>
+                    </div>
+                </div>
+                <div class="reveal delay-4">
+                    <p class="footer-col-title">
+                        Lokasi Kami
+                    </p>
+
+                    <div class="footer-map-wrap">
+                        <iframe
+                            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3953.7654966187083!2d113.49449157462853!3d-7.708294292309393!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2dd70578fbd1ce1d%3A0xf274e90330fce8f5!2sNay%20Flower%20%7C%7C%20florist%20paiton!5e0!3m2!1sid!2sid!4v1778167923174!5m2!1sid!2sid"
+                            width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy"
+                            referrerpolicy="no-referrer-when-downgrade"></iframe>
                     </div>
                 </div>
             </div>

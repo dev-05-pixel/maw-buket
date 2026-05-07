@@ -695,8 +695,8 @@
                     <div class="fp-field">
                         <label class="fp-lbl" for="fp-email">Alamat Email</label>
                         <input type="email" id="fp-email" name="email" class="fp-inp"
-                            placeholder="admin@mawbouquet.id" value="{{ old('email') }}" required
-                            autocomplete="email" autofocus aria-required="true" />
+                            placeholder="admin@mawbouquet.id" value="{{ old('email') }}" required autocomplete="email"
+                            autofocus aria-required="true" />
                         @error('email')
                             <p style="font-size:12px;color:var(--rose-light);margin-top:6px;" role="alert">
                                 {{ $message }}</p>
