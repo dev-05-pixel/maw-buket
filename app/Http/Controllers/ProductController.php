@@ -21,6 +21,18 @@ class ProductController extends Controller
 
         $query = Product::query();
 
+        // SEARCH
+        if ($request->filled('search')) {
+
+            $search = $request->search;
+
+            $query->where(function ($q) use ($search) {
+
+                $q->where('name', 'like', '%' . $search . '%')
+                    ->orWhere('category', 'like', '%' . $search . '%');
+            });
+        }
+
         // FILTER KATEGORI
         if ($request->filled('category') && $request->category != 'Semua') {
             $query->where('category', $request->category);
