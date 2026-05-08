@@ -18,10 +18,13 @@ class Product extends Model
         'category',
         'description',
         'price',
-        'image'
+        'image',
+        'color',
+        'sizes',
     ];
 
     protected $casts = [
         'price' => 'decimal:2',
+        'sizes' => 'array',
     ];
 }

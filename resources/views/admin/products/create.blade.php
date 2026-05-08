@@ -127,17 +127,19 @@
                         Ukuran <span class="text-rose">*</span>
                     </label>
 
-                    <select name="size"
-                        class="w-full border border-cream-d rounded-xl px-4 py-3 text-sm text-brown bg-white
-                        focus:outline-none focus:ring-2 focus:ring-rose/30 focus:border-rose/50 transition
-                        @error('size') border-red-300 @enderror">
-                        <option value="">— Pilih Ukuran —</option>
-                        @foreach (['S', 'M', 'L'] as $size)
-                            <option value="{{ $size }}" {{ old('size') == $size ? 'selected' : '' }}>
-                                {{ $size }}
-                            </option>
+                    @php
+                        $sizes = ['Mini (S)', 'Standar (M)', 'Besar (L)', 'Grand (XL)', 'Custom'];
+                    @endphp
+
+                    <div class="space-y-2">
+                        @foreach ($sizes as $size)
+                            <label class="flex items-center gap-2">
+                                <input type="checkbox" name="sizes[]" value="{{ $size }}"
+                                    {{ in_array($size, old('sizes', [])) ? 'checked' : '' }}>
+                                <span>{{ $size }}</span>
+                            </label>
                         @endforeach
-                    </select>
+                    </div>
 
                     @error('size')
                         <p class="text-xs text-red-500 mt-1.5">{{ $message }}</p>

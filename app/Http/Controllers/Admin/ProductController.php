@@ -7,6 +7,7 @@ use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+
 class ProductController extends Controller
 {
     public function index(Request $request)
@@ -35,28 +36,82 @@ class ProductController extends Controller
             'price'       => 'required|numeric|min:1000',
             'image'       => 'required|image|mimes:jpg,jpeg,png|max:20480',
             'description' => 'nullable|string',
-            'color'       => 'required|string|max:50',
-            'size'        => 'required|in:S,M,L',
+            'color'       => 'required|string|max:255',
+            'sizes'       => 'required|array|min:1',
+            'sizes.*'     => 'string',
         ]);
 
+        /*
+        |--------------------------------------------------------------------------
+        | GENERATE ID
+        |--------------------------------------------------------------------------
+        */
         $id = strtoupper(Str::random(12));
 
-        // Normalisasi warna (rapikan spasi + kapitalisasi)
-        $color = preg_replace('/\s+/', ' ', $request->color);
-        $color = trim(ucwords(strtolower($color)));
+        /*
+        |--------------------------------------------------------------------------
+        | NORMALISASI WARNA
+        |--------------------------------------------------------------------------
+        |
+        | Input:
+        | pink, dusty pink, peach
+        |
+        | Output:
+        | Pink, Dusty Pink, Peach
+        |
+        */
+        $color = collect(explode(',', $request->color))
+            ->map(function ($item) {
 
-        // Upload image
+                $item = preg_replace('/\s+/', ' ', $item);
+                return trim(ucwords(strtolower($item)));
+            })
+            ->filter()
+            ->unique()
+            ->implode(', ');
+
+        /*
+        |--------------------------------------------------------------------------
+        | NORMALISASI SIZE
+        |--------------------------------------------------------------------------
+        */
+        $size = collect($request->sizes)
+            ->map(function ($item) {
+
+                return trim($item);
+            })
+            ->filter()
+            ->unique()
+            ->implode(', ');
+
+        /*
+        |--------------------------------------------------------------------------
+        | UPLOAD IMAGE
+        |--------------------------------------------------------------------------
+        */
         $imagePath = null;
+
         if ($request->hasFile('image')) {
-            $imagePath = $request->file('image')->store('products', 'public');
+
+            $imagePath = $request
+                ->file('image')
+                ->store('products', 'public');
         }
 
         if (!$imagePath) {
+
             return back()
-                ->withErrors(['image' => 'Upload gagal'])
+                ->withErrors([
+                    'image' => 'Upload gagal'
+                ])
                 ->withInput();
         }
 
+        /*
+        |--------------------------------------------------------------------------
+        | CREATE PRODUCT
+        |--------------------------------------------------------------------------
+        */
         Product::create([
             'id'          => $id,
             'name'        => $request->name,
@@ -65,7 +120,7 @@ class ProductController extends Controller
             'description' => $request->description,
             'image'       => $imagePath,
             'color'       => $color,
-            'size'        => $request->size,
+            'size'        => $size,
         ]);
 
         return redirect()
@@ -77,7 +132,10 @@ class ProductController extends Controller
     {
         $colors = $this->getColors();
 
-        return view('admin.products.edit', compact('product', 'colors'));
+        return view('admin.products.edit', compact(
+            'product',
+            'colors'
+        ));
     }
 
     public function update(Request $request, Product $product)
@@ -88,33 +146,83 @@ class ProductController extends Controller
             'price'       => 'required|numeric|min:1000',
             'image'       => 'nullable|image|mimes:jpg,jpeg,png|max:20480',
             'description' => 'nullable|string',
-            'color'       => 'required|string|max:50',
-            'size'        => 'required|in:S,M,L',
+            'color'       => 'required|string|max:255',
+            'sizes'       => 'required|array|min:1',
+            'sizes.*'     => 'string',
         ]);
 
-        // Normalisasi warna
-        $color = preg_replace('/\s+/', ' ', $request->color);
-        $color = trim(ucwords(strtolower($color)));
+        /*
+        |--------------------------------------------------------------------------
+        | NORMALISASI WARNA
+        |--------------------------------------------------------------------------
+        */
+        $color = collect(explode(',', $request->color))
+            ->map(function ($item) {
+                $item = preg_replace('/\s+/', ' ', $item);
+                return trim(ucwords(strtolower($item)));
+            })
+            ->filter()
+            ->unique()
+            ->implode(', ');
 
+        /*
+        |--------------------------------------------------------------------------
+        | NORMALISASI SIZE
+        |--------------------------------------------------------------------------
+        */
+        $size = collect($request->sizes)
+            ->map(function ($item) {
+
+                return trim($item);
+            })
+            ->filter()
+            ->unique()
+            ->implode(', ');
+
+        /*
+        |--------------------------------------------------------------------------
+        | IMAGE
+        |--------------------------------------------------------------------------
+        */
         $imagePath = $product->image;
 
         if ($request->hasFile('image')) {
 
-            // Hapus image lama jika ada
-            if ($product->image && Storage::disk('public')->exists($product->image)) {
+            /*
+            |--------------------------------------------------------------------------
+            | HAPUS IMAGE LAMA
+            |--------------------------------------------------------------------------
+            */
+            if (
+                $product->image &&
+                Storage::disk('public')->exists($product->image)
+            ) {
+
                 Storage::disk('public')->delete($product->image);
             }
 
-            $imagePath = $request->file('image')->store('products', 'public');
+            /*
+            |--------------------------------------------------------------------------
+            | UPLOAD IMAGE BARU
+            |--------------------------------------------------------------------------
+            */
+            $imagePath = $request
+                ->file('image')
+                ->store('products', 'public');
         }
 
+        /*
+        |--------------------------------------------------------------------------
+        | UPDATE PRODUCT
+        |--------------------------------------------------------------------------
+        */
         $product->update([
             'name'        => $request->name,
             'price'       => $request->price,
             'category'    => $request->category,
             'description' => $request->description,
             'color'       => $color,
-            'size'        => $request->size,
+            'size'        => $size,
             'image'       => $imagePath,
         ]);
 
@@ -125,10 +233,24 @@ class ProductController extends Controller
 
     public function destroy(Product $product)
     {
-        if ($product->image && Storage::disk('public')->exists($product->image)) {
+        /*
+        |--------------------------------------------------------------------------
+        | DELETE IMAGE
+        |--------------------------------------------------------------------------
+        */
+        if (
+            $product->image &&
+            Storage::disk('public')->exists($product->image)
+        ) {
+
             Storage::disk('public')->delete($product->image);
         }
 
+        /*
+        |--------------------------------------------------------------------------
+        | DELETE PRODUCT
+        |--------------------------------------------------------------------------
+        */
         $product->delete();
 
         return redirect()
@@ -143,7 +265,19 @@ class ProductController extends Controller
     {
         return Product::select('color')
             ->whereNotNull('color')
-            ->distinct()
-            ->pluck('color');
+            ->pluck('color')
+            ->flatMap(function ($item) {
+
+                return explode(',', $item);
+            })
+
+            ->map(function ($item) {
+                return trim($item);
+            })
+
+            ->filter()
+            ->unique()
+            ->sort()
+            ->values();
     }
 }

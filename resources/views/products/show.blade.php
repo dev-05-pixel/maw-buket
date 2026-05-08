@@ -93,53 +93,54 @@
             @endif
 
             {{-- SIZE OPTIONS --}}
-            <div class="option-group">
-                <p class="option-label">
-                    Ukuran — <span id="selected-size">Standar (M)</span> dipilih
-                </p>
-                <div class="size-options" role="group" aria-label="Pilih ukuran">
-                    @php
-                        $sizes = [
-                            ['label' => 'Mini (S)', 'price' => '+Rp 0', 'disabled' => false],
-                            ['label' => 'Standar (M)', 'price' => '+Rp 30.000', 'disabled' => false],
-                            ['label' => 'Besar (L)', 'price' => '+Rp 65.000', 'disabled' => false],
-                            ['label' => 'Grand (XL)', 'price' => '+Rp 120.000', 'disabled' => false],
-                        ];
-                    @endphp
-                    @foreach ($sizes as $i => $size)
-                        <button class="size-btn {{ $i === 1 ? 'active' : '' }} {{ $size['disabled'] ? 'disabled' : '' }}"
-                            data-price="{{ $size['price'] }}" aria-pressed="{{ $i === 1 ? 'true' : 'false' }}"
-                            aria-label="{{ $size['label'] }} {{ $size['price'] }}">
-                            {{ $size['label'] }}
-                        </button>
-                    @endforeach
+            @if ($product->size)
+                @php
+                    $sizes = array_map('trim', explode(',', $product->size));
+                @endphp
+
+                <div class="option-group">
+                    <p class="option-label">
+                        Ukuran —
+                        <span id="selected-size">
+                            {{ $sizes[0] }}
+                        </span>
+                    </p>
+
+                    <div class="size-options" role="group" aria-label="Pilihan ukuran">
+                        @foreach ($sizes as $i => $size)
+                            <button class="size-btn {{ $i === 0 ? 'active' : '' }}"
+                                aria-pressed="{{ $i === 0 ? 'true' : 'false' }}" data-size="{{ $size }}">
+                                {{ $size }}
+                            </button>
+                        @endforeach
+                    </div>
                 </div>
-            </div>
+            @endif
 
             {{-- COLOR OPTIONS --}}
-            <div class="option-group">
-                <p class="option-label">
-                    Warna Dominan
-                    <span id="selected-color">Blush Pink</span>
-                </p>
-                <div class="color-options" role="group" aria-label="Pilih warna">
-                    @php
-                        $productColors = [
-                            ['hex' => '#e8a0a0', 'name' => 'Blush Pink', 'active' => true],
-                            ['hex' => '#d4b8d4', 'name' => 'Lavender', 'active' => false],
-                            ['hex' => '#f5deb3', 'name' => 'Cream White', 'active' => false],
-                            ['hex' => '#c2f0c2', 'name' => 'Sage Green', 'active' => false],
-                            ['hex' => '#f5a06a', 'name' => 'Peach Coral', 'active' => false],
-                        ];
-                    @endphp
-                    @foreach ($productColors as $color)
-                        <button class="color-opt {{ $color['active'] ? 'active' : '' }}"
-                            style="background: {{ $color['hex'] }};" aria-label="{{ $color['name'] }}"
-                            title="{{ $color['name'] }}"
-                            aria-pressed="{{ $color['active'] ? 'true' : 'false' }}"></button>
-                    @endforeach
+            @if ($product->dominant_color)
+                @php
+                    $colors = array_map('trim', explode(',', $product->dominant_color));
+                @endphp
+
+                <div class="option-group">
+                    <p class="option-label">
+                        Warna Dominan —
+                        <span id="selected-color">
+                            {{ $colors[0] }}
+                        </span>
+                    </p>
+
+                    <div class="color-tags">
+                        @foreach ($colors as $i => $color)
+                            <button type="button" class="color-tag-detail {{ $i === 0 ? 'active' : '' }}"
+                                data-color="{{ $color }}">
+                                {{ $color }}
+                            </button>
+                        @endforeach
+                    </div>
                 </div>
-            </div>
+            @endif
 
             {{-- CTA --}}
             <div class="product-cta">

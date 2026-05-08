@@ -214,3 +214,43 @@ document.getElementById("share-btn").addEventListener("click", async () => {
         setTimeout(() => toast.remove(), 2200);
     }
 });
+
+/* =========================================
+   COLOR TAG SELECT
+========================================= */
+const colorTags = document.querySelectorAll(".color-tag-detail");
+const selectedColor = document.getElementById("selected-color");
+
+colorTags.forEach((tag) => {
+    tag.addEventListener("click", () => {
+        colorTags.forEach((t) => t.classList.remove("active"));
+
+        tag.classList.add("active");
+
+        if (selectedColor) {
+            selectedColor.textContent = tag.dataset.color;
+        }
+    });
+});
+
+/* =========================================
+   SIZE SELECT
+========================================= */
+const sizeButtons = document.querySelectorAll(".size-btn");
+const selectedSize = document.getElementById("selected-size");
+
+sizeButtons.forEach((btn) => {
+    btn.addEventListener("click", () => {
+        sizeButtons.forEach((b) => {
+            b.classList.remove("active");
+            b.setAttribute("aria-pressed", "false");
+        });
+
+        btn.classList.add("active");
+        btn.setAttribute("aria-pressed", "true");
+
+        if (selectedSize) {
+            selectedSize.textContent = btn.dataset.size;
+        }
+    });
+});
