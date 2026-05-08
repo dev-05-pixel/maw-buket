@@ -158,8 +158,8 @@
 
         <div class="products-grid">
 
-            @foreach ($featuredProducts as $i => $product)
-                <article class="product-card reveal delay-{{ $i + 1 }}">
+            @forelse ($featuredProducts as $i => $product)
+                <article class="product-card reveal delay-{{ ($i % 4) + 1 }}">
                     <a href="{{ url('/products/' . $product->id) }}">
                         <div class="product-card-img-wrap">
                             <img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->name }}"
@@ -176,7 +176,24 @@
                         </p>
                     </a>
                 </article>
-            @endforeach
+
+            @empty
+
+                <div class="empty-state">
+                    <svg class="empty-state-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="1.8">
+
+                        <path d="M20 7l-8-4-8 4m16 0v10l-8 4m8-14l-8 4m0 10L4 17V7m8 14V11M4 7l8 4" />
+                    </svg>
+
+                    <h3 class="empty-state-title">
+                        Koleksi sedang disiapkan
+                    </h3>
+                    <p class="empty-state-text">
+                        Produk pilihan akan segera hadir untuk Anda jelajahi.
+                    </p>
+                </div>
+            @endforelse
         </div>
     </section>
 
@@ -202,28 +219,48 @@
                 $exploreCategories = array_keys($categoryCounts);
             @endphp
 
-            @foreach ($exploreCategories as $i => $catName)
+            @forelse ($exploreCategories as $i => $catName)
                 @if ($i >= 4)
                     @break
                 @endif
+
                 <a href="{{ route('products.index', ['category' => $catName]) }}"
-                    class="category-card reveal delay-{{ $i + 1 }}" aria-label="{{ $catName }}">
+                    class="category-card reveal delay-{{ ($i % 4) + 1 }}" aria-label="{{ $catName }}">
                     <img src="{{ $exploreImages[$i] }}" alt="{{ $catName }}" class="category-img"
                         loading="lazy" />
                     <div class="category-overlay" aria-hidden="true"></div>
                     <div class="category-content">
-                        <p class="category-name">{{ $catName }}</p>
-                        <p class="category-count">{{ $categoryCounts[$catName] }} Produk</p>
+                        <p class="category-name">
+                            {{ $catName }}
+                        </p>
+                        <p class="category-count">
+                            {{ $categoryCounts[$catName] }} Produk
+                        </p>
+
                         <span class="category-arrow">
                             Lihat semua
                             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                stroke-width="2">
                                 <path d="M5 12h14M12 5l7 7-7 7" />
                             </svg>
                         </span>
                     </div>
                 </a>
-            @endforeach
+            @empty
+
+                <div class="empty-state">
+                    <svg class="empty-state-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="1.8">
+                        <path d="M3 7l9-4 9 4-9 4-9-4zm0 5l9 4 9-4m-18 5l9 4 9-4" />
+                    </svg>
+                    <h3 class="empty-state-title">
+                        Kategori belum tersedia
+                    </h3>
+                    <p class="empty-state-text">
+                        Pilihan kategori akan segera ditampilkan di halaman ini.
+                    </p>
+                </div>
+            @endforelse
         </div>
     </section>
 
@@ -267,7 +304,7 @@
             @endphp
 
             @foreach ($steps as $i => $step)
-                <div class="process-step reveal delay-{{ $i + 1 }}">
+                <div class="process-step reveal delay-{{ ($i % 4) + 1 }}">
                     <div class="process-step-num">{{ $step['num'] }}</div>
                     <h3 class="process-step-name">{{ $step['name'] }}</h3>
                     <p class="process-step-desc">{{ $step['desc'] }}</p>
@@ -292,46 +329,51 @@
 
         <div class="testimonials-grid">
 
-            @foreach ($testimonials as $i => $t)
-                <div class="testimonial-card reveal delay-{{ $i + 1 }}">
-
+            @forelse ($testimonials as $i => $t)
+                <div class="testimonial-card reveal delay-{{ ($i % 4) + 1 }}">
                     <div class="testimonial-stars">
-
                         @for ($s = 0; $s < $t->rating; $s++)
                             <svg class="star-icon" viewBox="0 0 24 24">
                                 <path
                                     d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
                             </svg>
                         @endfor
-
                     </div>
-
                     <span class="testimonial-quote-mark">
                         &ldquo;
                     </span>
-
                     <p class="testimonial-text">
                         {{ $t->message }}
                     </p>
-
                     <div class="testimonial-author">
-
                         <div class="testimonial-avatar-letter">
                             {{ strtoupper(substr($t->name, 0, 1)) }}
                         </div>
-
                         <div>
                             <p class="testimonial-author-name">
                                 {{ $t->name }}
                             </p>
-
                             <p class="testimonial-author-loc">
                                 {{ $t->location }}
                             </p>
                         </div>
                     </div>
                 </div>
-            @endforeach
+            @empty
+
+                <div class="empty-state testimonial-empty-state">
+                    <svg class="empty-state-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="1.8">
+                        <path d="M8 10h8M8 14h5M7 3h10a2 2 0 012 2v10a2 2 0 01-2 2H7a2 2 0 01-2-2V5a2 2 0 012-2z" />
+                    </svg>
+                    <h3 class="empty-state-title">
+                        Belum ada cerita yang dibagikan
+                    </h3>
+                    <p class="empty-state-text">
+                        Jadilah yang pertama membagikan pengalaman bersama Maw Bouquet.
+                    </p>
+                </div>
+            @endforelse
         </div>
 
         <div style="margin-top:40px; text-align:center;">
@@ -352,6 +394,16 @@
                         Ulasan Anda membantu kami terus menghadirkan rangkaian bunga terbaik.
                     </p>
                 </div>
+
+                @if ($errors->any())
+                    <div class="testimonial-errors">
+                        @foreach ($errors->all() as $error)
+                            <p class="testimonial-error-text">
+                                {{ $error }}
+                            </p>
+                        @endforeach
+                    </div>
+                @endif
 
                 <form id="testimonialForm" action="{{ route('testimonials.store') }}" method="POST" novalidate>
                     @csrf
@@ -384,11 +436,12 @@
                     </div>
 
                     <div class="testimonial-field">
-                        <input type="text" name="name" placeholder="Nama Anda" required class="testimonial-input">
+                        <input type="text" name="name" value="{{ old('name') }}" placeholder="Nama Anda"
+                            required class="testimonial-input">
                     </div>
                     <div class="testimonial-field">
                         <textarea name="message" placeholder="Tulis pengalaman Anda mengenai produk atau layanan kami..." required
-                            class="testimonial-textarea"></textarea>
+                            class="testimonial-textarea">{{ old('message') }}</textarea>
                     </div>
                     <button type="submit" class="btn-primary testimonial-submit">
                         Kirim Testimoni

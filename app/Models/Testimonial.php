@@ -7,13 +7,19 @@ use Illuminate\Database\Eloquent\Model;
 
 class Testimonial extends Model
 {
+    use HasFactory;
+
     protected $fillable = [
+        'id',
         'name',
         'location',
         'rating',
         'message',
         'avatar_letter',
-        'location',
-        'ip_address'
+        'ip_address',
     ];
+
+    protected $keyType = 'string';
+
+    public $incrementing = false;
 }

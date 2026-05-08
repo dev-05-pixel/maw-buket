@@ -12,15 +12,13 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('testimonials', function (Blueprint $table) {
-            $table->id();
-
+            $table->string('id', 12)->primary();
             $table->string('name');
             $table->string('location')->nullable();
             $table->tinyInteger('rating');
             $table->text('message');
             $table->string('avatar_letter', 1);
             $table->ipAddress('ip_address')->nullable();
-
             $table->timestamps();
         });
     }
