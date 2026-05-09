@@ -2,7 +2,6 @@
 //  INIT
 // ================================================================
 document.addEventListener("DOMContentLoaded", () => {
-    const inpBudget = document.getElementById("inp-budget");
     const budgetSlider = document.getElementById("budget-slider");
 
     // ================================================================
@@ -22,9 +21,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
         budgetSlider.addEventListener("input", () => {
             updateBudgetDisplay(budgetSlider.value);
-            if (inpBudget && !budgetSlider.disabled) {
-                inpBudget.value = budgetSlider.value;
-            }
         });
     }
 
@@ -61,8 +57,8 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         // Special: budget value
-        if (targetId === "inp-budget" && inpBudget && budgetSlider) {
-            inpBudget.value = checkbox.checked ? "" : budgetSlider.value;
+        if (slider) {
+            slider.disabled = checkbox.checked;
         }
     };
 
@@ -162,3 +158,42 @@ style.textContent = `
                 to { transform: rotate(360deg); }
             }`;
 document.head.appendChild(style);
+
+const sizeTrigger = document.getElementById("size-trigger");
+const sizeDropdown = document.getElementById("size-dropdown");
+const sizeTriggerText = document.getElementById("size-trigger-text");
+
+if (sizeTrigger && sizeDropdown) {
+    sizeTrigger.addEventListener("click", () => {
+        sizeDropdown.classList.toggle("active");
+    });
+
+    document.addEventListener("click", (e) => {
+        if (
+            !sizeTrigger.contains(e.target) &&
+            !sizeDropdown.contains(e.target)
+        ) {
+            sizeDropdown.classList.remove("active");
+        }
+    });
+
+    const sizeCheckboxes = sizeDropdown.querySelectorAll(
+        'input[type="checkbox"]',
+    );
+
+    const updateSizeLabel = () => {
+        const selected = [...sizeCheckboxes]
+            .filter((item) => item.checked)
+            .map((item) => item.value);
+
+        sizeTriggerText.textContent = selected.length
+            ? selected.join(", ")
+            : "Pilih ukuran buket";
+    };
+
+    sizeCheckboxes.forEach((item) => {
+        item.addEventListener("change", updateSizeLabel);
+    });
+
+    updateSizeLabel();
+}

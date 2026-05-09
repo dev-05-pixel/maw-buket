@@ -888,9 +888,93 @@
     color: var(--rose-deep);
 }
 
+.pagination-wrap {
+    margin-top: 48px;
+    display: flex;
+    justify-content: center;
+}
+
+.pagination-wrap nav {
+    display: flex;
+    gap: 8px;
+}
+
+.pagination-wrap svg {
+    width: 18px;
+}
+
+.ai-multi-select {
+    position: relative;
+    width: 100%;
+}
+
+.ai-multi-select-trigger {
+    width: 100%;
+    height: 56px;
+    border-radius: 18px;
+    border: 1px solid rgba(44, 36, 33, 0.1);
+    background: #fff;
+    padding: 0 18px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+    font-size: 14px;
+    color: var(--charcoal);
+    transition: 0.25s ease;
+}
+
+.ai-multi-select-trigger:hover {
+    border-color: var(--rose);
+}
+
+.ai-multi-select-dropdown {
+    position: absolute;
+    top: calc(100% + 10px);
+    left: 0;
+    width: 100%;
+    background: #fff;
+    border-radius: 20px;
+    border: 1px solid rgba(44, 36, 33, 0.08);
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.08);
+    padding: 10px;
+    z-index: 50;
+
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(10px);
+    transition: 0.25s ease;
+}
+
+.ai-multi-select-dropdown.active {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.ai-multi-option {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 14px;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: 0.2s ease;
+}
+
+.ai-multi-option:hover {
+    background: rgba(232, 160, 160, 0.08);
+}
+
+.ai-multi-option input {
+    width: 16px;
+    height: 16px;
+    accent-color: #d88d8d;
+}
+
 /* ================================================================
-                                                       RESPONSIVE
-                                                    ================================================================ */
+                       RESPONSIVE
+    ============================================================= */
 @media (max-width: 1024px) {
     .ai-main {
         grid-template-columns: 1fr;

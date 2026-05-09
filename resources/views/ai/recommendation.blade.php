@@ -75,34 +75,48 @@
                     {{-- ---- BUDGET ---- --}}
                     <div class="ai-field">
                         <div class="ai-field-header">
-                            <label class="ai-field-label" for="inp-budget">Budget</label>
-                            <label class="skip-toggle" for="skip-budget" title="Abaikan kriteria budget">
+                            <label class="ai-field-label" for="budget-slider">
+                                Budget
+                            </label>
+
+                            <label class="skip-toggle" for="skip-budget">
                                 <input type="checkbox" id="skip-budget" name="skip_budget" value="1"
-                                    class="skip-checkbox" data-target="inp-budget" data-slider="budget-slider"
-                                    {{ old('skip_budget') ? 'checked' : '' }} />
+                                    class="skip-checkbox" data-target="budget-slider"
+                                    {{ old('skip_budget', request('skip_budget')) ? 'checked' : '' }}>
+
                                 <div class="skip-toggle-track">
                                     <div class="skip-toggle-knob"></div>
                                 </div>
-                                <span class="skip-label-text">Skip</span>
+
+                                <span class="skip-label-text">
+                                    Skip
+                                </span>
                             </label>
                         </div>
 
                         <div class="budget-display">
-                            <span class="budget-value" id="budget-display">
-                                Rp <span
-                                    id="budget-val">{{ old('budget', 150000) ? number_format(old('budget', 150000), 0, ',', '.') : '150.000' }}</span>
+                            <span class="budget-value">
+                                Rp
+                                <span id="budget-val">
+                                    {{ number_format(old('budget', request('budget', 150000)), 0, ',', '.') }}
+                                </span>
                             </span>
-                            <span class="budget-range-labels">Rp 50rb — Rp 1jt</span>
+
+                            <span class="budget-range-labels">
+                                Rp 50rb — Rp 1jt
+                            </span>
                         </div>
 
-                        <input type="range" class="budget-slider" id="budget-slider" min="50000" max="1000000"
-                            step="10000" value="{{ old('budget', 150000) }}" />
+                        <input type="range" class="budget-slider" id="budget-slider" name="budget" min="50000"
+                            max="1000000" step="10000" value="{{ old('budget', request('budget', 150000)) }}"
+                            {{ old('skip_budget', request('skip_budget')) ? 'disabled' : '' }}>
 
-                        <input type="hidden" name="budget" id="inp-budget" value="{{ old('budget', 150000) }}" />
-
-                        <p class="ai-input-hint">Seret slider untuk menyesuaikan budget. Pilih "Skip" untuk mengabaikan
-                            filter ini.</p>
+                        <p class="ai-input-hint">
+                            Budget merupakan harga maksimal produk.
+                        </p>
                     </div>
+
+                    <div class="form-divider"></div>
 
                     <div class="form-divider"></div>
 
@@ -113,7 +127,7 @@
                             <label class="skip-toggle" for="skip-kategori" title="Abaikan kriteria kategori">
                                 <input type="checkbox" id="skip-kategori" name="skip_kategori" value="1"
                                     class="skip-checkbox" data-target="inp-kategori"
-                                    {{ old('skip_kategori') ? 'checked' : '' }} />
+                                    {{ old('skip_kategori', request('skip_kategori')) ? 'checked' : '' }} />
                                 <div class="skip-toggle-track">
                                     <div class="skip-toggle-knob"></div>
                                 </div>
@@ -123,17 +137,24 @@
 
                         <div class="ai-select-wrap">
                             <select name="kategori" id="inp-kategori" class="ai-select"
-                                {{ old('skip_kategori') ? 'disabled' : '' }}>
-                                <option value="buket_segar" {{ old('kategori') == 'buket_segar' ? 'selected' : '' }}>
+                                {{ old('skip_kategori', request('skip_kategori')) ? 'disabled' : '' }}>
+                                <option value="buket_segar"
+                                    {{ old('kategori', request('kategori')) == 'buket_segar' ? 'selected' : '' }}>
                                     Buket Segar
                                 </option>
-                                <option value="buket_kering" {{ old('kategori') == 'buket_kering' ? 'selected' : '' }}>
+
+                                <option value="buket_kering"
+                                    {{ old('kategori', request('kategori')) == 'buket_kering' ? 'selected' : '' }}>
                                     Buket Kering
                                 </option>
-                                <option value="pampas" {{ old('kategori') == 'pampas' ? 'selected' : '' }}>
+
+                                <option value="pampas"
+                                    {{ old('kategori', request('kategori')) == 'pampas' ? 'selected' : '' }}>
                                     Pampas
                                 </option>
-                                <option value="mini_bouquet" {{ old('kategori') == 'mini_bouquet' ? 'selected' : '' }}>
+
+                                <option value="mini_bouquet"
+                                    {{ old('kategori', request('kategori')) == 'mini_bouquet' ? 'selected' : '' }}>
                                     Mini Bouquet
                                 </option>
                             </select>
@@ -149,7 +170,7 @@
                             <label class="skip-toggle" for="skip-warna" title="Abaikan kriteria warna">
                                 <input type="checkbox" id="skip-warna" name="skip_warna" value="1"
                                     class="skip-checkbox" data-target="color-picker-group"
-                                    {{ old('skip_warna') ? 'checked' : '' }} />
+                                    {{ old('skip_warna', request('skip_warna')) ? 'checked' : '' }} />
                                 <div class="skip-toggle-track">
                                     <div class="skip-toggle-knob"></div>
                                 </div>
@@ -158,26 +179,53 @@
                         </div>
 
                         <div class="color-picker-grid" id="color-picker-group"
-                            style="{{ old('skip_warna') ? 'opacity:0.4; pointer-events:none;' : '' }}">
+                            style="{{ old('skip_warna', request('skip_warna')) ? 'opacity:0.4; pointer-events:none;' : '' }}">
                             @php
+
+                                $dbColors = \App\Models\Product::pluck('color')
+                                    ->filter()
+                                    ->flatMap(function ($item) {
+                                        return collect(explode(',', $item))->map(fn($c) => trim(strtolower($c)));
+                                    })
+                                    ->unique()
+                                    ->values();
+
                                 $colorOptions = [
                                     [
                                         'value' => 'bebas',
                                         'label' => 'Bebas',
                                         'hex' => 'linear-gradient(135deg,#e8a0a0,#d4b8d4,#c2f0c2,#f5deb3)',
                                     ],
-                                    ['value' => 'pink', 'label' => 'Pink', 'hex' => '#e8a0a0'],
-                                    ['value' => 'putih', 'label' => 'Putih', 'hex' => '#f5f5f0'],
-                                    ['value' => 'merah', 'label' => 'Merah', 'hex' => '#dc6060'],
-                                    ['value' => 'kuning', 'label' => 'Kuning', 'hex' => '#f5d66a'],
-                                    ['value' => 'ungu', 'label' => 'Ungu', 'hex' => '#d4b8d4'],
-                                    [
-                                        'value' => 'campur',
-                                        'label' => 'Mix',
-                                        'hex' => 'linear-gradient(135deg,#e8a0a0,#c2f0c2,#b0c4de)',
-                                    ],
                                 ];
-                                $selectedColor = old('warna', 'bebas');
+
+                                foreach ($dbColors as $color) {
+                                    $hexMap = [
+                                        'pink' => '#e8a0a0',
+                                        'putih' => '#f5f5f0',
+                                        'merah' => '#dc6060',
+                                        'kuning' => '#f5d66a',
+                                        'ungu' => '#d4b8d4',
+                                        'biru' => '#9db7d5',
+                                        'hijau' => '#b8d8b8',
+                                        'orange' => '#f2b37a',
+                                        'cream' => '#efe3cf',
+                                    ];
+
+                                    $colorOptions[] = [
+                                        'value' => $color,
+                                        'label' => ucfirst($color),
+                                        'hex' => $hexMap[$color] ?? '#cccccc',
+                                    ];
+                                }
+
+                                $colorOptions[] = [
+                                    'value' => 'mix',
+                                    'label' => 'Mix',
+                                    'hex' => 'linear-gradient(135deg,#e8a0a0,#c2f0c2,#b0c4de)',
+                                ];
+
+                                $selectedColor = old('warna', request('warna', 'bebas'));
+
                             @endphp
 
                             @foreach ($colorOptions as $col)
@@ -199,8 +247,9 @@
                         <div class="ai-field-header">
                             <label class="ai-field-label">Ukuran Buket</label>
                             <label class="skip-toggle" for="skip-ukuran">
-                                <input type="checkbox" id="skip-ukuran" name="skip_ukuran" class="skip-checkbox"
-                                    data-target="inp-ukuran" />
+                                <input type="checkbox" id="skip-ukuran" name="skip_ukuran" value="1"
+                                    class="skip-checkbox" data-target="inp-ukuran"
+                                    {{ old('skip_ukuran', request('skip_ukuran')) ? 'checked' : '' }} />
                                 <div class="skip-toggle-track">
                                     <div class="skip-toggle-knob"></div>
                                 </div>
@@ -208,15 +257,36 @@
                             </label>
                         </div>
 
-                        <div class="ai-select-wrap">
-                            <select name="ukuran" id="inp-ukuran" class="ai-select">
-                                <option value="kecil">Kecil</option>
-                                <option value="sedang">Sedang</option>
-                                <option value="besar">Besar</option>
-                            </select>
+                        <div class="ai-multi-select" id="inp-ukuran"
+                            style="{{ old('skip_ukuran', request('skip_ukuran')) ? 'opacity:0.4; pointer-events:none;' : '' }}">
+
+                            @php
+                                $sizes = ['Mini (S)', 'Standar (M)', 'Besar (L)', 'Grand (XL)', 'Custom'];
+
+                                $selectedSizes = old('ukuran', request('ukuran', []));
+                            @endphp
+
+                            <button type="button" class="ai-multi-select-trigger" id="size-trigger">
+                                <span id="size-trigger-text">
+                                    {{ count($selectedSizes) ? implode(', ', $selectedSizes) : 'Pilih ukuran buket' }}
+                                </span>
+
+                                <svg viewBox="0 0 24 24" width="18" height="18">
+                                    <path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2" />
+                                </svg>
+                            </button>
+
+                            <div class="ai-multi-select-dropdown" id="size-dropdown">
+                                @foreach ($sizes as $size)
+                                    <label class="ai-multi-option">
+                                        <input type="checkbox" name="ukuran[]" value="{{ $size }}"
+                                            {{ in_array($size, $selectedSizes) ? 'checked' : '' }}>
+                                        <span>{{ $size }}</span>
+                                    </label>
+                                @endforeach
+                            </div>
                         </div>
                     </div>
-
                     <div class="form-divider"></div>
 
                     {{-- ---- SUBMIT ---- --}}
@@ -342,6 +412,12 @@
                     </article>
                 @endforeach
             </div>
+
+            @if ($products instanceof \Illuminate\Pagination\LengthAwarePaginator)
+                <div class="pagination-wrap">
+                    {{ $products->links() }}
+                </div>
+            @endif
         </section>
     @endif
 
