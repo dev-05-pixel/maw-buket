@@ -21,86 +21,52 @@ if (descToggle && descBox) {
 // ================================================================
 const waBtn = document.getElementById("wa-order");
 
-waBtn.addEventListener("click", function () {
-    let productName = "{{ $product->name }}";
-    let price = "Rp {{ number_format($product->price, 0, ',', '.') }}";
-    let productLink = window.location.href;
+if (waBtn) {
+    waBtn.addEventListener("click", async function (e) {
+        e.preventDefault();
 
-    let size = document.querySelector(".size-btn.active")?.innerText || "-";
-    let color = document.querySelector(".color-opt.active")?.title || "-";
+        const productId = this.dataset.id;
 
-    const greetings = ["Halo Maw Bouquet,", "Permisi kak,"];
+        const size =
+            document.querySelector(".size-btn.active")?.dataset.size || "-";
 
-    const openings = [
-        "Saya tertarik dengan salah satu produk ini.",
-        "Saya menemukan produk berikut dan tertarik untuk memesannya.",
-        "Saya ingin menanyakan ketersediaan produk berikut:",
-        "Saya tertarik dengan produk ini:",
-    ];
+        const color =
+            document.querySelector(".color-tag-detail.active")?.dataset.color ||
+            "-";
 
-    const closings = [
-        "Apakah buket ini masih tersedia untuk dipesan?",
-        "Apakah produk ini masih available?",
-        "Boleh dibantu informasi ketersediaannya?",
-        "Apakah buket ini bisa dipesan untuk hari ini?",
-    ];
+        try {
+            const response = await fetch("/orders/store", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    Accept: "application/json",
+                    "X-CSRF-TOKEN": document
+                        .querySelector('meta[name="csrf-token"]')
+                        .getAttribute("content"),
+                },
+                body: JSON.stringify({
+                    product_id: productId,
+                    size: size,
+                    color: color,
+                }),
+            });
 
-    let greeting = greetings[Math.floor(Math.random() * greetings.length)];
-    let opening = openings[Math.floor(Math.random() * openings.length)];
-    let closing = closings[Math.floor(Math.random() * closings.length)];
+            const result = await response.json();
 
-    let message =
-        greeting +
-        "\n\n" +
-        opening +
-        "\n\n" +
-        "*Detail Produk*\n" +
-        "Produk : " +
-        productName +
-        "\n" +
-        "Harga  : " +
-        price +
-        "\n" +
-        "Ukuran : " +
-        size +
-        "\n" +
-        "Warna  : " +
-        color +
-        "\n\n" +
-        "Link produk:\n" +
-        productLink +
-        "\n\n" +
-        closing +
-        "\nTerima kasih.";
+            console.log(result);
 
-    let url = "https://wa.me/6282333000472?text=" + encodeURIComponent(message);
-
-    this.href = url;
-});
-
-const colorBtns = document.querySelectorAll(".color-opt");
-const colorLabel = document.getElementById("selected-color");
-
-colorBtns.forEach((btn) => {
-    btn.addEventListener("click", () => {
-        colorBtns.forEach((b) => b.classList.remove("active"));
-        btn.classList.add("active");
-
-        colorLabel.textContent = btn.title;
+            if (response.ok && result.success) {
+                window.open(result.wa_url, "_blank");
+            } else {
+                alert(result.message || "Gagal membuat pesanan.");
+            }
+        } catch (error) {
+            console.error(error);
+            alert("Terjadi kesalahan saat membuat pesanan.");
+        }
     });
-});
+}
 
-const sizeButtons = document.querySelectorAll(".size-btn");
-const sizeLabel = document.getElementById("selected-size");
-
-sizeButtons.forEach((btn) => {
-    btn.addEventListener("click", () => {
-        sizeButtons.forEach((b) => b.classList.remove("active"));
-        btn.classList.add("active");
-
-        sizeLabel.textContent = btn.textContent.trim();
-    });
-});
 const mainImg = document.getElementById("gallery-main");
 const thumbs = document.querySelectorAll(".gallery-thumb");
 const dots = document.querySelectorAll(".gallery-nav-dot");
@@ -143,20 +109,6 @@ document.querySelectorAll(".size-btn").forEach((btn) => {
         document.querySelectorAll(".size-btn").forEach((b) => {
             b.classList.remove("active");
             b.setAttribute("aria-pressed", "false");
-        });
-        this.classList.add("active");
-        this.setAttribute("aria-pressed", "true");
-    });
-});
-
-// ================================================================
-//  COLOR OPTIONS
-// ================================================================
-document.querySelectorAll(".color-opt").forEach((opt) => {
-    opt.addEventListener("click", function () {
-        document.querySelectorAll(".color-opt").forEach((o) => {
-            o.classList.remove("active");
-            o.setAttribute("aria-pressed", "false");
         });
         this.classList.add("active");
         this.setAttribute("aria-pressed", "true");

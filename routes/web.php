@@ -10,6 +10,7 @@ use App\Http\Controllers\Admin\ProductController as AdminProductController;
 use App\Http\Controllers\Admin\MessageController;
 use App\Http\Controllers\AIRecommendationController;
 use App\Http\Controllers\TestimonialController;
+use App\Http\Controllers\OrderController;
 
 // Halaman publik
 Route::get('/', [HomeController::class, 'index'])->name('home');
@@ -29,6 +30,9 @@ Route::post('/testimonials', [TestimonialController::class, 'store'])
 
 Route::get('/testimonials', [TestimonialController::class, 'index'])
     ->name('testimonials.index');
+
+Route::post('/orders/store', [OrderController::class, 'store'])
+    ->name('orders.store');
 
 // Admin auth
 Route::prefix('admin')->name('filament.admin.auth.')->group(function () {

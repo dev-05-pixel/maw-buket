@@ -16,6 +16,7 @@
     <meta property="og:image"
         content="{{ isset($product) && $product->image ? asset('storage/' . $product->image) : asset('images/logo.png') }}">
     <meta property="og:url" content="{{ url()->current() }}">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     {{-- Google Fonts --}}
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
