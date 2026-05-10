@@ -12,15 +12,17 @@ class OrderController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'product_id' => 'required|string|exists:products,id',
+            'product_id' => 'required|exists:products,id',
             'size' => 'nullable|string',
             'color' => 'nullable|string',
         ]);
 
         $product = Product::findOrFail($request->product_id);
 
+        $orderId = 'MWB-' . strtoupper(Str::random(8));
+
         $order = Order::create([
-            'id' => strtoupper(Str::random(12)),
+            'id' => $orderId,
             'product_id' => $product->id,
             'product_name' => $product->name,
             'product_price' => $product->price,
@@ -30,26 +32,25 @@ class OrderController extends Controller
         ]);
 
         $greetings = [
-            'Halo kak 👋',
-            'Halo Maw Bouquet 🌸',
-            'Permisi kak 🙌',
-            'Hai kak 😊',
+            'Halo kak',
+            'Halo Maw Bouquet',
+            'Permisi kak',
+            'Hai kak',
         ];
 
         $openings = [
             'Saya tertarik dengan produk berikut.',
-            'Saya ingin order bouquet ini.',
-            'Saya menemukan produk ini dan tertarik.',
-            'Saya mau tanya untuk produk berikut.',
-            'Saya ingin memesan bouquet berikut 🌷',
+            'Saya ingin memesan bouquet berikut.',
+            'Saya menemukan produk ini dan tertarik untuk order.',
+            'Saya ingin bertanya untuk produk berikut.',
         ];
 
         $closings = [
-            'Apakah masih tersedia?',
+            'Apakah produk ini masih tersedia?',
             'Bisa dibantu untuk proses pemesanannya?',
             'Apakah bisa dipesan hari ini?',
-            'Mohon info ketersediaannya ya kak 🙏',
-            'Terima kasih sebelumnya 😊',
+            'Mohon info ketersediaannya.',
+            'Terima kasih.',
         ];
 
         $message =
@@ -57,16 +58,16 @@ class OrderController extends Controller
 
             $openings[array_rand($openings)] . "\n\n" .
 
-            "📦 *Detail Produk*\n" .
+            "*DETAIL PRODUK*\n" .
             "• Produk : {$order->product_name}\n" .
             "• Harga  : Rp " . number_format($order->product_price, 0, ',', '.') . "\n" .
             "• Ukuran : " . ($order->size ?: '-') . "\n" .
             "• Warna  : " . ($order->color ?: '-') . "\n\n" .
 
-            "🆔 *ID Order*\n" .
-            "#{$order->id}\n\n" .
+            "*ID ORDER*\n" .
+            "{$order->id}\n\n" .
 
-            "🔗 Link Produk\n" .
+            "*LINK PRODUK*\n" .
             route('products.show', $product->id) . "\n\n" .
 
             $closings[array_rand($closings)];
