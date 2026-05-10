@@ -80,9 +80,14 @@
             {{-- Nav --}}
             <nav class="flex-1 p-3 space-y-0.5 text-sm overflow-y-auto">
 
-                <p class="text-[10px] font-semibold tracking-widest text-muted uppercase px-3 pt-4 pb-2">Utama</p>
+                {{-- ================= MAIN ================= --}}
+                <p class="text-[10px] font-semibold tracking-widest text-muted uppercase px-3 pt-4 pb-2">
+                    Utama
+                </p>
+
                 <a href="/admin/dashboard"
                     class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-brown-m hover:bg-cream {{ request()->is('admin/dashboard') ? 'active' : '' }}">
+
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                         stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
                         <rect x="3" y="3" width="7" height="7" rx="1" />
@@ -90,32 +95,97 @@
                         <rect x="14" y="14" width="7" height="7" rx="1" />
                         <rect x="3" y="14" width="7" height="7" rx="1" />
                     </svg>
+
                     Dashboard
                 </a>
 
-                <p class="text-[10px] font-semibold tracking-widest text-muted uppercase px-3 pt-5 pb-2">Katalog</p>
+                {{-- ================= KATALOG ================= --}}
+                <p class="text-[10px] font-semibold tracking-widest text-muted uppercase px-3 pt-5 pb-2">
+                    Katalog
+                </p>
+
                 <a href="/admin/products"
                     class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-brown-m hover:bg-cream {{ request()->is('admin/products*') ? 'active' : '' }}">
+
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                         stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M20 7H4a2 2 0 00-2 2v10a2 2 0 002 2h16a2 2 0 002-2V9a2 2 0 00-2-2z" />
                         <path d="M16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2" />
                     </svg>
+
                     Produk
                 </a>
 
-                <p class="text-[10px] font-semibold tracking-widest text-muted uppercase px-3 pt-5 pb-2">Pesan Masuk</p>
-                <a href="/admin/messages"
-                    class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-brown-m hover:bg-cream {{ request()->is('admin/messages*') ? 'active' : '' }}">
+                {{-- ================= TRANSAKSI ================= --}}
+                <p class="text-[10px] font-semibold tracking-widest text-muted uppercase px-3 pt-5 pb-2">
+                    Transaksi
+                </p>
+
+                @php
+                    $pendingOrders = \App\Models\Order::where('status', 'pending')->count();
+                @endphp
+
+                <a href="/admin/orders"
+                    class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-brown-m hover:bg-cream {{ request()->is('admin/orders*') ? 'active' : '' }}">
+
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M6 2l3 6" />
+                        <path d="M18 2l-3 6" />
+                        <path d="M3 10h18" />
+                        <rect x="3" y="6" width="18" height="14" rx="2" />
+                    </svg>
+
+                    Pesanan
+
+                    @if ($pendingOrders > 0)
+                        <span
+                            class="ml-auto bg-rose text-white text-[10px] font-semibold px-1.5 py-0.5 rounded-full leading-none">
+                            {{ $pendingOrders }}
+                        </span>
+                    @endif
+                </a>
+
+                {{-- ================= TESTIMONI ================= --}}
+                <p class="text-[10px] font-semibold tracking-widest text-muted uppercase px-3 pt-5 pb-2">
+                    Website
+                </p>
+
+                <a href="/admin/testimonials"
+                    class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-brown-m hover:bg-cream {{ request()->is('admin/testimonials*') ? 'active' : '' }}">
+
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                         stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" />
                     </svg>
+
+                    Testimoni
+                </a>
+
+                {{-- ================= PESAN ================= --}}
+                <p class="text-[10px] font-semibold tracking-widest text-muted uppercase px-3 pt-5 pb-2">
+                    Pesan Masuk
+                </p>
+
+                @php
+                    $unreadCount = \App\Models\ContactMessage::where('is_read', false)->count();
+                @endphp
+
+                <a href="/admin/messages"
+                    class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-brown-m hover:bg-cream {{ request()->is('admin/messages*') ? 'active' : '' }}">
+
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" />
+                    </svg>
+
                     Pesan Kontak
-                    @php $unreadCount = \App\Models\ContactMessage::where('is_read', false)->count(); @endphp
+
                     @if ($unreadCount > 0)
                         <span
-                            class="ml-auto bg-rose text-white text-[10px] font-semibold px-1.5 py-0.5 rounded-full leading-none">{{ $unreadCount }}</span>
+                            class="ml-auto bg-rose text-white text-[10px] font-semibold px-1.5 py-0.5 rounded-full leading-none">
+                            {{ $unreadCount }}
+                        </span>
                     @endif
                 </a>
 
