@@ -20,11 +20,21 @@ class Product extends Model
         'price',
         'image',
         'color',
-        'sizes',
+        'size',
     ];
 
     protected $casts = [
         'price' => 'decimal:2',
-        'sizes' => 'array',
     ];
+
+    /*
+    |--------------------------------------------------------------------------
+    | RELATION
+    |--------------------------------------------------------------------------
+    */
+
+    public function orders()
+    {
+        return $this->hasMany(Order::class, 'product_id', 'id');
+    }
 }
