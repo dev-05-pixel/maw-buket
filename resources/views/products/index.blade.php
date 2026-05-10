@@ -269,11 +269,10 @@
 
                                     <div class="product-card-quick">
                                         <a href="#" class="product-quick-btn wa-order"
-    data-id="{{ $product->id }}"
-    data-name="{{ $product->name }}"
-    data-price="{{ $product->price }}"
-    data-url="{{ route('products.show', $product->id) }}"
-    data-store-url="{{ route('orders.store') }}">
+                                            data-id="{{ $product->id }}" data-name="{{ $product->name }}"
+                                            data-price="{{ $product->price }}"
+                                            data-url="{{ route('products.show', $product->id) }}"
+                                            data-store-url="{{ route('orders.store') }}">
                                             Pesan via WhatsApp
                                         </a>
                                     </div>

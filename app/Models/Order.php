@@ -10,6 +10,8 @@ class Order extends Model
 {
     use HasFactory;
 
+    protected $table = 'orders';
+
     protected $keyType = 'string';
 
     public $incrementing = false;
@@ -34,6 +36,7 @@ class Order extends Model
         parent::boot();
 
         static::creating(function ($order) {
+
             if (!$order->id) {
                 $order->id = strtoupper(Str::random(12));
             }
@@ -42,6 +45,15 @@ class Order extends Model
 
     public function product()
     {
-        return $this->belongsTo(Product::class, 'product_id', 'id');
+        return $this->belongsTo(
+            Product::class,
+            'product_id',
+            'id'
+        );
+    }
+
+    public function canChangeTo($newStatus)
+    {
+        return $this->status !== $newStatus;
     }
 }

@@ -8,17 +8,11 @@ use Illuminate\Http\Request;
 
 class OrderController extends Controller
 {
-    public function index(Request $request)
+    public function index()
     {
-        $status = $request->status;
+        $orders = Order::latest()->paginate(10);
 
-        $orders = Order::when($status, function ($query) use ($status) {
-                $query->where('status', $status);
-            })
-            ->latest()
-            ->paginate(10);
-
-        return view('admin.orders.index', compact('orders', 'status'));
+        return view('admin.orders.index', compact('orders'));
     }
 
     public function show(Order $order)
@@ -29,20 +23,44 @@ class OrderController extends Controller
     public function updateStatus(Request $request, Order $order)
     {
         $request->validate([
-            'status' => 'required'
+            'status' => 'required|in:pending,confirmed,completed,cancelled',
+        ]);
+
+        $newStatus = $request->status;
+
+        if (!$order->canChangeTo($newStatus)) {
+            return back()->with('error', 'Perubahan status tidak valid.');
+        }
+
+        $order->update([
+            'status' => $newStatus,
+        ]);
+
+        return back()->with('success', 'Status transaksi berhasil diperbarui.');
+    }
+
+    public function updatePhone(Request $request, Order $order)
+    {
+        $request->validate([
+            'customer_phone' => 'required|string|max:20',
         ]);
 
         $order->update([
-            'status' => $request->status
+            'customer_phone' => $request->customer_phone,
         ]);
 
-        return back()->with('success', 'Status pesanan berhasil diperbarui.');
+        return back()->with(
+            'success',
+            'Nomor WhatsApp berhasil diperbarui.'
+        );
     }
 
     public function destroy(Order $order)
     {
         $order->delete();
 
-        return back()->with('success', 'Pesanan berhasil dihapus.');
+        return redirect()
+            ->route('admin.orders.index')
+            ->with('success', 'Transaksi berhasil dihapus.');
     }
 }

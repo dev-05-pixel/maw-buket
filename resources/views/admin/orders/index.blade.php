@@ -19,7 +19,7 @@
                 <thead class="bg-cream">
                     <tr class="text-left text-muted">
                         <th class="px-6 py-4">Order ID</th>
-                        <th class="px-6 py-4">Pelanggan</th>
+                        <th class="px-6 py-4">WhatsApp</th>
                         <th class="px-6 py-4">Produk</th>
                         <th class="px-6 py-4">Total</th>
                         <th class="px-6 py-4">Status</th>
@@ -35,7 +35,7 @@
                             </td>
 
                             <td class="px-6 py-4">
-                                {{ $order->customer_name }}
+                                {{ $order->customer_phone ?: '-' }}
                             </td>
 
                             <td class="px-6 py-4">
@@ -43,7 +43,7 @@
                             </td>
 
                             <td class="px-6 py-4">
-                                Rp {{ number_format($order->total_price, 0, ',', '.') }}
+                                Rp {{ number_format($order->product_price, 0, ',', '.') }}
                             </td>
 
                             <td class="px-6 py-4">
