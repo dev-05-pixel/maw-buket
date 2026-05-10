@@ -3,31 +3,38 @@
 // ================================================================
 
 document.querySelectorAll(".wa-order").forEach((btn) => {
-    btn.addEventListener("click", function (e) {
+    btn.addEventListener("click", async function (e) {
         e.preventDefault();
 
-        let name = this.dataset.name;
-        let price = this.dataset.price;
-        let link = this.dataset.url;
+        const productId = this.dataset.id;
+        const storeUrl = this.dataset.storeUrl;
 
-        const messages = [
-            `Halo Maw Bouquet, saya tertarik dengan produk ${name} dengan harga Rp ${price} ini. Apakah produk ini masih tersedia untuk dipesan? Berikut link produknya: ${link}`,
+        try {
+            const response = await fetch(storeUrl, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRF-TOKEN": document
+                        .querySelector('meta[name="csrf-token"]')
+                        .getAttribute("content"),
+                    Accept: "application/json",
+                },
+                body: JSON.stringify({
+                    product_id: productId,
+                }),
+            });
 
-            `Halo kak, saya menemukan produk ${name} di website Maw Bouquet dengan harga Rp ${price} dan tertarik untuk memesannya. Apakah produk ini masih tersedia? Berikut link produk yang saya lihat: ${link}`,
+            const data = await response.json();
 
-            `Permisi kak, saya tertarik dengan ${name} dengan harga Rp ${price} yang ada di website. Apakah buket ini masih bisa dipesan? Berikut link produknya: ${link}`,
-
-            `Halo Maw Bouquet, saya melihat produk ${name} dengan harga Rp ${price} di website dan tertarik untuk memesannya. Boleh dibantu informasi apakah produk ini masih tersedia? Link produk: ${link}`,
-        ];
-
-        let message = messages[Math.floor(Math.random() * messages.length)];
-
-        let phone = "6282333000472";
-
-        let url =
-            "https://wa.me/" + phone + "?text=" + encodeURIComponent(message);
-
-        window.open(url, "_blank");
+            if (data.success) {
+                window.open(data.wa_url, "_blank");
+            } else {
+                alert("Terjadi kesalahan saat membuat pesanan.");
+            }
+        } catch (error) {
+            console.error(error);
+            alert("Gagal terhubung ke server.");
+        }
     });
 });
 
