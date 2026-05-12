@@ -1,0 +1,32 @@
+
+[2026-05-11T16:17:08.914Z]
+STATUS : FAILED
+TEST   : AI Recommendation Page Test
+ERROR  : Title halaman AI recommendation tidak sesuai
+
+
+[2026-05-11T16:46:52.613Z]
+STATUS : FAILED
+TEST   : AI Recommendation Page Test
+ERROR  : Form panel tidak tampil
+
+
+[2026-05-11T16:48:17.004Z]
+STATUS : FAILED
+TEST   : AI Recommendation Page Test
+ERROR  : element not interactable
+  (Session info: chrome=147.0.7727.138)
+
+
+        [2026-05-11T16:50:31.711Z]
+        STATUS : SUCCESS
+        TEST   : AI Recommendation Page Test
+        TITLE  : Maw Bouquet | Maw Bouquet
+
+        
+        [2026-05-11T16:53:43.445Z]
+        STATUS : SUCCESS
+        TEST   : AI Recommendation Page Test
+        TITLE  : Maw Bouquet | Maw Bouquet
+
+        
