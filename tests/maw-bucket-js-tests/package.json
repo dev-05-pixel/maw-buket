@@ -1,0 +1,28 @@
+{
+  "name": "maw-bucket-tests",
+  "version": "1.0.0",
+  "description": "Automation Testing Selenium untuk aplikasi Maw-Bucket",
+  "main": "index.js",
+
+"scripts": {
+  "test": "mocha tests/**/*.test.js --timeout 30000 --reporter spec",
+  "test:publik": "mocha tests/01_halaman_publik.test.js --timeout 30000 --reporter spec",
+  "test:kontak": "mocha tests/02_form_kontak.test.js --timeout 30000 --reporter spec",
+  "test:auth": "mocha tests/03_admin_auth.test.js --timeout 30000 --reporter spec",
+  "test:produk": "mocha tests/04_admin_produk.test.js --timeout 30000 --reporter spec",
+  "test:pesan": "mocha tests/05_admin_pesan.test.js --timeout 30000 --reporter spec",
+  "test:navigasi": "mocha tests/06_responsif_navigasi.test.js --timeout 30000 --reporter spec",
+
+  "test:report": "mocha tests/**/*.test.js --timeout 30000 --reporter mochawesome --reporter-options reportDir=reports,reportFilename=laporan_pengujian,html=true,json=false",
+
+  "report": "node utils/generateReport.js"
+},
+  "dependencies": {
+    "selenium-webdriver": "^4.20.0"
+  },
+  "devDependencies": {
+    "mocha": "^10.4.0",
+    "mochawesome": "^7.1.4",
+    "mochawesome-report-generator": "^6.3.2"
+  }
+}
