@@ -118,17 +118,62 @@
             </a>
 
             <div class="about-stats">
-                <div class="reveal delay-1">
-                    <p class="about-stat-num">200<sup>+</sup></p>
-                    <p class="about-stat-label">Pesanan Selesai</p>
+
+                {{-- Orders --}}
+                <div class="about-stat-card reveal delay-1">
+
+                    <div class="about-stat-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M20 13V7a2 2 0 00-2-2h-3V3H9v2H6a2 2 0 00-2 2v6m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0H4" />
+                        </svg>
+                    </div>
+
+                    <div class="about-stat-content">
+                        <p class="about-stat-num">
+                            {{ number_format($completedOrders) }}<span>+</span>
+                        </p>
+
+                        <p class="about-stat-label">
+                            Pesanan Selesai
+                        </p>
+
+                        <div class="about-stat-line"></div>
+
+                        <p class="about-stat-desc">
+                            Buket telah dikirim untuk berbagai momen spesial pelanggan kami.
+                        </p>
+                    </div>
+
                 </div>
-                <div class="reveal delay-2">
-                    <p class="about-stat-num">4.9</p>
-                    <p class="about-stat-label">Rating Rata-rata</p>
-                </div>
-                <div class="reveal delay-3">
-                    <p class="about-stat-num">3<sup>thn</sup></p>
-                    <p class="about-stat-label">Pengalaman</p>
+
+                {{-- Rating --}}
+                <div class="about-stat-card reveal delay-2">
+
+                    <div class="about-stat-icon rating">
+                        <svg viewBox="0 0 24 24" fill="currentColor">
+                            <path
+                                d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+                        </svg>
+                    </div>
+                    <div class="about-stat-content">
+
+                        <div class="about-rating-row">
+                            <p class="about-stat-num">
+                                {{ $averageRating }}
+                            </p>
+                            <div class="about-rating-stars">
+                                ★★★★★
+                            </div>
+                        </div>
+                        <p class="about-stat-label">
+                            Rating Rata-rata
+                        </p>
+                        <div class="about-stat-line"></div>
+                        <p class="about-stat-desc">
+                            Berdasarkan ulasan pelanggan yang telah mempercayai Maw Bouquet.
+                        </p>
+                    </div>
                 </div>
             </div>
         </div>

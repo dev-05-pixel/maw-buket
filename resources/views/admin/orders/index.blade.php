@@ -23,6 +23,7 @@
                         <th class="px-6 py-4">Produk</th>
                         <th class="px-6 py-4">Total</th>
                         <th class="px-6 py-4">Status</th>
+                        <th class="px-6 py-4">Tanggal Ambil</th>
                         <th class="px-6 py-4 text-right">Aksi</th>
                     </tr>
                 </thead>
@@ -50,6 +51,14 @@
                                 <span class="px-3 py-1 rounded-full text-xs bg-cream text-brown">
                                     {{ ucfirst($order->status) }}
                                 </span>
+                            </td>
+
+                            <td class="px-6 py-4">
+                                @if ($order->pickup_date)
+                                    {{ $order->pickup_date->format('d M Y H:i') }}
+                                @else
+                                    -
+                                @endif
                             </td>
 
                             <td class="px-6 py-4">
