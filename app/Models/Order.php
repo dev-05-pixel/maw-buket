@@ -25,10 +25,12 @@ class Order extends Model
         'color',
         'customer_phone',
         'status',
+        'pickup_date',
     ];
 
     protected $casts = [
         'product_price' => 'integer',
+        'pickup_date' => 'datetime',
     ];
 
     protected static function boot()
