@@ -141,4 +141,9 @@ Route::prefix('admin')
             '/orders/{order}',
             [AdminOrderController::class, 'destroy']
         )->name('orders.destroy');
+
+        Route::get(
+            '/orders/{order}/whatsapp',
+            [AdminOrderController::class, 'whatsappReply']
+        )->name('orders.whatsapp');
     });
