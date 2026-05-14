@@ -15,6 +15,7 @@ use App\Http\Controllers\Admin\ProductController as AdminProductController;
 use App\Http\Controllers\Admin\MessageController;
 use App\Http\Controllers\Admin\TestimonialController as AdminTestimonialController;
 use App\Http\Controllers\Admin\OrderController as AdminOrderController;
+use App\Http\Controllers\Admin\FaqController;
 
 /*
 |--------------------------------------------------------------------------
@@ -146,4 +147,14 @@ Route::prefix('admin')
             '/orders/{order}/whatsapp',
             [AdminOrderController::class, 'whatsappReply']
         )->name('orders.whatsapp');
+           /*
+        | FAQ
+        */
+        Route::resource('faqs', FaqController::class);
+
+        /*
+        | AI CHATBOT
+        */
+        Route::post('/ai-chat', [\App\Http\Controllers\Admin\AiChatController::class, 'chat'])
+            ->name('ai.chat');
     });
