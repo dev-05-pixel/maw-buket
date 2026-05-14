@@ -45,6 +45,8 @@
 
 <body class="bg-cream text-brown">
 
+    @include('components.ai-chat-widget')
+
     <div class="cur-ring" id="cur-ring"></div>
     <div class="cur-dot" id="cur-dot"></div>
     <div id="sidebar-overlay" onclick="closeSidebar()"></div>
@@ -167,6 +169,8 @@
                     Pesan Masuk
                 </p>
 
+
+
                 @php
                     $unreadCount = \App\Models\ContactMessage::where('is_read', false)->count();
                 @endphp
@@ -187,6 +191,24 @@
                             {{ $unreadCount }}
                         </span>
                     @endif
+                </a>
+
+                {{-- ================= FAQ ================= --}}
+                <p class="text-[10px] font-semibold tracking-widest text-muted uppercase px-3 pt-5 pb-2">
+                    Knowledge Base
+                </p>
+
+                <a href="/admin/faqs"
+                    class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-brown-m hover:bg-cream {{ request()->is('admin/faqs*') ? 'active' : '' }}">
+
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="10" />
+                        <path d="M9.09 9a3 3 0 115.82 1c0 2-3 2-3 4" />
+                        <line x1="12" y1="17" x2="12.01" y2="17" />
+                    </svg>
+
+                    FAQ
                 </a>
 
             </nav>

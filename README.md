@@ -50,6 +50,22 @@ Sistem ini memungkinkan pelanggan untuk memesan buket bunga secara online dan ad
 
 ---
 
+## Setup
+
+### Laravel
+composer install
+npm install
+cp .env.example .env
+php artisan key:generate
+php artisan migrate
+
+### Flask AI
+pip install --upgrade pip
+python -m venv venv
+venv\Scripts\activate
+pip install -r requirements.txt
+python chatbot_api.py
+
 ## 🏗️ Struktur Project
 
 ```
