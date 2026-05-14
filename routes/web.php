@@ -1,20 +1,19 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
-
-use App\Http\Controllers\HomeController;
-use App\Http\Controllers\ProductController;
-use App\Http\Controllers\ContactController;
-use App\Http\Controllers\AIRecommendationController;
-use App\Http\Controllers\TestimonialController;
-use App\Http\Controllers\OrderController;
-
 use App\Http\Controllers\Admin\AuthController;
 use App\Http\Controllers\Admin\DashboardController;
-use App\Http\Controllers\Admin\ProductController as AdminProductController;
 use App\Http\Controllers\Admin\MessageController;
-use App\Http\Controllers\Admin\TestimonialController as AdminTestimonialController;
 use App\Http\Controllers\Admin\OrderController as AdminOrderController;
+use App\Http\Controllers\Admin\ProductController as AdminProductController;
+use App\Http\Controllers\Admin\TestimonialController as AdminTestimonialController;
+use App\Http\Controllers\AIRecommendationController;
+use App\Http\Controllers\ContactController;
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\OrderController;
+use App\Http\Controllers\ProductController;
+use App\Http\Controllers\TestimonialController;
+use App\Http\Controllers\Admin\FaqController;
+use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
@@ -141,4 +140,10 @@ Route::prefix('admin')
             '/orders/{order}',
             [AdminOrderController::class, 'destroy']
         )->name('orders.destroy');
+
+        Route::resource('faqs', FaqController::class);
     });
+
+//chatbot
+Route::post('/admin/ai-chat', [\App\Http\Controllers\Admin\AiChatController::class, 'chat'])
+    ->middleware('admin.auth');
