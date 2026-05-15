@@ -147,6 +147,7 @@ Route::prefix('admin')
             '/orders/{order}/whatsapp',
             [AdminOrderController::class, 'whatsappReply']
         )->name('orders.whatsapp');
+<<<<<<< Updated upstream
            /*
         | FAQ
         */
@@ -157,4 +158,12 @@ Route::prefix('admin')
         */
         Route::post('/ai-chat', [\App\Http\Controllers\Admin\AiChatController::class, 'chat'])
             ->name('ai.chat');
+=======
+
+        Route::resource('faqs', FaqController::class);
+>>>>>>> Stashed changes
     });
+
+//chatbot
+Route::post('/admin/ai-chat', [\App\Http\Controllers\Admin\AiChatController::class, 'chat'])
+    ->middleware('admin.auth');
