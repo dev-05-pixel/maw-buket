@@ -10,7 +10,9 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\DB;
 
 class FaqController extends Controller
+
 {
+
     public function index()
     {
         $faqs = FaqAnswer::with('questions')->latest()->get();
@@ -54,13 +56,12 @@ class FaqController extends Controller
 
             DB::commit();
 
-            // 🔥 IMPORTANT: refresh Flask cache
+            //  IMPORTANT: refresh Flask cache
             $this->refreshAiCache();
 
             return redirect()
                 ->route('admin.faqs.index')
                 ->with('success', 'FAQ berhasil ditambahkan');
-
         } catch (\Exception $e) {
             DB::rollBack();
 
@@ -113,13 +114,12 @@ class FaqController extends Controller
 
             DB::commit();
 
-            // 🔥 refresh Flask cache
+            //  refresh Flask cache
             $this->refreshAiCache();
 
             return redirect()
                 ->route('admin.faqs.index')
                 ->with('success', 'FAQ berhasil diupdate');
-
         } catch (\Exception $e) {
             DB::rollBack();
 
@@ -135,13 +135,12 @@ class FaqController extends Controller
             $faq = FaqAnswer::findOrFail($id);
             $faq->delete();
 
-            // 🔥 refresh Flask cache
+            //  refresh Flask cache
             $this->refreshAiCache();
 
             return redirect()
                 ->route('admin.faqs.index')
                 ->with('success', 'FAQ berhasil dihapus');
-
         } catch (\Exception $e) {
             return back()->with('error', 'Gagal hapus FAQ');
         }
@@ -153,15 +152,15 @@ class FaqController extends Controller
     private function getEmbedding($text)
     {
         try {
+            $url = config('services.ai.url');
             $response = Http::timeout(5)->post(
-                'http://127.0.0.1:5000/generate-embedding',
+                $url . '/generate-embedding',
                 ['question' => $text]
             );
 
             if ($response->successful()) {
                 return $response->json()['embedding'] ?? [];
             }
-
         } catch (\Exception $e) {
             // optional log
         }
@@ -170,13 +169,14 @@ class FaqController extends Controller
     }
 
     /**
-     * 🔥 FLASK CACHE REFRESH (SOLUSI 2)
+     *  FLASK CACHE REFRESH (SOLUSI 2)
      */
     private function refreshAiCache()
     {
         try {
+            $url = config('services.ai.url');
             Http::timeout(5)->post(
-                'http://127.0.0.1:5000/refresh-faq'
+                $url . '/refresh-faq'
             );
         } catch (\Exception $e) {
             // kalau gagal refresh, tidak menghentikan flow

@@ -14,8 +14,10 @@ class AiChatController extends Controller
             'message' => 'required|string'
         ]);
 
+        $url = config('services.ai.url');
+
         // Kirim ke Python AI / Flask / FastAPI
-        $response = Http::post('http://127.0.0.1:5000/chat', [
+        $response = Http::post($url . '/chat', [
             'message' => $request->message
         ]);
 

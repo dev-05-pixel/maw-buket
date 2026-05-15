@@ -35,4 +35,8 @@ return [
         'api_key' => env('FIREBASE_API_KEY'),
     ],
 
+    'ai' => [
+        'url' => env('AI_FLASK_URL', 'http://127.0.0.1:5000'),
+    ],
+
 ];

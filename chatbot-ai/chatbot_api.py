@@ -11,16 +11,14 @@ app = Flask(__name__)
 CORS(app)
 
 # ==========================================
-# MODEL LOAD (HOT START)
+# MODEL (FAST + STABLE)
 # ==========================================
-print("Loading IndoBERT model...")
+print("Loading model...")
 
 model = SentenceTransformer('firqaaa/indo-sentence-bert-base')
 
-# WARMUP MODEL (HILANGKAN LAG 15 DETIK PERTAMA)
 print("Warming up model...")
 model.encode("warmup text")
-
 print("Model ready!")
 
 # ==========================================
@@ -36,14 +34,14 @@ engine = create_engine(
 )
 
 # ==========================================
-# CACHE GLOBAL (IMPORTANT)
+# CACHE
 # ==========================================
 faq_cache = None
 faq_embeddings_cache = None
 
 
 # ==========================================
-# LOAD FAQ + EMBEDDING
+# LOAD FAQ (OPTIMIZED)
 # ==========================================
 def load_faq():
     query = """
@@ -62,20 +60,26 @@ def load_faq():
     if df.empty:
         return df, np.array([])
 
-    embeddings = df["embedding"].apply(json.loads).tolist()
-    embeddings = np.array(embeddings)
+    # parse embedding
+    embeddings = np.array(
+        df["embedding"].apply(json.loads).tolist(),
+        dtype=np.float32
+    )
+
+    # NORMALIZE (biar cosine lebih stabil & cepat)
+    embeddings = embeddings / np.linalg.norm(embeddings, axis=1, keepdims=True)
 
     return df, embeddings
 
 
 # ==========================================
-# GET CACHE (FAST ACCESS)
+# GET CACHE
 # ==========================================
 def get_faq():
     global faq_cache, faq_embeddings_cache
 
     if faq_cache is None or faq_embeddings_cache is None:
-        print("Loading FAQ into cache...")
+        print("Loading FAQ cache...")
         faq_cache, faq_embeddings_cache = load_faq()
         print("FAQ cached!")
 
@@ -83,7 +87,7 @@ def get_faq():
 
 
 # ==========================================
-# REFRESH CACHE MANUAL
+# REFRESH CACHE
 # ==========================================
 def refresh_faq():
     global faq_cache, faq_embeddings_cache
@@ -98,19 +102,19 @@ def generate_embedding():
     data = request.get_json(force=True)
     question = data['question']
 
-    embedding = model.encode(question)
+    emb = model.encode(question)
+    emb = emb / np.linalg.norm(emb)
 
     return jsonify({
-        'embedding': embedding.tolist()
+        'embedding': emb.tolist()
     })
 
 
 # ==========================================
-# CHATBOT AI (OPTIMIZED + FAST)
+# CHAT ENDPOINT (FAST MODE)
 # ==========================================
 @app.route('/chat', methods=['POST'])
 def chat():
-
     try:
         data = request.get_json(force=True)
         user_message = data['message']
@@ -123,17 +127,18 @@ def chat():
                 'score': 0
             })
 
-        # embedding user (FAST MODE)
+        # user embedding
         user_embedding = model.encode(user_message)
+        user_embedding = user_embedding / np.linalg.norm(user_embedding)
 
-        # cosine similarity
-        similarities = cosine_similarity([user_embedding], faq_embeddings)[0]
+        # cosine similarity (lebih cepat dari sklearn)
+        similarities = np.dot(faq_embeddings, user_embedding)
 
         best_index = int(np.argmax(similarities))
         best_score = float(similarities[best_index])
 
         # threshold
-        if best_score < 0.55:
+        if best_score < 0.60:
             return jsonify({
                 'reply': 'Maaf, saya belum menemukan jawaban yang sesuai.',
                 'score': best_score
@@ -154,20 +159,18 @@ def chat():
 
 
 # ==========================================
-# REFRESH CACHE ENDPOINT
+# REFRESH CACHE
 # ==========================================
 @app.route('/refresh-faq', methods=['POST'])
 def refresh():
     refresh_faq()
-    return jsonify({
-        "message": "FAQ cache refreshed"
-    })
+    return jsonify({"message": "FAQ cache refreshed"})
 
 
 # ==========================================
-# PRELOAD CACHE SAAT START SERVER
+# PRELOAD SAAT START
 # ==========================================
-print("Preloading FAQ cache...")
+print("Preloading FAQ...")
 faq_cache, faq_embeddings_cache = load_faq()
 print("FAQ ready in memory!")
 
