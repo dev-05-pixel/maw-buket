@@ -187,6 +187,11 @@ document.addEventListener("DOMContentLoaded", () => {
             return false;
         }
 
+        if (value.length > 600) {
+        showError(message, "Pesan tidak boleh lebih dari 600 karakter");
+        return false;
+    }
+
         removeError(message);
         return true;
     }
@@ -222,6 +227,18 @@ document.addEventListener("DOMContentLoaded", () => {
     const counter = document.getElementById("msg-count");
 
     message.addEventListener("input", () => {
-        counter.innerText = `${message.value.length} / 600`;
-    });
+    const length = message.value.length;
+
+    counter.innerText = `${length} / 600`;
+
+    if (length > 600) {
+        counter.style.color = "#ff4d4f";
+        message.classList.add("input-error");
+
+        showError(message, "Pesan tidak boleh lebih dari 600 karakter");
+    } else {
+        counter.style.color = "";
+        removeError(message);
+    }
+});
 });
