@@ -48,6 +48,28 @@ Sistem ini memungkinkan pelanggan untuk memesan buket bunga secara online dan ad
 - 👥 Manajemen User
 - 📦 Monitoring Pesanan
 
+### AI Chatbot FAQ Service
+
+Service AI chatbot ini menggunakan semantic similarity berbasis embedding dari model transformer untuk mencocokkan pertanyaan user dengan dataset FAQ.
+
+### Chatbot dibangun menggunakan:
+
+Flask
+Sentence Transformers
+SQLAlchemy
+MySQL
+Features
+Semantic FAQ chatbot
+Fast cosine similarity search
+FAQ cache system
+Automatic embedding generation
+Auto refresh cache after CRUD FAQ
+Environment-based configuration
+Automatic model change detection
+Automatic embedding regeneration when model changes
+Multilingual embedding support
+REST API integration with Laravel
+
 ---
 
 ## Setup
