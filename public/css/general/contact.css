@@ -753,3 +753,16 @@
         grid-template-columns: 1fr;
     }
 }
+/* validation */
+.input-error {
+    border: 2px solid #e63946 !important;
+    background: #fff5f5;
+}
+
+.error-message {
+    display: block;
+    margin-top: 6px;
+    color: #e63946;
+    font-size: 13px;
+    font-weight: 500;
+}
