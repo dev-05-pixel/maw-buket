@@ -160,6 +160,3 @@ Route::prefix('admin')
             ->name('ai.chat');
     });
 
-//chatbot
-Route::post('/admin/ai-chat', [\App\Http\Controllers\Admin\AiChatController::class, 'chat'])
-    ->middleware('admin.auth');

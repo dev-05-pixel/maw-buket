@@ -8,6 +8,7 @@ use App\Models\FaqAnswer;
 use App\Models\FaqQuestion;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class FaqController extends Controller
 
@@ -147,26 +148,71 @@ class FaqController extends Controller
     }
 
     /**
-     * EMBEDDING SERVICE (SAFE)
+     * EMBEDDING SERVICE
      */
     private function getEmbedding($text)
     {
         try {
-            $url = config('services.ai.url');
-            $response = Http::timeout(5)->post(
-                $url . '/generate-embedding',
-                ['question' => $text]
+
+            $url = rtrim(
+                config('services.ai.url'),
+                '/'
             );
 
-            if ($response->successful()) {
-                return $response->json()['embedding'] ?? [];
-            }
-        } catch (\Exception $e) {
-            // optional log
-        }
+            $response = Http::timeout(30)
+                ->acceptJson()
+                ->post(
+                    $url . '/generate-embedding',
+                    [
+                        'question' => $text
+                    ]
+                );
 
-        return [];
-    }
+            // DEBUG RESPONSE
+            if (!$response->successful()) {
+
+                Log::error('AI EMBEDDING ERROR', [
+
+                    'status' => $response->status(),
+
+                    'body' => $response->body()
+
+                ]);
+
+                throw new \Exception(
+                    'AI server gagal merespon'
+                );
+            }
+
+            $json = $response->json();
+
+            // VALIDASI RESPONSE
+            if (
+                !isset($json['embedding']) ||
+                !is_array($json['embedding']) ||
+                count($json['embedding']) === 0
+            ) {
+
+                Log::error('EMBEDDING EMPTY', [
+                    'response' => $json
+                ]);
+
+                throw new \Exception(
+                    'Embedding kosong dari AI'
+                );
+            }
+
+            return $json['embedding'];
+        } catch (\Exception $e) {
+
+            Log::error(
+                'GET EMBEDDING ERROR: ' .
+                    $e->getMessage()
+            );
+
+            throw $e;
+        }
+    }       
 
     /**
      *  FLASK CACHE REFRESH (SOLUSI 2)
@@ -174,12 +220,24 @@ class FaqController extends Controller
     private function refreshAiCache()
     {
         try {
+
             $url = config('services.ai.url');
-            Http::timeout(5)->post(
+
+            $response = Http::timeout(10)->post(
                 $url . '/refresh-faq'
             );
+
+            if (!$response->successful()) {
+
+                throw new \Exception(
+                    'Refresh AI gagal: ' . $response->body()
+                );
+            }
         } catch (\Exception $e) {
-            // kalau gagal refresh, tidak menghentikan flow
+
+            Log::error(
+                'AI CACHE ERROR: ' . $e->getMessage()
+            );
         }
     }
 }
