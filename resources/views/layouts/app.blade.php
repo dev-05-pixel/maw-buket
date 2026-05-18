@@ -24,16 +24,46 @@
         href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600&family=Jost:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap"
         rel="stylesheet" />
 
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
-
     <link rel="stylesheet" href="{{ asset('css/layouts/app.css') }}">
-  
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: "#000000",
+                        soft: "#f7f7f7",
+
+                        cream: "#F7F3EE",
+                        "cream-d": "#EDE6DC",
+
+                        brown: "#2C2421",
+                        "brown-m": "#4A3F3A",
+
+                        rose: "#D4847A",
+                        "rose-l": "#E8B5AF",
+                        "rose-d": "#B85C52",
+
+                        sand: "#C9AA86",
+                        muted: "#9E8E84",
+                        sage: "#7A9B7A",
+                    },
+
+                    fontFamily: {
+                        serif: ["Playfair Display", "serif"],
+                        sans: ["Inter", "sans-serif"],
+                    },
+                },
+            },
+        }
+    </script>
 
     @stack('styles')
 </head>
 
 <body>
-  
+    @include('components.ai-chat-widget')
 
     {{-- Noise texture --}}
     <div class="noise-overlay" aria-hidden="true"></div>
@@ -61,12 +91,12 @@
                         class="{{ request()->is('products*') ? 'active' : '' }}">Koleksi</a></li>
                 <li><a href="{{ url('/contact') }}" class="{{ request()->is('contact') ? 'active' : '' }}">Kontak</a>
                 </li>
-                <li>
-                    {{-- <a href="{{ url('/ai-recommendation') }}"
+                {{-- <li>
+                    <a href="{{ url('/ai-recommendation') }}"
                         class="{{ request()->is('ai-recommendation') ? 'active' : '' }}">
                         Rekomendasi AI
-                    </a> --}}
-                </li>
+                    </a>
+                </li> --}}
                 <li>
                     <a href="https://wa.me/6282333000472" target="_blank" rel="noopener" class="nav-cta">
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
@@ -154,8 +184,6 @@
                     </ul>
                 </div>
 
-                
-
                 <div class="reveal delay-3">
                     <p class="footer-col-title">Hubungi Kami</p>
                     <div class="footer-contact-item">
@@ -207,7 +235,7 @@
             </div>
         </div>
     </footer>
-    @include('components.ai-chat-widget')
+
     <script src="{{ asset('js/layouts/app.js') }}"></script>
 
     @stack('scripts')
