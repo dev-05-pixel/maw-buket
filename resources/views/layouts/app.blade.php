@@ -24,12 +24,16 @@
         href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600&family=Jost:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap"
         rel="stylesheet" />
 
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
+
     <link rel="stylesheet" href="{{ asset('css/layouts/app.css') }}">
+  
 
     @stack('styles')
 </head>
 
 <body>
+  
 
     {{-- Noise texture --}}
     <div class="noise-overlay" aria-hidden="true"></div>
@@ -150,6 +154,8 @@
                     </ul>
                 </div>
 
+                
+
                 <div class="reveal delay-3">
                     <p class="footer-col-title">Hubungi Kami</p>
                     <div class="footer-contact-item">
@@ -201,7 +207,7 @@
             </div>
         </div>
     </footer>
-
+    @include('components.ai-chat-widget')
     <script src="{{ asset('js/layouts/app.js') }}"></script>
 
     @stack('scripts')
