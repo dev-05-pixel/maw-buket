@@ -5,7 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ContactController;
-use App\Http\Controllers\AIRecommendationController;
+// use App\Http\Controllers\AIRecommendationController;
 use App\Http\Controllers\TestimonialController;
 use App\Http\Controllers\OrderController;
 
@@ -38,12 +38,12 @@ Route::get('/contact', [ContactController::class, 'index'])
 Route::post('/contact', [ContactController::class, 'store'])
     ->name('contact.store');
 
-Route::get('/ai-recommendation', function () {
-    return view('ai.recommendation');
-})->name('ai.index');
+// Route::get('/ai-recommendation', function () {
+//     return view('ai.recommendation');
+// })->name('ai.index');
 
-Route::post('/ai-recommendation/process', [AIRecommendationController::class, 'process'])
-    ->name('ai.process');
+// Route::post('/ai-recommendation/process', [AIRecommendationController::class, 'process'])
+//     ->name('ai.process');
 
 Route::get('/testimonials', [TestimonialController::class, 'index'])
     ->name('testimonials.index');

@@ -1,4 +1,4 @@
-@extends('layouts.app')
+{{-- @extends('layouts.app')
 
 @section('title', 'Rekomendasi Buket AI — Maw Bouquet')
 
@@ -6,15 +6,15 @@
     <link rel="stylesheet" href="{{ asset('css/ai/recommendation.css') }}">
 @endpush
 
-@section('content')
+@section('content') --}}
 
     {{-- ================================================================
      PAGE HERO
 ================================================================ --}}
-    <header class="ai-hero" aria-label="AI Recommendation hero">
+    {{-- <header class="ai-hero" aria-label="AI Recommendation hero"> --}}
 
         {{-- Animated petals --}}
-        <div class="ai-hero-deco" aria-hidden="true">
+        {{-- <div class="ai-hero-deco" aria-hidden="true">
             @for ($p = 0; $p < 12; $p++)
                 <div class="ai-petal"
                     style="
@@ -28,9 +28,9 @@
             ">
                 </div>
             @endfor
-        </div>
+        </div> --}}
 
-        <div class="ai-hero-grain" aria-hidden="true"></div>
+        {{-- <div class="ai-hero-grain" aria-hidden="true"></div>
         <div class="ai-hero-overlay" aria-hidden="true"></div>
 
         <div class="ai-hero-content">
@@ -48,32 +48,32 @@
                 paling cocok dari koleksi Maw Bouquet.
             </p>
         </div>
-    </header>
+    </header> --}}
 
     {{-- ================================================================
      MAIN: FORM + INFO PANEL
 ================================================================ --}}
-    <div class="ai-main">
+    {{-- <div class="ai-main"> --}}
 
         {{-- ================================================================
          FORM PANEL
     ================================================================ --}}
-        <div class="ai-form-panel reveal">
+        {{-- <div class="ai-form-panel reveal"> --}}
 
-            <div class="form-panel-header">
+            {{-- <div class="form-panel-header">
                 <p class="form-panel-title">Kriteria Pencarian</p>
                 <div style="font-size: 11px; color: var(--warm-grey); font-weight: 300;">
                     Isi sesuai kebutuhanmu
                 </div>
-            </div>
+            </div> --}}
 
-            <form method="POST" action="{{ route('ai.process') }}" id="ai-form">
-                @csrf
+            {{-- <form method="POST" action="{{ route('ai.process') }}" id="ai-form">
+                @csrf --}}
 
-                <div class="form-panel-body">
+                {{-- <div class="form-panel-body"> --}}
 
                     {{-- ---- BUDGET ---- --}}
-                    <div class="ai-field">
+                    {{-- <div class="ai-field">
                         <div class="ai-field-header">
                             <label class="ai-field-label" for="budget-slider">
                                 Budget
@@ -92,9 +92,9 @@
                                     Skip
                                 </span>
                             </label>
-                        </div>
+                        </div> --}}
 
-                        <div class="budget-display">
+                        {{-- <div class="budget-display">
                             <span class="budget-value">
                                 Rp
                                 <span id="budget-val">
@@ -105,23 +105,23 @@
                             <span class="budget-range-labels">
                                 Rp 50rb — Rp 1jt
                             </span>
-                        </div>
+                        </div> --}}
 
-                        <input type="range" class="budget-slider" id="budget-slider" name="budget" min="50000"
+                        {{-- <input type="range" class="budget-slider" id="budget-slider" name="budget" min="50000"
                             max="1000000" step="10000" value="{{ old('budget', request('budget', 150000)) }}"
                             {{ old('skip_budget', request('skip_budget')) ? 'disabled' : '' }}>
 
                         <p class="ai-input-hint">
                             Budget merupakan harga maksimal produk.
                         </p>
-                    </div>
+                    </div> --}}
 
-                    <div class="form-divider"></div>
+                    {{-- <div class="form-divider"></div>
 
-                    <div class="form-divider"></div>
+                    <div class="form-divider"></div> --}}
 
                     {{-- ---- KATEGORI ---- --}}
-                    <div class="ai-field">
+                    {{-- <div class="ai-field">
                         <div class="ai-field-header">
                             <label class="ai-field-label" for="inp-kategori">Kategori</label>
                             <label class="skip-toggle" for="skip-kategori" title="Abaikan kriteria kategori">
@@ -159,12 +159,12 @@
                                 </option>
                             </select>
                         </div>
-                    </div>
+                    </div> --}}
 
-                    <div class="form-divider"></div>
+                    {{-- <div class="form-divider"></div> --}}
 
                     {{-- ---- WARNA ---- --}}
-                    <div class="ai-field">
+                    {{-- <div class="ai-field">
                         <div class="ai-field-header">
                             <label class="ai-field-label">Preferensi Warna</label>
                             <label class="skip-toggle" for="skip-warna" title="Abaikan kriteria warna">
@@ -176,9 +176,9 @@
                                 </div>
                                 <span class="skip-label-text">Skip</span>
                             </label>
-                        </div>
+                        </div> --}}
 
-                        <div class="color-picker-grid" id="color-picker-group"
+                        {{-- <div class="color-picker-grid" id="color-picker-group"
                             style="{{ old('skip_warna', request('skip_warna')) ? 'opacity:0.4; pointer-events:none;' : '' }}">
                             @php
 
@@ -226,9 +226,9 @@
 
                                 $selectedColor = old('warna', request('warna', 'bebas'));
 
-                            @endphp
+                            @endphp --}}
 
-                            @foreach ($colorOptions as $col)
+                            {{-- @foreach ($colorOptions as $col)
                                 <label class="color-pick-btn {{ $selectedColor === $col['value'] ? 'selected' : '' }}"
                                     data-value="{{ $col['value'] }}">
                                     <input type="radio" name="warna" value="{{ $col['value'] }}"
@@ -239,9 +239,9 @@
                                 </label>
                             @endforeach
                         </div>
-                    </div>
+                    </div> --}}
 
-                    <div class="form-divider"></div>
+                    {{-- <div class="form-divider"></div>
 
                     <div class="ai-field">
                         <div class="ai-field-header">
@@ -287,10 +287,10 @@
                             </div>
                         </div>
                     </div>
-                    <div class="form-divider"></div>
+                    <div class="form-divider"></div> --}}
 
                     {{-- ---- SUBMIT ---- --}}
-                    <button type="submit" class="ai-submit-btn" id="submit-btn">
+                    {{-- <button type="submit" class="ai-submit-btn" id="submit-btn">
                         <span>Temukan Buket Untukku</span>
                         <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             aria-hidden="true">
@@ -300,15 +300,15 @@
 
                 </div>
             </form>
-        </div>
+        </div> --}}
 
         {{-- ================================================================
          INFO / TIPS PANEL
     ================================================================ --}}
-        <aside class="ai-info-panel" aria-label="Informasi sistem">
+        {{-- <aside class="ai-info-panel" aria-label="Informasi sistem"> --}}
 
             {{-- HOW IT WORKS --}}
-            <div class="info-card reveal delay-1">
+            {{-- <div class="info-card reveal delay-1">
                 <p class="info-card-title">Cara Memilih Buketmu</p>
                 <div class="how-step">
                     <div class="how-step-num">1</div>
@@ -332,10 +332,10 @@
                         <strong>Pilih & Pesan: </strong> lihat rekomendasi buket, lalu pesan dengan mudah melalui WhatsApp.
                     </div>
                 </div>
-            </div>
+            </div> --}}
 
             {{-- ALGORITHM TAGS --}}
-            <div class="algo-card reveal delay-2">
+            {{-- <div class="algo-card reveal delay-2">
                 <p class="algo-card-title">Kenapa Rekomendasi Ini Cocok?</p>
                 <div class="algo-tag-list">
                     <span class="algo-tag accent">Dipersonalisasi</span>
@@ -344,10 +344,10 @@
                     <span class="algo-tag">Preferensi Warna</span>
                     <span class="algo-tag">Pilihan Terbaik</span>
                 </div>
-            </div>
+            </div> --}}
 
             {{-- TIPS --}}
-            <div class="algo-card reveal delay-3">
+            {{-- <div class="algo-card reveal delay-3">
                 <p class="algo-card-title">Panduan Cepat</p>
                 <div class="tip-grid">
                     <div class="tip-card">
@@ -370,12 +370,12 @@
             </div>
 
         </aside>
-    </div>
+    </div> --}}
 
     {{-- ================================================================
      PREVIOUS RESULTS (if any from session / old submission)
 ================================================================ --}}
-    @if (isset($products) && count($products) > 0)
+    {{-- @if (isset($products) && count($products) > 0)
         <section class="prev-results" aria-label="Hasil rekomendasi sebelumnya">
             <div style="margin-bottom: 40px;">
                 <span class="section-label">Hasil Terakhir</span>
@@ -411,8 +411,8 @@
                         </div>
                     </article>
                 @endforeach
-            </div>
-
+            </div> --}}
+{{--
             @if ($products instanceof \Illuminate\Pagination\LengthAwarePaginator)
                 <div class="pagination-wrap">
                     {{ $products->links() }}
@@ -425,4 +425,4 @@
 
 @push('scripts')
     <script src="{{ asset('js/ai/recommendation.js') }}"></script>
-@endpush
+@endpush --}}

@@ -208,7 +208,7 @@
 
     function startTimer(timerId, btnId) {
     let secs = 60;
-    const timerEl = document.getElementById(timerId);
+    const timerEl = document.getElementById(timerId)
     const btnEl = document.getElementById(btnId);
     if (!timerEl || !btnEl) return;
 

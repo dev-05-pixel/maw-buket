@@ -58,10 +58,10 @@
                 <li><a href="{{ url('/contact') }}" class="{{ request()->is('contact') ? 'active' : '' }}">Kontak</a>
                 </li>
                 <li>
-                    <a href="{{ url('/ai-recommendation') }}"
+                    {{-- <a href="{{ url('/ai-recommendation') }}"
                         class="{{ request()->is('ai-recommendation') ? 'active' : '' }}">
                         Rekomendasi AI
-                    </a>
+                    </a> --}}
                 </li>
                 <li>
                     <a href="https://wa.me/6282333000472" target="_blank" rel="noopener" class="nav-cta">
@@ -89,9 +89,9 @@
         <a href="{{ url('/') }}" class="mobile-nav-link">Beranda</a>
         <a href="{{ url('/products') }}" class="mobile-nav-link">Koleksi</a>
         <a href="{{ url('/contact') }}" class="mobile-nav-link">Kontak</a>
-        <a href="{{ url('/ai-recommendation') }}" class="mobile-nav-link">
+        {{-- <a href="{{ url('/ai-recommendation') }}" class="mobile-nav-link">
             Rekomendasi AI
-        </a>
+        </a> --}}
         <a href="https://wa.me/6285708573756" target="_blank" rel="noopener" class="mobile-nav-link">WhatsApp</a>
     </div>
 
