@@ -485,8 +485,13 @@
                             required class="testimonial-input">
                     </div>
                     <div class="testimonial-field">
-                        <textarea name="message" placeholder="Tulis pengalaman Anda mengenai produk atau layanan kami..." required
+                        <textarea name="message" id="testimonialMessage"
+                            placeholder="Tulis pengalaman Anda mengenai produk atau layanan kami..." required maxlength="1000"
                             class="testimonial-textarea">{{ old('message') }}</textarea>
+
+                        <div class="text-xs text-muted mt-2">
+                            <span id="charCount">0</span>/1000 karakter
+                        </div>
                     </div>
                     <button type="submit" class="btn-primary testimonial-submit">
                         Kirim Testimoni

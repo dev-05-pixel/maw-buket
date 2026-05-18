@@ -55,11 +55,11 @@
 
         {{-- ══════════════════ SIDEBAR ══════════════════ --}}
         <aside id="sidebar"
-            class="fixed md:static inset-y-0 left-0 z-50
-                  w-64 bg-white border-r border-cream-d
-                  flex flex-col
-                  -translate-x-full md:translate-x-0
-                  transition-transform duration-300">
+            class="fixed inset-y-0 left-0 z-50
+          w-64 bg-white border-r border-cream-d
+          flex flex-col
+          -translate-x-full md:translate-x-0
+          transition-transform duration-300">
 
             {{-- Brand — tinggi = topbar --}}
             <div class="sidebar-brand px-6 border-b border-cream-d flex items-center">
@@ -80,10 +80,10 @@
             </div>
 
             {{-- Nav --}}
-            <nav class="flex-1 p-3 space-y-0.5 text-sm overflow-y-auto">
+            <nav class="flex-1 p-3 space-y-0.5 text-sm overflow-hidden">
 
                 {{-- ================= MAIN ================= --}}
-                <p class="text-[10px] font-semibold tracking-widest text-muted uppercase px-3 pt-4 pb-2">
+                <p class="hidden lg:block text-[10px] font-semibold tracking-widest text-muted uppercase px-3 pt-4 pb-2">
                     Utama
                 </p>
 
@@ -102,7 +102,7 @@
                 </a>
 
                 {{-- ================= KATALOG ================= --}}
-                <p class="text-[10px] font-semibold tracking-widest text-muted uppercase px-3 pt-5 pb-2">
+                <p class="hidden lg:block text-[10px] font-semibold tracking-widest text-muted uppercase px-3 pt-5 pb-2">
                     Katalog
                 </p>
 
@@ -119,7 +119,7 @@
                 </a>
 
                 {{-- ================= TRANSAKSI ================= --}}
-                <p class="text-[10px] font-semibold tracking-widest text-muted uppercase px-3 pt-5 pb-2">
+                <p class="hidden lg:block text-[10px] font-semibold tracking-widest text-muted uppercase px-3 pt-5 pb-2">
                     Transaksi
                 </p>
 
@@ -149,7 +149,7 @@
                 </a>
 
                 {{-- ================= TESTIMONI ================= --}}
-                <p class="text-[10px] font-semibold tracking-widest text-muted uppercase px-3 pt-5 pb-2">
+                <p class="hidden lg:block text-[10px] font-semibold tracking-widest text-muted uppercase px-3 pt-5 pb-2">
                     Website
                 </p>
 
@@ -165,7 +165,7 @@
                 </a>
 
                 {{-- ================= PESAN ================= --}}
-                <p class="text-[10px] font-semibold tracking-widest text-muted uppercase px-3 pt-5 pb-2">
+                <p class="hidden lg:block text-[10px] font-semibold tracking-widest text-muted uppercase px-3 pt-5 pb-2">
                     Pesan Masuk
                 </p>
 
@@ -194,7 +194,7 @@
                 </a>
 
                 {{-- ================= FAQ ================= --}}
-                <p class="text-[10px] font-semibold tracking-widest text-muted uppercase px-3 pt-5 pb-2">
+                <p class="hidden lg:block text-[10px] font-semibold tracking-widest text-muted uppercase px-3 pt-5 pb-2">
                     Knowledge Base
                 </p>
 
@@ -232,7 +232,7 @@
         </aside>
 
         {{-- ══════════════════ MAIN ══════════════════ --}}
-        <main class="flex-1 flex flex-col min-w-0">
+        <main class="flex-1 flex flex-col min-w-0 md:ml-64">
 
             {{-- Topbar — tinggi = sidebar brand --}}
             <header
