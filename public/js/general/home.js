@@ -53,3 +53,14 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 });
+
+const textarea = document.getElementById('testimonialMessage');
+    const charCount = document.getElementById('charCount');
+
+    function updateCount() {
+        charCount.textContent = textarea.value.length;
+    }
+
+    textarea.addEventListener('input', updateCount);
+
+    updateCount();
