@@ -30,4 +30,20 @@ class ContactMessage extends Model
             }
         });
     }
+
+    public function getWhatsappLinkAttribute()
+    {
+
+        $phone = preg_replace('/[^0-9]/', '', $this->phone);
+
+        if (substr($phone, 0, 1) === '0') {
+            $phone = '62' . substr($phone, 1);
+        }
+
+        if (substr($phone, 0, 1) === '8') {
+            $phone = '62' . $phone;
+        }
+
+        return 'https://wa.me/' . $phone;
+    }
 }

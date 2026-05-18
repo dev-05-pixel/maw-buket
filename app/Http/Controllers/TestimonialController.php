@@ -22,6 +22,11 @@ class TestimonialController extends Controller
             'name' => 'required|max:100',
             'message' => 'required|max:1000',
             'rating' => 'required|integer|min:1|max:5',
+        ], [
+            'message.max' => 'Pesan testimonial maksimal 1000 karakter.',
+            'message.required' => 'Pesan testimonial wajib diisi.',
+            'name.required' => 'Nama wajib diisi.',
+            'rating.required' => 'Rating wajib dipilih.',
         ]);
 
         // =========================================
