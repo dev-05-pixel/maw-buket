@@ -21,14 +21,31 @@ jobs:
           script: |
             cd /var/www/Maw-Buket
 
+            echo "=== Pull Latest Code ==="
             git pull origin main
 
+            echo "=== Install Composer Dependencies ==="
             composer install --no-interaction --prefer-dist --optimize-autoloader
 
+            echo "=== Install NPM Dependencies ==="
             npm install
 
+            echo "=== Build Vite Assets ==="
             npm run build
 
+            echo "=== Fix Laravel Permissions ==="
+            chmod -R 775 storage bootstrap/cache
+
+            echo "=== Clear Old Cache ==="
+            php artisan optimize:clear
+
+            echo "=== Run Database Migration ==="
             php artisan migrate --force
 
+            echo "=== Optimize Laravel ==="
             php artisan optimize
+
+            echo "=== Restart Docker Stack ==="
+            docker stack deploy -c docker-compose.yml mawstack
+
+            echo "=== Deployment Finished Successfully ==="
