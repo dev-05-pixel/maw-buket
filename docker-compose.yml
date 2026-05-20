@@ -8,6 +8,8 @@ services:
       - "9100:9100"
     volumes:
       - ./:/var/www
+      - ./storage:/var/www/Maw-Buket/storage
+      - ./bootstrap/cache:/var/www/Maw-Buket/bootstrap/cache
     networks:
       - maw-network
     deploy:
