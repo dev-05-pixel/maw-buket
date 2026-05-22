@@ -79,6 +79,32 @@
             </form>
 
             <div class="filter-right">
+                <button type="button" class="mobile-filter-toggle" id="mobile-filter-toggle" aria-label="Buka filter">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <line x1="4" y1="6" x2="20" y2="6"></line>
+                        <line x1="7" y1="12" x2="17" y2="12"></line>
+                        <line x1="10" y1="18" x2="14" y2="18"></line>
+                    </svg>
+                </button>
+
+                <div class="mobile-category-dropdown">
+                    <select class="mobile-category-select" onchange="window.location.href=this.value">
+
+                        <option value="{{ route('products.index') }}">
+                            Semua
+                        </option>
+
+                        @foreach ($categories as $cat)
+                            @if ($cat !== 'Semua')
+                                <option value="{{ route('products.index', ['category' => $cat]) }}"
+                                    {{ request('category') == $cat ? 'selected' : '' }}>
+                                    {{ $cat }}
+                                </option>
+                            @endif
+                        @endforeach
+                    </select>
+                </div>
                 <div class="sort-select-wrap" aria-label="Urutkan">
                     <span class="sort-label">Urut:</span>
                     <select name="sort" class="sort-select">
@@ -93,7 +119,8 @@
                 </div>
 
                 <div class="view-toggle" role="group" aria-label="Tampilan grid">
-                    <button class="view-btn active" id="grid-view-btn" aria-label="Grid view" aria-pressed="true">
+                    <button type="button" class="view-btn active" id="grid-view-btn" aria-label="Grid view"
+                        aria-pressed="true">
                         <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
                             aria-hidden="true">
                             <rect x="3" y="3" width="7" height="7" />
@@ -102,7 +129,8 @@
                             <rect x="14" y="14" width="7" height="7" />
                         </svg>
                     </button>
-                    <button class="view-btn" id="list-view-btn" aria-label="List view" aria-pressed="false">
+                    <button type="button" class="view-btn" id="list-view-btn" aria-label="List view"
+                        aria-pressed="false">
                         <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
                             aria-hidden="true">
                             <line x1="8" y1="6" x2="21" y2="6" />
@@ -122,6 +150,7 @@
      MAIN CONTENT: SIDEBAR + PRODUCTS
 ================================================================ --}}
     <form method="GET" action="{{ route('products.index') }}">
+        <div class="sidebar-overlay" id="sidebar-overlay"></div>
         <div class="products-main">
 
             {{-- SIDEBAR --}}

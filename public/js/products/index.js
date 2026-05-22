@@ -68,26 +68,46 @@ document.querySelectorAll(".filter-tab").forEach((tab) => {
 });
 
 // ================================================================
-//  VIEW TOGGLE
+// VIEW TOGGLE + SAVE STATE
 // ================================================================
+
 const gridBtn = document.getElementById("grid-view-btn");
 const listBtn = document.getElementById("list-view-btn");
 const listing = document.getElementById("products-listing");
 
-gridBtn.addEventListener("click", () => {
-    listing.classList.remove("view-list");
-    gridBtn.classList.add("active");
-    listBtn.classList.remove("active");
-    gridBtn.setAttribute("aria-pressed", "true");
-    listBtn.setAttribute("aria-pressed", "false");
+function applyView(view) {
+    if (view === "list") {
+        listing.classList.add("view-list");
+
+        listBtn.classList.add("active");
+        gridBtn.classList.remove("active");
+
+        listBtn.setAttribute("aria-pressed", "true");
+        gridBtn.setAttribute("aria-pressed", "false");
+    } else {
+        listing.classList.remove("view-list");
+
+        gridBtn.classList.add("active");
+        listBtn.classList.remove("active");
+
+        gridBtn.setAttribute("aria-pressed", "true");
+        listBtn.setAttribute("aria-pressed", "false");
+    }
+
+    localStorage.setItem("productsView", view);
+}
+
+const savedView = localStorage.getItem("productsView") || "grid";
+applyView(savedView);
+
+gridBtn.addEventListener("click", (e) => {
+    e.preventDefault();
+    applyView("grid");
 });
 
-listBtn.addEventListener("click", () => {
-    listing.classList.add("view-list");
-    listBtn.classList.add("active");
-    gridBtn.classList.remove("active");
-    listBtn.setAttribute("aria-pressed", "true");
-    gridBtn.setAttribute("aria-pressed", "false");
+listBtn.addEventListener("click", (e) => {
+    e.preventDefault();
+    applyView("list");
 });
 
 // ================================================================
@@ -156,3 +176,25 @@ searchInput.addEventListener("blur", () => {
         searchWrap.classList.remove("active");
     }
 });
+
+// ================================================================
+// MOBILE SIDEBAR
+// ================================================================
+
+const mobileToggle = document.getElementById("mobile-filter-toggle");
+const sidebar = document.getElementById("sidebar");
+const sidebarOverlay = document.getElementById("sidebar-overlay");
+
+if (mobileToggle && sidebar && sidebarOverlay) {
+    mobileToggle.addEventListener("click", () => {
+        sidebar.classList.add("mobile-open");
+        sidebarOverlay.classList.add("active");
+        document.body.style.overflow = "hidden";
+    });
+
+    sidebarOverlay.addEventListener("click", () => {
+        sidebar.classList.remove("mobile-open");
+        sidebarOverlay.classList.remove("active");
+        document.body.style.overflow = "";
+    });
+}

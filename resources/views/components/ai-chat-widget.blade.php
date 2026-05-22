@@ -21,15 +21,10 @@
                 <div
                     class="w-10 h-10 rounded-full bg-gradient-to-br from-rose to-rose-d flex items-center justify-center shadow-md">
 
-                    <svg xmlns="http://www.w3.org/2000/svg"
-                        class="w-5 h-5 text-white"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                        stroke-width="2">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor" stroke-width="2">
 
-                        <path stroke-linecap="round"
-                            stroke-linejoin="round"
+                        <path stroke-linecap="round" stroke-linejoin="round"
                             d="M8 10h8M8 14h5m-9 6l2.5-2.5A9 9 0 1112 21a8.96 8.96 0 01-4.5-1.2L3 20z" />
                     </svg>
                 </div>
@@ -98,9 +93,7 @@
 
             <div class="flex items-center gap-2">
 
-                <input id="chat-input"
-                    type="text"
-                    placeholder="Tulis pesan..."
+                <input id="chat-input" type="text" placeholder="Tulis pesan..."
                     class="flex-1 px-4 py-3 text-sm
                            bg-cream/40
                            border border-cream-d
@@ -121,16 +114,10 @@
                            transition
                            shadow-md">
 
-                    <svg xmlns="http://www.w3.org/2000/svg"
-                        class="w-5 h-5"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                        stroke-width="2">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor" stroke-width="2">
 
-                        <path stroke-linecap="round"
-                            stroke-linejoin="round"
-                            d="M5 12h14M13 5l7 7-7 7" />
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14M13 5l7 7-7 7" />
                     </svg>
 
                 </button>
@@ -140,8 +127,7 @@
     </div>
 
     {{-- FLOAT BUTTON --}}
-    <button id="chat-open-btn"
-        onclick="AiChat.open()"
+    <button id="chat-open-btn" onclick="AiChat.open()"
         class="group relative flex items-center gap-3 px-5 h-14
                bg-gradient-to-r from-rose to-rose-d
                text-white rounded-full shadow-xl
@@ -155,14 +141,10 @@
         <div class="flex items-center justify-center w-8 h-8 rounded-full bg-white/15">
 
             <svg xmlns="http://www.w3.org/2000/svg"
-                class="w-5 h-5 transition-transform duration-300 group-hover:rotate-6"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                stroke-width="2">
+                class="w-5 h-5 transition-transform duration-300 group-hover:rotate-6" fill="none"
+                viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
 
-                <path stroke-linecap="round"
-                    stroke-linejoin="round"
+                <path stroke-linecap="round" stroke-linejoin="round"
                     d="M8 10h8M8 14h5m-9 6l2.5-2.5A9 9 0 1112 21a8.96 8.96 0 01-4.5-1.2L3 20z" />
             </svg>
         </div>
@@ -235,6 +217,67 @@
         margin-left: 6px;
         font-weight: 600;
     }
+
+    /* ================= STYLE ================= */
+    /* AI Chat Widget Responsif */
+    #ai-chat-wrapper {
+        position: fixed;
+        bottom: 80px;
+        /* jarak dari bawah default */
+        right: 16px;
+        z-index: 9999;
+    }
+
+    /* Layar 375px */
+    @media (max-width: 375px) {
+        #ai-chat-wrapper {
+            bottom: 80px;
+            /* naikkan agar tidak ketutup header/footer */
+            right: 12px;
+            max-width: 90%;
+        }
+
+        #ai-chat-box {
+            width: 300px;
+            /* proporsional */
+            height: 460px;
+            border-radius: 1.5rem;
+            /* tetap bulat tapi tidak terlalu besar */
+        }
+
+        #chat-open-btn {
+            height: 52px;
+            padding: 0 14px;
+            border-radius: 1.5rem;
+            gap: 8px;
+        }
+    }
+
+    /* Layar 320px */
+    @media (max-width: 320px) {
+        #ai-chat-wrapper {
+            bottom: 90px;
+            /* lebih tinggi agar tidak terpotong */
+            right: 8px;
+            max-width: 95%;
+        }
+
+        #ai-chat-box {
+            width: 260px;
+            /* lebih kecil dari 375px */
+            height: 420px;
+            /* lebih pendek */
+            border-radius: 1.25rem;
+        }
+
+        #chat-open-btn {
+            height: 48px;
+            width: auto;
+            padding: 0 12px;
+            border-radius: 1.25rem;
+            gap: 6px;
+        }
+    }
 </style>
 
 {{-- ================= JS ================= --}}
@@ -290,9 +333,9 @@
 
             this.init();
 
-            this.box.classList.contains('hidden')
-                ? this.open()
-                : this.close();
+            this.box.classList.contains('hidden') ?
+                this.open() :
+                this.close();
         },
 
         async send() {
@@ -356,14 +399,14 @@
             const label = document.createElement('div');
             label.className = "msg-label";
 
-            label.textContent = type === 'bot'
-                ? 'BOT'
-                : 'YOU';
+            label.textContent = type === 'bot' ?
+                'BOT' :
+                'YOU';
 
             const msg = document.createElement('div');
 
-            msg.className = type === 'user'
-                ? `
+            msg.className = type === 'user' ?
+                `
                     bg-gradient-to-r from-rose to-rose-d
                     text-white
                     p-3 rounded-2xl
@@ -371,8 +414,8 @@
                     ml-auto
                     w-fit
                     max-w-[85%]
-                  `
-                : `
+                  ` :
+                `
                     bg-gradient-to-br from-cream to-white
                     text-brown-m
                     p-3 rounded-2xl
