@@ -64,3 +64,4 @@ jobs:
             docker stack deploy -c docker-compose.yml mawstack
 
             echo "=== DONE ==="
+
