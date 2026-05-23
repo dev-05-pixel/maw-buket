@@ -13,7 +13,7 @@ import os
 # ==========================================
 # LOAD ENV
 # ==========================================
-load_dotenv('/app/.env')
+load_dotenv('../.env')
 # ==========================================
 # APP CONFIG
 # ==========================================
@@ -369,6 +369,17 @@ def generate_embedding():
 # ==========================================
 # CHAT AI
 # ==========================================
+# ==========================================
+# WHATSAPP CONFIG
+# ==========================================
+FALLBACK_AI_WA = os.getenv(
+    'FALLBACK_AI_WA',
+    '6285829364229'
+)
+
+# ==========================================
+# CHAT AI
+# ==========================================
 @app.route(
     '/chat',
     methods=['POST']
@@ -404,15 +415,6 @@ def chat():
             normalize_embeddings=True
         )
 
-        # VALIDASI DIMENSI
-        if faq_embeddings.shape[1] != len(user_embedding):
-
-            return jsonify({
-                'reply': 'Embedding model tidak cocok. Regenerate diperlukan.',
-                'faq_dimension': int(faq_embeddings.shape[1]),
-                'user_dimension': int(len(user_embedding))
-            }), 500
-
         similarities = np.dot(
             faq_embeddings,
             user_embedding
@@ -426,11 +428,33 @@ def chat():
             similarities[best_index]
         )
 
+        # ==========================================
+        # FALLBACK WHATSAPP
+        # ==========================================
         if best_score < AI_THRESHOLD:
 
+            wa_text = (
+                f"Halo admin Maw Bouquet,%0A%0A"
+                f"Saya ingin bertanya:%0A"
+                f"{user_message}"
+            )
+
+            wa_link = (
+                f"https://wa.me/"
+                f"{FALLBACK_AI_WA}"
+                f"?text={wa_text}"
+            )
+
             return jsonify({
-                'reply': 'Maaf, saya belum menemukan jawaban yang sesuai.',
-                'score': round(best_score, 4)
+
+                'reply':
+                'Maaf 😢 AI belum bisa menjawab pertanyaan kamu.',
+
+                'score': round(best_score, 4),
+
+                'fallback': True,
+
+                'whatsapp_url': wa_link
             })
 
         answer = faq_df.iloc[
@@ -438,20 +462,24 @@ def chat():
         ]['answer']
 
         return jsonify({
+
             'reply': answer,
-            'score': round(best_score, 4)
+
+            'score': round(best_score, 4),
+
+            'fallback': False
         })
 
     except Exception as e:
 
-        print(
-            "CHAT ERROR:",
-            str(e)
-        )
+        print("CHAT ERROR:", str(e))
 
         return jsonify({
+
             'reply': 'Terjadi kesalahan sistem.',
+
             'error': str(e)
+
         }), 500
 
 # ==========================================
@@ -462,17 +490,12 @@ def chat():
     methods=['POST']
 )
 def refresh():
-
     try:
-
         refresh_faq()
-
         return jsonify({
             'message': 'FAQ cache refreshed'
         })
-
     except Exception as e:
-
         return jsonify({
             'error': str(e)
         }), 500
@@ -487,24 +510,17 @@ if saved_model != AI_MODEL:
     print("MODEL CHANGED!")
     print(f"OLD MODEL : {saved_model}")
     print(f"NEW MODEL : {AI_MODEL}")
-
     regenerate_all_embeddings()
-
     save_current_model()
-
     print("All embeddings updated!\n")
 
-else:
-
-    print("Model unchanged\n")
+else:print("Model unchanged\n")
 
 # ==========================================
 # PRELOAD FAQ
 # ==========================================
 print("Preloading FAQ cache...")
-
 faq_df_cache, faq_embeddings_cache = load_faq()
-
 print("FAQ ready in memory!\n")
 
 # ==========================================
