@@ -19,7 +19,11 @@ jobs:
           key: ${{ secrets.SERVER_SSH_KEY }}
 
           script: |
+
             cd /var/www/Maw-Buket
+
+            echo "=== Enable Maintenance Mode ==="
+            php artisan down || true
 
             echo "=== Pull Latest Code ==="
             git pull origin main
@@ -35,6 +39,7 @@ jobs:
 
             echo "=== Fix Laravel Permissions ==="
             chmod -R 775 storage bootstrap/cache
+            chown -R www-data:www-data storage bootstrap/cache
 
             echo "=== Clear Old Cache ==="
             php artisan optimize:clear
@@ -42,10 +47,37 @@ jobs:
             echo "=== Run Database Migration ==="
             php artisan migrate --force
 
-            echo "=== Optimize Laravel ==="
-            php artisan optimize
+            echo "=== Rebuild Docker Image ==="
+            docker build --no-cache -t maw-app:latest .
 
-            echo "=== Restart Docker Stack ==="
+            echo "=== Redeploy Docker Swarm Stack ==="
             docker stack deploy -c docker-compose.yml mawstack
+
+            echo "=== Force Restart Services ==="
+            docker service update --force mawstack_app
+            docker service update --force mawstack_nginx
+
+            echo "=== Wait Container Ready ==="
+            sleep 15
+
+            echo "=== Clear Laravel Cache Inside Container ==="
+
+            CONTAINER_ID=$(docker ps --filter "ancestor=maw-app:latest" -q | head -n 1)
+
+            docker exec $CONTAINER_ID php artisan optimize:clear
+            docker exec $CONTAINER_ID php artisan view:clear
+            docker exec $CONTAINER_ID php artisan config:clear
+            docker exec $CONTAINER_ID php artisan route:clear
+            docker exec $CONTAINER_ID php artisan cache:clear
+
+            echo "=== Rebuild Laravel Cache ==="
+            docker exec $CONTAINER_ID php artisan optimize
+
+            echo "=== Disable Maintenance Mode ==="
+            docker exec $CONTAINER_ID php artisan up
+
+            echo "=== Remove Unused Docker Resources ==="
+            docker image prune -af
+            docker container prune -f
 
             echo "=== Deployment Finished Successfully ==="
