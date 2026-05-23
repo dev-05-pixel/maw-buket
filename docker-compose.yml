@@ -3,22 +3,23 @@ version: '3.8'
 services:
 
   app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+
     image: maw-app:latest
 
     ports:
       - "9100:9000"
+
+    volumes:
+      - ./:/var/www
 
     networks:
       - maw-network
 
     deploy:
       replicas: 1
-
-      update_config:
-        order: start-first
-
-      restart_policy:
-        condition: any
 
   nginx:
     image: nginx:latest
@@ -27,7 +28,8 @@ services:
       - "80:80"
 
     volumes:
-      - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
+      - ./:/var/www
+      - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf
 
     depends_on:
       - app
@@ -37,12 +39,6 @@ services:
 
     deploy:
       replicas: 1
-
-      update_config:
-        order: start-first
-
-      restart_policy:
-        condition: any
 
   redis:
     image: redis:latest
@@ -81,7 +77,7 @@ services:
       - "9090:9090"
 
     volumes:
-      - ./docker/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - ./docker/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
 
     networks:
       - maw-network
@@ -160,12 +156,6 @@ services:
 
     deploy:
       replicas: 1
-
-      update_config:
-        order: start-first
-
-      restart_policy:
-        condition: any
 
 networks:
   maw-network:
