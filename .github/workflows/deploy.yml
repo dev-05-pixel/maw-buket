@@ -25,42 +25,57 @@ jobs:
 
             cd /var/www/Maw-Buket
 
+            echo "=== FIX PROJECT OWNERSHIP ==="
+            sudo chown -R $USER:$USER /var/www/Maw-Buket
+
             echo "=== CURRENT COMMIT BEFORE PULL ==="
             git log --oneline -1
 
-            echo "=== PULL LATEST CODE ==="
+            echo "=== FETCH LATEST CODE ==="
             git fetch origin main
+
+            echo "=== RESET TO REMOTE MAIN ==="
             git reset --hard origin/main
 
             echo "=== CURRENT COMMIT AFTER PULL ==="
             git log --oneline -1
 
-            echo "=== INSTALL COMPOSER ==="
-            composer install --no-interaction --prefer-dist --optimize-autoloader
+            echo "=== CLEAN OLD DOCKER CACHE ==="
+            docker system prune -af || true
+            docker builder prune -af || true
 
-            echo "=== INSTALL NPM ==="
+            echo "=== INSTALL COMPOSER DEPENDENCIES ==="
+            composer install \
+              --no-interaction \
+              --prefer-dist \
+              --optimize-autoloader
+
+            echo "=== INSTALL NPM DEPENDENCIES ==="
             npm install
 
-            echo "=== BUILD VITE ==="
+            echo "=== BUILD VITE ASSETS ==="
             npm run build
 
-            echo "=== FIX PERMISSION ==="
+            echo "=== FIX LARAVEL PERMISSIONS ==="
             sudo chown -R www-data:www-data storage bootstrap/cache
             sudo chmod -R 775 storage bootstrap/cache
 
-            echo "=== CLEAR CACHE ==="
+            echo "=== CLEAR OLD LARAVEL CACHE ==="
             php artisan optimize:clear
 
-            echo "=== MIGRATE DATABASE ==="
+            echo "=== RUN DATABASE MIGRATION ==="
             php artisan migrate --force
 
             echo "=== OPTIMIZE LARAVEL ==="
             php artisan optimize
 
-            echo "=== REBUILD DOCKER APP IMAGE ==="
+            echo "=== REBUILD DOCKER IMAGE ==="
             docker build -t maw-app:latest .
 
-            echo "=== RESTART DOCKER STACK ==="
+            echo "=== RESTART DOCKER SWARM STACK ==="
             docker stack deploy -c docker-compose.yml mawstack
 
-            echo "=== DONE ==="
+            echo "=== REMOVE DANGLING IMAGES ==="
+            docker image prune -af || true
+
+            echo "=== DEPLOYMENT FINISHED SUCCESSFULLY ==="
