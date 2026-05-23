@@ -79,4 +79,3 @@ jobs:
             docker image prune -af || true
 
             echo "=== DEPLOYMENT FINISHED SUCCESSFULLY ==="
-
