@@ -9,65 +9,58 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
 
-    timeout-minutes: 30
-
     steps:
       - name: Deploy to VPS
-        uses: appleboy/ssh-action@master
+        uses: appleboy/ssh-action@v1.0.3
 
         with:
           host: ${{ secrets.SERVER_HOST }}
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.SERVER_SSH_KEY }}
-
-          command_timeout: 30m
+          command_timeout: 40m
 
           script: |
 
+            set -e
+
             cd /var/www/Maw-Buket
 
-            echo "=== Pull Latest Code ==="
-            git reset --hard
-            git pull origin main
+            echo "=== CURRENT COMMIT BEFORE PULL ==="
+            git log --oneline -1
 
-            echo "=== Laravel Maintenance Mode ==="
-            php artisan down || true
+            echo "=== PULL LATEST CODE ==="
+            git fetch origin main
+            git reset --hard origin/main
 
-            echo "=== Install Composer Dependencies ==="
-            composer install --no-interaction --prefer-dist --optimize-autoloader --no-dev
+            echo "=== CURRENT COMMIT AFTER PULL ==="
+            git log --oneline -1
 
-            echo "=== Install NPM Dependencies ==="
+            echo "=== INSTALL COMPOSER ==="
+            composer install --no-interaction --prefer-dist --optimize-autoloader
+
+            echo "=== INSTALL NPM ==="
             npm install
 
-            echo "=== Build Vite Assets ==="
+            echo "=== BUILD VITE ==="
             npm run build
 
-            echo "=== Clear Laravel Cache ==="
+            echo "=== FIX PERMISSION ==="
+            sudo chown -R www-data:www-data storage bootstrap/cache
+            sudo chmod -R 775 storage bootstrap/cache
+
+            echo "=== CLEAR CACHE ==="
             php artisan optimize:clear
 
-            echo "=== Run Migration ==="
+            echo "=== MIGRATE DATABASE ==="
             php artisan migrate --force
 
-            echo "=== Fix Permissions ==="
-            chmod -R 775 storage bootstrap/cache
-
-            echo "=== Rebuild Docker Images ==="
-            docker compose build --no-cache
-
-            echo "=== Redeploy Docker Swarm ==="
-            docker stack deploy -c docker-compose.yml mawstack
-
-            echo "=== Restart Laravel Containers ==="
-            docker service update --force mawstack_app
-            docker service update --force mawstack_nginx
-
-            echo "=== Optimize Laravel ==="
+            echo "=== OPTIMIZE LARAVEL ==="
             php artisan optimize
 
-            echo "=== Laravel Up ==="
-            php artisan up
+            echo "=== REBUILD DOCKER APP IMAGE ==="
+            docker build -t maw-app:latest .
 
-            echo "=== Remove Old Docker Images ==="
-            docker image prune -af
+            echo "=== RESTART DOCKER STACK ==="
+            docker stack deploy -c docker-compose.yml mawstack
 
-            echo "=== Deployment Finished ==="
+            echo "=== DONE ==="
