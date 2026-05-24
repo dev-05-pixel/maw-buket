@@ -22,84 +22,62 @@ jobs:
 
             cd /var/www/Maw-Buket
 
-            echo "=== FIX PROJECT OWNERSHIP (HOST) ==="
+            echo "=== FIX PROJECT OWNERSHIP ==="
             sudo chown -R $USER:$USER /var/www/Maw-Buket
 
-            echo "=== CURRENT COMMIT BEFORE PULL ==="
-            git log --oneline -1
-
-            echo "=== FETCH LATEST CODE ==="
+            echo "=== PULL LATEST CODE ==="
             git fetch origin main
-
-            echo "=== RESET TO REMOTE MAIN ==="
             git reset --hard origin/main
 
-            echo "=== CURRENT COMMIT AFTER PULL ==="
-            git log --oneline -1
-
-            echo "=== ENSURE HOME VIEW EXISTS ==="
+            echo "=== ENSURE HOME VIEW EXISTS (FALLBACK) ==="
+            mkdir -p resources/views
             if [ ! -f resources/views/home.blade.php ]; then
-                mkdir -p resources/views
                 cat > resources/views/home.blade.php << 'EOF'
             @extends('layouts.app')
-
+            @section('title', 'Beranda')
+            @push('styles')
+                <link rel="stylesheet" href="{{ asset('css/general/home.css') }}">
+            @endpush
             @section('content')
-            <div class="container">
                 <h1>Selamat Datang di Maw Bouquet</h1>
-                <p>Toko bunga online terpercaya.</p>
-            </div>
             @endsection
             EOF
             fi
 
-            echo "=== CLEAN OLD DOCKER CACHE ==="
-            docker system prune -af || true
-            docker builder prune -af || true
+            echo "=== SET PERMISSION 777 (TEMPORARY) ==="
+            sudo chmod -R 777 storage bootstrap/cache
 
-            echo "=== INSTALL COMPOSER DEPENDENCIES ==="
-            composer install \
-              --no-interaction \
-              --prefer-dist \
-              --optimize-autoloader
-
-            echo "=== INSTALL NPM DEPENDENCIES ==="
+            echo "=== COMPOSER & NPM ==="
+            composer install --no-interaction --prefer-dist --optimize-autoloader
             npm install
-
-            echo "=== BUILD VITE ASSETS ==="
             npm run build
-
-            echo "=== FIX LARAVEL PERMISSIONS (USE UID 33) ==="
-            sudo chown -R 33:33 storage bootstrap/cache
-            sudo chmod -R 775 storage bootstrap/cache
-            sudo chmod -R 775 storage/logs
 
             echo "=== CLEAR LARAVEL CACHE (HOST) ==="
             php artisan view:clear
             php artisan config:clear
             php artisan route:clear
+            php artisan view:cache
 
-            echo "=== RUN DATABASE MIGRATION ==="
+            echo "=== MIGRATE DATABASE ==="
             php artisan migrate --force
-
-            echo "=== OPTIMIZE LARAVEL ==="
-            php artisan optimize
 
             echo "=== REBUILD DOCKER IMAGE ==="
             docker build -t maw-app:latest .
 
-            echo "=== RESTART DOCKER SWARM STACK ==="
+            echo "=== DEPLOY SWARM STACK ==="
             docker stack deploy -c docker-compose.yml mawstack
 
-            echo "=== FIX PERMISSIONS INSIDE CONTAINER ==="
+            echo "=== FIX PERMISSION & CACHE INSIDE CONTAINER ==="
             CONTAINER_ID=$(docker ps -qf "name=mawstack_app")
             if [ ! -z "$CONTAINER_ID" ]; then
-                docker exec $CONTAINER_ID chown -R 33:33 /var/www/storage /var/www/bootstrap/cache
-                docker exec $CONTAINER_ID chmod -R 775 /var/www/storage /var/www/bootstrap/cache
+                docker exec $CONTAINER_ID chmod -R 777 /var/www/storage /var/www/bootstrap/cache
                 docker exec $CONTAINER_ID php artisan view:clear
-                docker exec $CONTAINER_ID php artisan config:cache
+                docker exec $CONTAINER_ID php artisan config:clear
+                docker exec $CONTAINER_ID php artisan route:clear
+                docker exec $CONTAINER_ID php artisan view:cache
             fi
 
-            echo "=== REMOVE DANGLING IMAGES ==="
+            echo "=== CLEANUP ==="
             docker image prune -af || true
 
-            echo "=== DEPLOYMENT FINISHED SUCCESSFULLY ==="
+            echo "=== DEPLOYMENT SUCCESS ==="
