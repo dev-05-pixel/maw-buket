@@ -156,7 +156,7 @@ Route::prefix('admin')
         /*
         | AI CHATBOT
         */
-        Route::post('/ai-chat', [\App\Http\Controllers\Admin\AiChatController::class, 'chat'])
+        Route::post('/chat-ai/chat', [\App\Http\Controllers\Admin\AiChatController::class, 'chat'])
             ->name('ai.chat');
     });
 
