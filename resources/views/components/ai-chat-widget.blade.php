@@ -348,7 +348,16 @@ const AiChat = {
             const raw = await res.text();
             console.log("RAW VPS RESPONSE:", raw);
 
-            const data = await res.json();
+            const raw = await res.text();
+            console.log("RAW RESPONSE VPS:", raw);
+
+            let data;
+            try {
+                data = JSON.parse(raw);
+            } catch (e) {
+                console.log("JSON PARSE ERROR:", e);
+                return;
+            }
 
             this.removeTyping();
 
