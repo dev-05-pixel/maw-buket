@@ -14,6 +14,7 @@ import os
 # LOAD ENV
 # ==========================================
 load_dotenv('/app/.env')
+
 # ==========================================
 # APP CONFIG
 # ==========================================
@@ -40,6 +41,14 @@ AI_THRESHOLD = float(
 MODEL_INFO_FILE = 'current_model.txt'
 
 # ==========================================
+# WHATSAPP CONFIG
+# ==========================================
+FALLBACK_AI_WA = os.getenv(
+    'FALLBACK_AI_WA',
+    '6285829364229'
+)
+
+# ==========================================
 # DATABASE CONFIG
 # ==========================================
 DB_HOST = os.getenv('DB_HOST', '127.0.0.1')
@@ -53,6 +62,7 @@ DB_USERNAME = os.getenv('DB_USERNAME')
 DB_PASSWORD = os.getenv('DB_PASSWORD')
 
 if not DB_DATABASE:
+
     raise Exception(
         "DB_DATABASE tidak ditemukan di .env"
     )
@@ -115,15 +125,18 @@ faq_embeddings_cache = None
 def get_saved_model():
 
     if not os.path.exists(MODEL_INFO_FILE):
+
         return None
 
     with open(MODEL_INFO_FILE, 'r') as file:
+
         return file.read().strip()
 
 
 def save_current_model():
 
     with open(MODEL_INFO_FILE, 'w') as file:
+
         file.write(AI_MODEL)
 
 # ==========================================
@@ -236,6 +249,7 @@ def load_faq():
                     valid_embeddings.append(emb)
 
             except Exception:
+
                 continue
 
         if not valid_embeddings:
@@ -369,17 +383,6 @@ def generate_embedding():
 # ==========================================
 # CHAT AI
 # ==========================================
-# ==========================================
-# WHATSAPP CONFIG
-# ==========================================
-FALLBACK_AI_WA = os.getenv(
-    'FALLBACK_AI_WA',
-    '6285829364229'
-)
-
-# ==========================================
-# CHAT AI
-# ==========================================
 @app.route(
     '/chat',
     methods=['POST']
@@ -414,6 +417,17 @@ def chat():
             user_message,
             normalize_embeddings=True
         )
+
+        # ==========================================
+        # VALIDASI DIMENSI EMBEDDING
+        # ==========================================
+        if faq_embeddings.shape[1] != len(user_embedding):
+
+            return jsonify({
+                'reply': 'Embedding model tidak cocok. Regenerate diperlukan.',
+                'faq_dimension': int(faq_embeddings.shape[1]),
+                'user_dimension': int(len(user_embedding))
+            }), 500
 
         similarities = np.dot(
             faq_embeddings,
@@ -490,37 +504,87 @@ def chat():
     methods=['POST']
 )
 def refresh():
+
     try:
+
         refresh_faq()
+
         return jsonify({
             'message': 'FAQ cache refreshed'
         })
+
     except Exception as e:
+
         return jsonify({
             'error': str(e)
         }), 500
 
 # ==========================================
-# AUTO DETECT MODEL CHANGE
+# AUTO DETECT MODEL / EMBEDDING CHANGE
 # ==========================================
 saved_model = get_saved_model()
+
+need_regenerate = False
 
 if saved_model != AI_MODEL:
 
     print("MODEL CHANGED!")
     print(f"OLD MODEL : {saved_model}")
     print(f"NEW MODEL : {AI_MODEL}")
+
+    need_regenerate = True
+
+else:
+
+    try:
+
+        with engine.begin() as conn:
+
+            result = conn.execute(text("""
+                SELECT COUNT(*)
+                FROM faq_questions
+                WHERE embedding IS NULL
+                   OR embedding = ''
+            """))
+
+            empty_embedding = result.scalar()
+
+            if empty_embedding > 0:
+
+                print(
+                    f"FOUND {empty_embedding} EMPTY EMBEDDINGS"
+                )
+
+                need_regenerate = True
+
+    except Exception as e:
+
+        print(
+            "CHECK EMBEDDING ERROR:",
+            str(e)
+        )
+
+if need_regenerate:
+
+    print("\nREGENERATING EMBEDDINGS...")
+
     regenerate_all_embeddings()
+
     save_current_model()
+
     print("All embeddings updated!\n")
 
-else:print("Model unchanged\n")
+else:
+
+    print("Model & embeddings unchanged\n")
 
 # ==========================================
 # PRELOAD FAQ
 # ==========================================
 print("Preloading FAQ cache...")
+
 faq_df_cache, faq_embeddings_cache = load_faq()
+
 print("FAQ ready in memory!\n")
 
 # ==========================================
