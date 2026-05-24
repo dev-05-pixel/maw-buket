@@ -282,6 +282,7 @@
 
 {{-- ================= JS ================= --}}
 <script>
+console.log("AI CHAT JS LOADED");
 const AI_FLASK_URL = @json(env('AI_FLASK_URL'));
 
 const AiChat = {
