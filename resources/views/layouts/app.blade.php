@@ -183,7 +183,7 @@
                             <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z" />
                             <circle cx="12" cy="10" r="3" />
                         </svg>
-                        <p class="footer-contact-text">Probolinggo, Indonesia</p>
+                        <p class="footer-contact-text">Probolinggo, jember</p>
                     </div>
                 </div>
                 <div class="reveal delay-4">
