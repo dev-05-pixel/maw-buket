@@ -344,6 +344,9 @@ const AiChat = {
                 body: JSON.stringify({ message: text })
             });
 
+            const raw = await res.text();
+            console.log("RAW VPS RESPONSE:", raw);
+
             const data = await res.json();
 
             this.removeTyping();
