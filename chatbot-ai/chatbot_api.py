@@ -9,11 +9,12 @@ import pandas as pd
 import numpy as np
 import json
 import os
+import urllib.parse
 
 # ==========================================
 # LOAD ENV
 # ==========================================
-load_dotenv('/app/.env')
+load_dotenv('../.env')
 
 # ==========================================
 # APP CONFIG
@@ -448,27 +449,20 @@ def chat():
         if best_score < AI_THRESHOLD:
 
             wa_text = (
-                f"Halo admin Maw Bouquet,%0A%0A"
-                f"Saya ingin bertanya:%0A"
+                f"Halo admin Maw Bouquet,\n\n"
+                f"Saya ingin bertanya:\n"
                 f"{user_message}"
             )
-
+            wa_text_encoded = urllib.parse.quote(wa_text)
             wa_link = (
-                f"https://wa.me/"
-                f"{FALLBACK_AI_WA}"
-                f"?text={wa_text}"
+                f"https://wa.me/{FALLBACK_AI_WA}?text={wa_text_encoded}"
             )
 
             return jsonify({
-
-                'reply':
-                'Maaf 😢 AI belum bisa menjawab pertanyaan kamu.',
-
-                'score': round(best_score, 4),
-
+                'reply': 'Maaf 😢 AI belum menemukan jawaban yang sesuai.',
                 'fallback': True,
-
-                'whatsapp_url': wa_link
+                'whatsapp_url': wa_link,
+                'score': round(best_score, 4)
             })
 
         answer = faq_df.iloc[

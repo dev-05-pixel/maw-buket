@@ -415,7 +415,7 @@
                 // =========================
                 // FALLBACK WHATSAPP
                 // =========================
-                if (data.fallback === true) {
+                if (data.fallback) {
 
                     this.addMessage(`
         <div class="space-y-3">
