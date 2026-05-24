@@ -282,6 +282,7 @@
 
 {{-- ================= JS ================= --}}
 <script>
+    const AI_FLASK_URL = @json(env('AI_FLASK_URL'));
     const AiChat = {
 
         box: null,
@@ -367,7 +368,7 @@
             try {
 
                 const res = await fetch(
-                    "/chat-ai/chat", {
+                    `${AI_FLASK_URL}/chat`, {
                         method: "POST",
 
                         headers: {
