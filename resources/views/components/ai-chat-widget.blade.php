@@ -282,348 +282,203 @@
 
 {{-- ================= JS ================= --}}
 <script>
-    const AI_FLASK_URL = @json(env('AI_FLASK_URL'));
-    const AiChat = {
+const AI_FLASK_URL = @json(env('AI_FLASK_URL'));
 
-        box: null,
-        button: null,
-        input: null,
-        messages: null,
-        loading: false,
+const AiChat = {
 
-        // =========================
-        // INIT
-        // =========================
-        init() {
+    box: null,
+    button: null,
+    input: null,
+    messages: null,
+    loading: false,
 
-            if (this.box) return;
+    init() {
+        if (this.box) return;
 
-            this.box = document.getElementById('ai-chat-box');
-            this.button = document.getElementById('chat-open-btn');
-            this.input = document.getElementById('chat-input');
-            this.messages = document.getElementById('chat-messages');
-            this.input.addEventListener('keydown', (e) => {
+        this.box = document.getElementById('ai-chat-box');
+        this.button = document.getElementById('chat-open-btn');
+        this.input = document.getElementById('chat-input');
+        this.messages = document.getElementById('chat-messages');
 
-                if (e.key === 'Enter') {
-                    this.send();
-                }
+        this.input.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') this.send();
+        });
+    },
 
+    open() {
+        this.init();
+        this.box.classList.remove('hidden');
+        this.box.classList.add('flex');
+        this.button.classList.add('hidden');
+        this.input.focus();
+    },
+
+    close() {
+        this.init();
+        this.box.classList.add('hidden');
+        this.box.classList.remove('flex');
+        this.button.classList.remove('hidden');
+    },
+
+    toggle() {
+        this.box.classList.contains('hidden')
+            ? this.open()
+            : this.close();
+    },
+
+    async send() {
+
+        const text = this.input.value.trim();
+        if (!text || this.loading) return;
+
+        this.addMessage(text, 'user');
+        this.input.value = '';
+        this.showTyping();
+        this.loading = true;
+
+        try {
+
+            const res = await fetch(`${AI_FLASK_URL}/chat`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ message: text })
             });
-        },
 
-        // =========================
-        // OPEN CHAT
-        // =========================
-        open() {
+            const data = await res.json();
 
-            this.init();
+            this.removeTyping();
 
-            this.box.classList.remove('hidden');
-            this.box.classList.add('flex');
+            // ❌ SERVER ERROR
+            if (!res.ok) {
+                this.addMessage(`
+                    <div class="space-y-2">
+                        <p>Server AI sedang bermasalah 😢</p>
+                        <p class="text-xs text-muted">Coba beberapa saat lagi</p>
+                    </div>
+                `, 'bot', true);
 
-            this.button.classList.add('hidden');
+                this.loading = false;
+                return;
+            }
 
-            this.input.focus();
-        },
+            // ⚠️ FALLBACK WHATSAPP (FIX DARI FLASK)
+            if (data.fallback === true) {
 
-        close() {
+                this.addMessage(`
+                    <div class="space-y-3">
 
-            this.init();
+                        <div>
+                            <p class="font-medium text-brown">
+                                ${data.reply}
+                            </p>
 
-            this.box.classList.add('hidden');
-            this.box.classList.remove('flex');
+                            <p class="text-xs text-muted mt-1">
+                                Jawaban tidak ditemukan, silakan hubungi admin.
+                            </p>
+                        </div>
 
-            this.button.classList.remove('hidden');
-        },
+                        <a href="${data.whatsapp_url}"
+                           target="_blank"
+                           class="
+                                inline-flex items-center gap-2
+                                px-4 py-2
+                                rounded-xl
+                                bg-green-500
+                                hover:bg-green-600
+                                text-white
+                                text-sm
+                                font-medium
+                           ">
+                            📱 Hubungi WhatsApp
+                        </a>
 
-        // =========================
-        // TOGGLE
-        // =========================
-        toggle() {
+                    </div>
+                `, 'bot', true);
 
-            this.box.classList.contains('hidden') ?
-                this.open() :
-                this.close();
-        },
+                this.loading = false;
+                return;
+            }
 
-        // =========================
-        // SEND MESSAGE
-        // =========================
+            // ✅ NORMAL RESPONSE
+            this.addMessage(data.reply || "Tidak ada jawaban.", 'bot');
 
-        async send() {
+        } catch (err) {
 
-            const text = this.input.value.trim();
+            console.error(err);
 
-            if (!text || this.loading) return;
+            this.removeTyping();
 
-            // tampilkan pesan user
-            this.addMessage(text, 'user');
-
-            this.input.value = '';
-
-            this.showTyping();
-
-            this.loading = true;
-
-            try {
-
-                const res = await fetch(
-                    `${AI_FLASK_URL}/chat`, {
-                        method: "POST",
-
-                        headers: {
-                            "Content-Type": "application/json"
-                        },
-
-                        body: JSON.stringify({
-                            message: text
-                        })
-                    }
-                );
-
-                const data = await res.json();
-
-                this.removeTyping();
-
-                // =========================
-                // ERROR SERVER
-                // =========================
-                if (!res.ok) {
-
-                    this.addMessage(`
+            this.addMessage(`
                 <div class="space-y-2">
-
-                    <p>
-                        Server AI sedang bermasalah 😢
-                    </p>
-
-                    <p class="text-xs text-muted">
-                        Silakan coba beberapa saat lagi.
-                    </p>
-
+                    <p>Tidak dapat terhubung ke server AI 😢</p>
+                    <p class="text-xs text-muted">Cek koneksi Flask</p>
                 </div>
             `, 'bot', true);
 
-                    this.loading = false;
-
-                    return;
-                }
-
-                // =========================
-                // FALLBACK WHATSAPP
-                // =========================
-                // =========================
-                // FALLBACK WHATSAPP
-                // =========================
-                if (data.fallback) {
-
-                    this.addMessage(`
-        <div class="space-y-3">
-
-            <div>
-
-                <p class="font-medium">
-                    ${data.reply}
-                </p>
-
-                <p class="text-xs text-muted mt-1">
-                    Kamu bisa lanjut bertanya langsung ke admin.
-                </p>
-
-            </div>
-
-            <a href="${data.whatsapp_url}"
-               target="_blank"
-               rel="noopener noreferrer"
-               class="
-                    inline-flex items-center gap-2
-                    px-4 py-2
-                    rounded-xl
-                    bg-green-500
-                    hover:bg-green-600
-                    text-white
-                    text-sm
-                    font-medium
-                    transition
-               ">
-
-                <svg xmlns="http://www.w3.org/2000/svg"
-                     class="w-4 h-4"
-                     fill="currentColor"
-                     viewBox="0 0 24 24">
-
-                    <path d="M20.52 3.48A11.86 11.86 0 0012.07 0C5.49 0 .14 5.35.14 11.93c0 2.1.55 4.16 1.6 5.98L0 24l6.28-1.65a11.9 11.9 0 005.79 1.48h.01c6.58 0 11.93-5.35 11.93-11.93 0-3.19-1.24-6.19-3.49-8.42zm-8.45 18.3h-.01a9.9 9.9 0 01-5.05-1.38l-.36-.21-3.73.98 1-3.64-.24-.37a9.86 9.86 0 01-1.52-5.23c0-5.46 4.45-9.9 9.91-9.9 2.64 0 5.12 1.03 6.98 2.89a9.82 9.82 0 012.9 6.99c0 5.46-4.45 9.9-9.9 9.9zm5.43-7.37c-.3-.15-1.76-.87-2.03-.97-.27-.1-.47-.15-.67.15-.2.3-.77.97-.94 1.17-.17.2-.35.22-.65.07-.3-.15-1.26-.46-2.4-1.48-.89-.79-1.49-1.76-1.66-2.06-.17-.3-.02-.46.13-.61.14-.14.3-.35.45-.52.15-.17.2-.3.3-.5.1-.2.05-.37-.02-.52-.08-.15-.67-1.61-.92-2.2-.24-.58-.49-.5-.67-.5h-.57c-.2 0-.52.07-.8.37-.27.3-1.04 1.02-1.04 2.48 0 1.46 1.06 2.87 1.21 3.07.15.2 2.09 3.2 5.07 4.48.71.31 1.27.49 1.7.63.71.22 1.35.19 1.86.12.57-.08 1.76-.72 2-1.41.25-.69.25-1.28.17-1.41-.07-.12-.27-.2-.57-.35z"/>
-                </svg>
-
-                Hubungi Admin WhatsApp
-
-            </a>
-
-        </div>
-    `, 'bot', true);
-
-                    this.loading = false;
-
-                    return;
-                }
-
-                // =========================
-                // RESPONSE NORMAL AI
-                // =========================
-                this.addMessage(
-                    data.reply || "Tidak ada jawaban.",
-                    'bot'
-                );
-
-            } catch (err) {
-
-                console.error(err);
-
-                this.removeTyping();
-
-                this.addMessage(`
-            <div class="space-y-2">
-
-                <p>
-                    Tidak dapat terhubung ke server AI 😢
-                </p>
-
-                <p class="text-xs text-muted">
-                    Periksa koneksi server Flask.
-                </p>
-
-            </div>
-        `, 'bot', true);
-            }
-
+        } finally {
             this.loading = false;
-        },
-
-        // =========================
-        // ADD MESSAGE
-        // =========================
-        addMessage(
-            text,
-            type,
-            isHtml = false
-        ) {
-
-            const wrapper = document.createElement('div');
-            wrapper.className = "msg-row";
-
-            // LABEL
-            const label = document.createElement('div');
-            label.className = "msg-label";
-            label.textContent =
-                type === 'bot' ?
-                'BOT' :
-                'YOU';
-
-            // MESSAGE BOX
-            const msg = document.createElement('div');
-            const userClass = `
-                bg-gradient-to-r
-                from-rose
-                to-rose-d
-                text-white
-                p-3
-                rounded-2xl
-                shadow-md
-                ml-auto
-                w-fit
-                max-w-[85%]
-            `;
-
-            const botClass = `
-                bg-gradient-to-br
-                from-cream
-                to-white
-                text-brown-m
-                p-3
-                rounded-2xl
-                shadow-sm
-                border
-                border-cream-d
-                w-fit
-                max-w-[85%]
-            `;
-
-            msg.className =
-                type === 'user' ?
-                userClass :
-                botClass;
-
-            // SAFE HTML
-            if (isHtml) {
-                msg.innerHTML = text;
-            } else {
-                msg.textContent = text;
-            }
-
-            wrapper.appendChild(label);
-            wrapper.appendChild(msg);
-            this.messages.appendChild(wrapper);
-
-            // AUTO SCROLL
-            this.messages.scrollTop =
-                this.messages.scrollHeight;
-        },
-
-        // =========================
-        // SHOW TYPING
-        // =========================
-        showTyping() {
-
-            const typing = document.createElement('div');
-            typing.id = "typing-indicator";
-            typing.className = `
-                bg-gradient-to-br
-                from-cream
-                to-white
-                p-3
-                rounded-2xl
-                shadow-sm
-                border
-                border-cream-d
-                w-fit
-                max-w-[85%]
-            `;
-
-            typing.innerHTML = `
-                <div class="typing">
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                </div>
-            `;
-
-            this.messages.appendChild(typing);
-            this.messages.scrollTop =
-                this.messages.scrollHeight;
-        },
-
-        // =========================
-        // REMOVE TYPING
-        // =========================
-        removeTyping() {
-
-            const typing = document.getElementById(
-                'typing-indicator'
-            );
-
-            if (typing) {
-                typing.remove();
-            }
         }
-    };
+    },
 
-    // =========================
-    // INIT APP
-    // =========================
-    document.addEventListener(
-        'DOMContentLoaded',
-        () => {
-            AiChat.init();
-        }
-    );
+    addMessage(text, type, isHtml = false) {
+
+        const wrapper = document.createElement('div');
+        wrapper.className = "msg-row";
+
+        const label = document.createElement('div');
+        label.className = "msg-label";
+        label.textContent = type === 'bot' ? 'BOT' : 'YOU';
+
+        const msg = document.createElement('div');
+
+        const userClass = `
+            bg-gradient-to-r from-rose to-rose-d
+            text-white p-3 rounded-2xl ml-auto
+            w-fit max-w-[85%]
+        `;
+
+        const botClass = `
+            bg-gradient-to-br from-cream to-white
+            text-brown-m p-3 rounded-2xl
+            border border-cream-d
+            w-fit max-w-[85%]
+        `;
+
+        msg.className = type === 'user' ? userClass : botClass;
+
+        isHtml ? msg.innerHTML = text : msg.textContent = text;
+
+        wrapper.appendChild(label);
+        wrapper.appendChild(msg);
+        this.messages.appendChild(wrapper);
+
+        this.messages.scrollTop = this.messages.scrollHeight;
+    },
+
+    showTyping() {
+
+        const typing = document.createElement('div');
+        typing.id = "typing-indicator";
+        typing.className = `
+            bg-gradient-to-br from-cream to-white
+            p-3 rounded-2xl border border-cream-d
+        `;
+
+        typing.innerHTML = `
+            <div class="typing">
+                <span></span><span></span><span></span>
+            </div>
+        `;
+
+        this.messages.appendChild(typing);
+        this.messages.scrollTop = this.messages.scrollHeight;
+    },
+
+    removeTyping() {
+        const t = document.getElementById("typing-indicator");
+        if (t) t.remove();
+    }
+};
+
+document.addEventListener('DOMContentLoaded', () => AiChat.init());
 </script>
