@@ -282,6 +282,7 @@
 
 {{-- ================= JS ================= --}}
 <script>
+    const AI_FLASK_URL = @json(env('AI_FLASK_URL'));
     const AiChat = {
 
         box: null,
@@ -366,16 +367,19 @@
 
             try {
 
-                const AI_FLASK_URL = "{{ config('services.ai.url') }}";
-                const res = await fetch(`${AI_FLASK_URL}/chat`, {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify({
-                        message: text
-                    })
-                });
+                const res = await fetch(
+                    "http://103.157.27.202:5000/chat", {
+                        method: "POST",
+
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+
+                        body: JSON.stringify({
+                            message: text
+                        })
+                    }
+                );
 
                 const data = await res.json();
 
