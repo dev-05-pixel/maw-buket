@@ -35,7 +35,7 @@
 </head>
 
 <body>
-    {{-- @include('components.ai-chat-widget') --}}
+    @include('components.ai-chat-widget')
 
     {{-- Noise texture --}}
     <div class="noise-overlay" aria-hidden="true"></div>
