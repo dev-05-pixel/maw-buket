@@ -87,9 +87,13 @@ class AuthController extends Controller
 
         if ($response->failed()) {
 
-            $data = $response->json();
-            $message = $data['error']['message']
-                ?? 'Email tidak ditemukan dalam sistem kami.';
+            $firebaseError = $response->json()['error']['message'] ?? '';
+
+            $message = match ($firebaseError) {
+                'EMAIL_NOT_FOUND' => 'Email tidak ditemukan.',
+                'INVALID_EMAIL' => 'Format email tidak valid.',
+                default => 'Gagal mengirim tautan reset password.',
+            };
 
             return back()
                 ->withInput()

@@ -67,7 +67,12 @@ class OrderController extends Controller
     public function updatePhone(Request $request, Order $order)
     {
         $request->validate([
-            'customer_phone' => 'required|string|max:20',
+            'customer_phone' => [
+                'required',
+                'string',
+                'max:20',
+                'regex:/^[0-9+\-\s()]+$/',
+            ],
         ]);
 
         $order->update([
@@ -131,7 +136,7 @@ class OrderController extends Controller
             "• Produk   : {$order->product_name}\n" .
             "• Harga    : Rp " .
             number_format($order->product_price, 0, ',', '.') . "\n" .
-            "• Ukuran   : " . ($order->size ?: '-') . "\n" .
+            "• Varian   : " . ($order->variant ?: '-') . "\n" .
             "• Warna    : " . ($order->color ?: '-') . "\n\n" .
 
             "*TANGGAL PENGAMBILAN*\n" .
@@ -141,13 +146,15 @@ class OrderController extends Controller
 
         $phone = trim($order->customer_phone);
 
-        $phone = preg_replace('/[^0-9+]/', '', $phone);
+        $phone = preg_replace('/[^\d+]/', '', $phone);
 
-        if (str_starts_with($phone, '08')) {
+        if (preg_match('/^08/', $phone)) {
             $phone = '62' . substr($phone, 1);
         }
 
         $phone = ltrim($phone, '+');
+
+        $phone = preg_replace('/\D/', '', $phone);
 
         $waUrl =
             'https://wa.me/' .

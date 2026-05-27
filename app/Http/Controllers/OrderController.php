@@ -13,7 +13,8 @@ class OrderController extends Controller
     {
         $request->validate([
             'product_id' => 'required|exists:products,id',
-            'size' => 'nullable|string',
+            'variant' => 'nullable|string',
+            'price' => 'required|integer',
             'color' => 'nullable|string',
         ]);
 
@@ -25,8 +26,8 @@ class OrderController extends Controller
             'id' => $orderId,
             'product_id' => $product->id,
             'product_name' => $product->name,
-            'product_price' => $product->price,
-            'size' => $request->size,
+            'product_price' => $request->price,
+            'variant' => $request->variant,
             'color' => $request->color,
             'status' => 'pending',
         ]);
@@ -61,7 +62,7 @@ class OrderController extends Controller
             "*DETAIL PRODUK*\n" .
             "• Produk : {$order->product_name}\n" .
             "• Harga  : Rp " . number_format($order->product_price, 0, ',', '.') . "\n" .
-            "• Ukuran : " . ($order->size ?: '-') . "\n" .
+            "• Varian : " . ($order->variant ?: '-') . "\n" .
             "• Warna  : " . ($order->color ?: '-') . "\n\n" .
 
             "*ID ORDER*\n" .

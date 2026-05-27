@@ -31,64 +31,46 @@ class ProductController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'name'        => 'required|max:255',
-            'category'    => 'required|in:Buket Segar,Buket Kering,Pampas,Mini Bouquet',
-            'price'       => 'required|numeric|min:1000',
-            'image'       => 'required|image|mimes:jpg,jpeg,png|max:20480',
-            'description' => 'nullable|string',
-            'color'       => 'required|string|max:255',
-            'sizes'       => 'required|array|min:1',
-            'sizes.*'     => 'string',
+            'name'                    => 'required|max:255',
+            'category'                => 'required|in:Buket Segar,Buket Kering,Pampas,Mini Bouquet',
+            'image'                   => 'required|image|mimes:jpg,jpeg,png|max:20480',
+            'description'             => 'nullable|string',
+            'color'                   => 'required|string|max:255',
+            'variants'                => 'required|array|min:1',
+            'variants.*.name'         => 'required|string|max:255',
+            'variants.*.price'        => 'required|string',
         ]);
 
-        /*
-        |--------------------------------------------------------------------------
-        | GENERATE ID
-        |--------------------------------------------------------------------------
-        */
         $id = strtoupper(Str::random(12));
 
-        /*
-        |--------------------------------------------------------------------------
-        | NORMALISASI WARNA
-        |--------------------------------------------------------------------------
-        |
-        | Input:
-        | pink, dusty pink, peach
-        |
-        | Output:
-        | Pink, Dusty Pink, Peach
-        |
-        */
         $color = collect(explode(',', $request->color))
             ->map(function ($item) {
-
                 $item = preg_replace('/\s+/', ' ', $item);
-                return trim(ucwords(strtolower($item)));
+
+                return trim(
+                    ucwords(strtolower($item))
+                );
             })
             ->filter()
             ->unique()
             ->implode(', ');
 
-        /*
-        |--------------------------------------------------------------------------
-        | NORMALISASI SIZE
-        |--------------------------------------------------------------------------
-        */
-        $size = collect($request->sizes)
-            ->map(function ($item) {
+        $variants = collect($request->variants)
+            ->map(function ($variant) {
 
-                return trim($item);
+                $price = preg_replace('/[^0-9]/', '', $variant['price']);
+
+                return [
+                    'name'  => trim($variant['name']),
+                    'price' => (int) $price,
+                ];
             })
-            ->filter()
-            ->unique()
-            ->implode(', ');
+            ->filter(function ($variant) {
+                return $variant['name'] !== '' && $variant['price'] !== null;
+            })
+            ->values()
+            ->toArray();
 
-        /*
-        |--------------------------------------------------------------------------
-        | UPLOAD IMAGE
-        |--------------------------------------------------------------------------
-        */
         $imagePath = null;
 
         if ($request->hasFile('image')) {
@@ -107,20 +89,14 @@ class ProductController extends Controller
                 ->withInput();
         }
 
-        /*
-        |--------------------------------------------------------------------------
-        | CREATE PRODUCT
-        |--------------------------------------------------------------------------
-        */
         Product::create([
             'id'          => $id,
             'name'        => $request->name,
-            'price'       => $request->price,
             'category'    => $request->category,
             'description' => $request->description,
             'image'       => $imagePath,
             'color'       => $color,
-            'size'        => $size,
+            'variants'    => $variants,
         ]);
 
         return redirect()
@@ -141,58 +117,49 @@ class ProductController extends Controller
     public function update(Request $request, Product $product)
     {
         $request->validate([
-            'name'        => 'required|max:255',
-            'category'    => 'required|in:Buket Segar,Buket Kering,Pampas,Mini Bouquet',
-            'price'       => 'required|numeric|min:1000',
-            'image'       => 'nullable|image|mimes:jpg,jpeg,png|max:20480',
-            'description' => 'nullable|string',
-            'color'       => 'required|string|max:255',
-            'sizes'       => 'required|array|min:1',
-            'sizes.*'     => 'string',
+            'name'                    => 'required|max:255',
+            'category'                => 'required|in:Buket Segar,Buket Kering,Pampas,Mini Bouquet',
+            'image'                   => 'nullable|image|mimes:jpg,jpeg,png|max:20480',
+            'description'             => 'nullable|string',
+            'color'                   => 'required|string|max:255',
+            'variants'                => 'required|array|min:1',
+            'variants.*.name'         => 'required|string|max:255',
+            'variants.*.price'        => 'required|string',
         ]);
 
-        /*
-        |--------------------------------------------------------------------------
-        | NORMALISASI WARNA
-        |--------------------------------------------------------------------------
-        */
         $color = collect(explode(',', $request->color))
             ->map(function ($item) {
+
                 $item = preg_replace('/\s+/', ' ', $item);
-                return trim(ucwords(strtolower($item)));
+
+                return trim(
+                    ucwords(strtolower($item))
+                );
             })
             ->filter()
             ->unique()
             ->implode(', ');
 
-        /*
-        |--------------------------------------------------------------------------
-        | NORMALISASI SIZE
-        |--------------------------------------------------------------------------
-        */
-        $size = collect($request->sizes)
-            ->map(function ($item) {
+        $variants = collect($request->variants)
+            ->map(function ($variant) {
 
-                return trim($item);
+                $price = preg_replace('/[^0-9]/', '', $variant['price']);
+
+                return [
+                    'name'  => trim($variant['name']),
+                    'price' => (int) $price,
+                ];
             })
-            ->filter()
-            ->unique()
-            ->implode(', ');
+            ->filter(function ($variant) {
+                return $variant['name'] !== '' && $variant['price'] !== null;
+            })
+            ->values()
+            ->toArray();
 
-        /*
-        |--------------------------------------------------------------------------
-        | IMAGE
-        |--------------------------------------------------------------------------
-        */
         $imagePath = $product->image;
 
         if ($request->hasFile('image')) {
 
-            /*
-            |--------------------------------------------------------------------------
-            | HAPUS IMAGE LAMA
-            |--------------------------------------------------------------------------
-            */
             if (
                 $product->image &&
                 Storage::disk('public')->exists($product->image)
@@ -201,28 +168,17 @@ class ProductController extends Controller
                 Storage::disk('public')->delete($product->image);
             }
 
-            /*
-            |--------------------------------------------------------------------------
-            | UPLOAD IMAGE BARU
-            |--------------------------------------------------------------------------
-            */
             $imagePath = $request
                 ->file('image')
                 ->store('products', 'public');
         }
 
-        /*
-        |--------------------------------------------------------------------------
-        | UPDATE PRODUCT
-        |--------------------------------------------------------------------------
-        */
         $product->update([
             'name'        => $request->name,
-            'price'       => $request->price,
             'category'    => $request->category,
             'description' => $request->description,
             'color'       => $color,
-            'size'        => $size,
+            'variants'    => $variants,
             'image'       => $imagePath,
         ]);
 
@@ -233,11 +189,6 @@ class ProductController extends Controller
 
     public function destroy(Product $product)
     {
-        /*
-        |--------------------------------------------------------------------------
-        | DELETE IMAGE
-        |--------------------------------------------------------------------------
-        */
         if (
             $product->image &&
             Storage::disk('public')->exists($product->image)
@@ -246,11 +197,6 @@ class ProductController extends Controller
             Storage::disk('public')->delete($product->image);
         }
 
-        /*
-        |--------------------------------------------------------------------------
-        | DELETE PRODUCT
-        |--------------------------------------------------------------------------
-        */
         $product->delete();
 
         return redirect()
@@ -258,9 +204,6 @@ class ProductController extends Controller
             ->with('success', 'Produk berhasil dihapus.');
     }
 
-    /**
-     * Ambil daftar warna unik dari database
-     */
     private function getColors()
     {
         return Product::select('color')
@@ -270,11 +213,10 @@ class ProductController extends Controller
 
                 return explode(',', $item);
             })
-
             ->map(function ($item) {
+
                 return trim($item);
             })
-
             ->filter()
             ->unique()
             ->sort()

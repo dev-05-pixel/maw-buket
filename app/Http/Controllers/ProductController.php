@@ -28,74 +28,109 @@ class ProductController extends Controller
 
                 $q->where('name', 'like', "%{$search}%")
                     ->orWhere('category', 'like', "%{$search}%")
-                    ->orWhere('color', 'like', "%{$search}%")
-                    ->orWhere('size', 'like', "%{$search}%");
+                    ->orWhere('color', 'like', "%{$search}%");
             });
         }
 
-        if ($request->filled('category')) {
+        $selectedCategories = array_filter(
+            (array) $request->category,
+            fn($item) => $item !== 'Semua'
+        );
 
-            $selectedCategories = (array) $request->category;
-
-            if (!in_array('Semua', $selectedCategories)) {
-                $query->whereIn('category', $selectedCategories);
-            }
-        }
-
-        if ($request->filled('min_price')) {
-            $query->where('price', '>=', (int) $request->min_price);
-        }
-
-        if ($request->filled('max_price')) {
-            $query->where('price', '<=', (int) $request->max_price);
-        }
-
-        if ($request->filled('size')) {
-
-            $sizes = (array) $request->size;
-
-            $query->where(function ($q) use ($sizes) {
-
-                foreach ($sizes as $size) {
-                    $q->orWhere('size', 'like', "%{$size}%");
-                }
-            });
+        if (!empty($selectedCategories)) {
+            $query->whereIn('category', $selectedCategories);
         }
 
         if ($request->filled('color')) {
 
-            $colors = (array) $request->color;
+            $selectedColors = (array) $request->color;
 
-            $query->where(function ($q) use ($colors) {
+            $query->where(function ($q) use ($selectedColors) {
 
-                foreach ($colors as $color) {
-                    $q->orWhere('color', 'like', "%{$color}%");
+                foreach ($selectedColors as $color) {
+
+                    $q->orWhereRaw(
+                        "FIND_IN_SET(?, REPLACE(color, ', ', ','))",
+                        [$color]
+                    );
                 }
+            });
+        }
+
+        $products = $query->get()->map(function ($product) {
+
+            $variants = is_string($product->variants)
+                ? json_decode($product->variants, true)
+                : ($product->variants ?? []);
+
+            $prices = collect($variants)
+                ->pluck('price')
+                ->map(function ($price) {
+
+                    $price = preg_replace('/[^0-9]/', '', (string) $price);
+
+                    return (int) $price;
+                })
+                ->filter(fn($price) => $price > 0)
+                ->values();
+
+            $product->min_price = $prices->min() ?? 0;
+            $product->max_price = $prices->max() ?? 0;
+
+            return $product;
+        });
+
+        if ($request->filled('min_price')) {
+
+            $products = $products->filter(function ($product) use ($request) {
+
+                return $product->min_price >= (int) $request->min_price;
+            });
+        }
+
+        if ($request->filled('max_price')) {
+
+            $products = $products->filter(function ($product) use ($request) {
+
+                return $product->max_price <= (int) $request->max_price;
             });
         }
 
         switch ($request->sort) {
 
             case 'price-asc':
-                $query->orderBy('price', 'asc');
+                $products = $products->sortBy('min_price');
                 break;
 
             case 'price-desc':
-                $query->orderBy('price', 'desc');
+                $products = $products->sortByDesc('min_price');
                 break;
 
             case 'name-asc':
-                $query->orderBy('name', 'asc');
+                $products = $products->sortBy('name');
                 break;
 
             default:
-                $query->latest();
+                $products = $products->sortByDesc('created_at');
                 break;
         }
 
-        $products = $query
-            ->paginate(9)
-            ->appends($request->query());
+        $products = $products->values();
+
+        $perPage = 12;
+
+        $currentPage = request()->get('page', 1);
+
+        $pagedProducts = new \Illuminate\Pagination\LengthAwarePaginator(
+            $products->forPage($currentPage, $perPage),
+            $products->count(),
+            $perPage,
+            $currentPage,
+            [
+                'path' => request()->url(),
+                'query' => request()->query(),
+            ]
+        );
 
         $categoryCounts = Product::select(
             'category',
@@ -149,26 +184,13 @@ class ProductController extends Controller
             'hex'  => $colorMap[$color] ?? '#D6CFC7',
         ]);
 
-        $rawSizes = Product::whereNotNull('size')
-            ->pluck('size')
-            ->toArray();
-
-        $sizes = collect($rawSizes)
-            ->flatMap(fn($item) => explode(',', $item))
-            ->map(fn($item) => trim($item))
-            ->filter()
-            ->unique()
-            ->sort()
-            ->values();
-
-        return view('products.index', compact(
-            'products',
-            'categories',
-            'categoryCounts',
-            'totalProducts',
-            'colors',
-            'sizes'
-        ));
+        return view('products.index', [
+            'products'       => $pagedProducts,
+            'categories'     => $categories,
+            'categoryCounts' => $categoryCounts,
+            'totalProducts'  => $totalProducts,
+            'colors'         => $colors
+        ]);
     }
 
     public function show(Product $product)
