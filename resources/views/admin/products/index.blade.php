@@ -62,8 +62,29 @@
                                         </div>
                                     @endif
                                     <div>
-                                        <p class="font-medium text-brown">{{ $product->name }}</p>
-                                        <p class="text-xs text-muted sm:hidden">{{ $product->category }}</p>
+
+                                        <p class="font-medium text-brown">
+                                            {{ $product->name }}
+                                        </p>
+
+                                        <div class="flex flex-col gap-0.5">
+                                            <p class="text-xs text-muted sm:hidden">
+                                                {{ $product->category }}
+                                            </p>
+                                            @php
+                                                $variants = is_array($product->variants)
+                                                    ? $product->variants
+                                                    : json_decode($product->variants, true);
+
+                                                $variants = $variants ?? [];
+                                            @endphp
+
+                                            @if (count($variants))
+                                                <p class="text-[11px] text-muted">
+                                                    {{ count($variants) }} varian tersedia
+                                                </p>
+                                            @endif
+                                        </div>
                                     </div>
                                 </div>
                             </td>
@@ -72,8 +93,39 @@
                                     class="bg-sand/15 text-brown-m text-xs px-2.5 py-1 rounded-full">{{ $product->category }}</span>
                             </td>
                             <td class="px-6 py-4">
-                                <p class="text-sm font-medium text-brown">Rp
-                                    {{ number_format($product->price, 0, ',', '.') }}</p>
+
+                                @php
+                                    $variantData = is_array($product->variants)
+                                        ? $product->variants
+                                        : json_decode($product->variants, true);
+                                    $variants = collect($variantData ?? []);
+                                    $prices = $variants->pluck('price')->map(fn($price) => (int) $price);
+                                    $minPrice = $prices->min();
+                                    $maxPrice = $prices->max();
+                                @endphp
+
+                                @if ($prices->count())
+                                    @if ($minPrice == $maxPrice)
+                                        <p class="text-sm font-medium text-brown">
+                                            Rp {{ number_format($minPrice, 0, ',', '.') }}
+                                        </p>
+                                    @else
+                                        <div class="space-y-1">
+                                            <p class="text-sm font-medium text-brown">
+                                                Rp {{ number_format($minPrice, 0, ',', '.') }}
+                                                -
+                                                {{ number_format($maxPrice, 0, ',', '.') }}
+                                            </p>
+                                            <p class="text-[11px] text-muted">
+                                                {{ $variants->count() }} varian
+                                            </p>
+                                        </div>
+                                    @endif
+                                @else
+                                    <p class="text-sm text-muted">
+                                        Tidak ada varian
+                                    </p>
+                                @endif
                             </td>
                             <td class="px-6 py-4">
                                 <div class="flex items-center gap-3">

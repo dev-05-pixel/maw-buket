@@ -19,8 +19,11 @@
                 <thead class="bg-cream">
                     <tr class="text-left text-muted">
                         <th class="px-6 py-4">Order ID</th>
+                        <th class="px-6 py-4">Tanggal Pesan</th>
                         <th class="px-6 py-4">WhatsApp</th>
                         <th class="px-6 py-4">Produk</th>
+                        <th class="px-6 py-4">Varian</th>
+                        <th class="px-6 py-4">Warna</th>
                         <th class="px-6 py-4">Total</th>
                         <th class="px-6 py-4">Status</th>
                         <th class="px-6 py-4">Tanggal Ambil</th>
@@ -31,8 +34,13 @@
                 <tbody class="divide-y divide-cream-d">
                     @forelse($orders as $order)
                         <tr class="hover:bg-cream/50">
+
                             <td class="px-6 py-4 font-medium text-brown">
                                 #{{ $order->id }}
+                            </td>
+
+                            <td class="px-6 py-4 text-muted whitespace-nowrap">
+                                {{ $order->created_at->format('d M Y H:i') }}
                             </td>
 
                             <td class="px-6 py-4">
@@ -41,6 +49,14 @@
 
                             <td class="px-6 py-4">
                                 {{ $order->product_name }}
+                            </td>
+
+                            <td class="px-6 py-4">
+                                {{ $order->variant ?: '-' }}
+                            </td>
+
+                            <td class="px-6 py-4">
+                                {{ $order->color ?: '-' }}
                             </td>
 
                             <td class="px-6 py-4">
@@ -63,26 +79,29 @@
 
                             <td class="px-6 py-4">
                                 <div class="flex justify-end gap-2">
+
                                     <a href="{{ route('admin.orders.show', $order->id) }}"
                                         class="px-3 py-2 rounded-xl text-xs bg-cream hover:bg-cream-d">
                                         Detail
                                     </a>
+
                                     <button
                                         onclick="openDeleteModal({
-                                        action: '{{ route('admin.orders.destroy', $order->id) }}',
-                                        title: 'Hapus pesanan?',
-                                        desc: 'Data transaksi akan dihapus permanen.'
-                                    })"
-                                        class="px-3 py-2 rounded-xl text-xs bg-red-50
-                                    text-red-500 hover:bg-red-100">
+                    action: '{{ route('admin.orders.destroy', $order->id) }}',
+                    title: 'Hapus pesanan?',
+                    desc: 'Data transaksi akan dihapus permanen.'
+                })"
+                                        class="px-3 py-2 rounded-xl text-xs bg-red-50 text-red-500 hover:bg-red-100">
                                         Hapus
                                     </button>
+
                                 </div>
                             </td>
+
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="6" class="px-6 py-10 text-center text-muted">
+                            <td colspan="10" class="px-6 py-10 text-center text-muted">
                                 Belum ada pesanan.
                             </td>
                         </tr>

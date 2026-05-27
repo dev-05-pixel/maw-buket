@@ -36,19 +36,88 @@
                     @enderror
                 </div>
 
-                {{-- Harga --}}
-                <div>
-                    <label class="block text-xs font-semibold text-brown tracking-wide uppercase mb-2">Harga (Rp) <span
-                            class="text-rose">*</span></label>
-                    <div class="relative">
-                        <span class="absolute left-4 top-1/2 -translate-y-1/2 text-sm text-muted">Rp</span>
-                        <input type="number" name="price" value="{{ old('price', $product->price) }}" step="1000"
-                            min="1000"
-                            class="w-full border border-cream-d rounded-xl pl-10 pr-4 py-3 text-sm text-brown focus:outline-none focus:ring-2 focus:ring-rose/30 focus:border-rose/50 transition @error('price') border-red-300 @enderror">
+                {{-- Variant --}}
+                <div class="md:col-span-2">
+
+                    <div class="flex items-center justify-between mb-3">
+
+                        <label class="block text-xs font-semibold text-brown tracking-wide uppercase">
+                            Varian Produk
+                            <span class="text-rose">*</span>
+                        </label>
+
+                        <button type="button" id="add-variant"
+                            class="px-3 py-2 text-xs bg-brown text-white rounded-lg hover:opacity-90 transition">
+                            + Tambah Varian
+                        </button>
+
                     </div>
-                    @error('price')
-                        <p class="text-xs text-red-500 mt-1.5">{{ $message }}</p>
+
+                    <div id="variant-wrapper" class="space-y-3">
+
+                        @php
+                            $variants = old('variants', $product->variants);
+
+                            if (is_string($variants)) {
+                                $variants = json_decode($variants, true);
+                            }
+
+                            if (!is_array($variants) || empty($variants)) {
+                                $variants = [['name' => '', 'price' => '']];
+                            }
+                        @endphp
+
+                        @foreach ($variants as $index => $variant)
+                            <div
+                                class="variant-item grid grid-cols-1 md:grid-cols-[1fr_1fr_auto] gap-3 border border-cream-d rounded-xl p-4">
+
+                                {{-- Nama Variant --}}
+                                <div>
+                                    <label class="text-xs text-muted mb-1 block">
+                                        Nama Variant
+                                    </label>
+
+                                    <input type="text" name="variants[{{ $index }}][name]"
+                                        value="{{ $variant['name'] ?? '' }}" placeholder="Contoh: S / M / L"
+                                        class="w-full border border-cream-d rounded-xl px-4 py-3 text-sm">
+                                </div>
+
+                                {{-- Harga --}}
+                                <div>
+                                    <label class="text-xs text-muted mb-1 block">
+                                        Harga
+                                    </label>
+
+                                    <div class="relative">
+
+                                        <span class="absolute left-4 top-1/2 -translate-y-1/2 text-sm text-muted">
+                                            Rp
+                                        </span>
+
+                                        <input type="text" name="variants[{{ $index }}][price]"
+                                            value="{{ isset($variant['price']) ? number_format((int) $variant['price'], 0, ',', '.') : '' }}"
+                                            placeholder="25.000"
+                                            class="variant-price w-full border border-cream-d rounded-xl pl-10 pr-4 py-3 text-sm">
+                                    </div>
+                                </div>
+
+                                {{-- Remove --}}
+                                <div class="flex items-end">
+                                    <button type="button"
+                                        class="remove-variant px-3 py-3 text-sm rounded-xl border border-red-200 text-red-500 hover:bg-red-50 transition">
+                                        Hapus
+                                    </button>
+                                </div>
+
+                            </div>
+                        @endforeach
+
+                    </div>
+
+                    @error('variants')
+                        <p class="text-xs text-red-500 mt-2">{{ $message }}</p>
                     @enderror
+
                 </div>
 
                 {{-- Kategori --}}
@@ -119,31 +188,6 @@
                     @enderror
                 </div>
 
-                {{-- Size --}}
-                <div>
-                    <label class="block text-xs font-semibold text-brown tracking-wide uppercase mb-2">
-                        Ukuran <span class="text-rose">*</span>
-                    </label>
-
-                    @php
-                        $sizes = ['Mini (S)', 'Standar (M)', 'Besar (L)', 'Grand (XL)', 'Custom'];
-                    @endphp
-
-                    <div class="space-y-2">
-                        @foreach ($sizes as $size)
-                            <label class="flex items-center gap-2">
-                                <input type="checkbox" name="sizes[]" value="{{ $size }}"
-                                    {{ in_array($size, old('sizes', $product->sizes ?? [])) ? 'checked' : '' }}>
-                                <span>{{ $size }}</span>
-                            </label>
-                        @endforeach
-                    </div>
-
-                    @error('size')
-                        <p class="text-xs text-red-500 mt-1.5">{{ $message }}</p>
-                    @enderror
-                </div>
-
                 {{-- Deskripsi --}}
                 <div class="md:col-span-2">
                     <label class="block text-xs font-semibold text-brown tracking-wide uppercase mb-2">Deskripsi</label>
@@ -199,6 +243,94 @@
             }
         </style>
         <script>
+            function formatRupiah(value) {
+
+                value = value.replace(/\D/g, '');
+
+                return new Intl.NumberFormat('id-ID').format(value);
+            }
+
+            document.addEventListener('input', function(e) {
+
+                if (e.target.classList.contains('variant-price')) {
+
+                    e.target.value = formatRupiah(e.target.value);
+                }
+            });
+
+            let variantIndex =
+                document.querySelectorAll('.variant-item').length;
+
+            document.getElementById('add-variant')
+                .addEventListener('click', function() {
+
+                    const html = `
+                <div class="variant-item grid grid-cols-1 md:grid-cols-[1fr_1fr_auto] gap-3 border border-cream-d rounded-xl p-4">
+
+                    <div>
+                        <label class="text-xs text-muted mb-1 block">
+                            Nama Variant
+                        </label>
+
+                        <input type="text"
+                            name="variants[${variantIndex}][name]"
+                            placeholder="Contoh: S / M / L"
+                            class="w-full border border-cream-d rounded-xl px-4 py-3 text-sm">
+                    </div>
+
+                    <div>
+                        <label class="text-xs text-muted mb-1 block">
+                            Harga
+                        </label>
+
+                        <div class="relative">
+
+                            <span class="absolute left-4 top-1/2 -translate-y-1/2 text-sm text-muted">
+                                Rp
+                            </span>
+
+                            <input type="text"
+                                name="variants[${variantIndex}][price]"
+                                placeholder="25.000"
+                                class="variant-price w-full border border-cream-d rounded-xl pl-10 pr-4 py-3 text-sm">
+
+                        </div>
+                    </div>
+
+                    <div class="flex items-end">
+                        <button type="button"
+                            class="remove-variant px-3 py-3 text-sm rounded-xl border border-red-200 text-red-500 hover:bg-red-50 transition">
+                            Hapus
+                        </button>
+                    </div>
+
+                </div>
+            `;
+
+                    document.getElementById('variant-wrapper')
+                        .insertAdjacentHTML('beforeend', html);
+
+                    variantIndex++;
+                });
+
+            document.addEventListener('click', function(e) {
+
+                if (e.target.classList.contains('remove-variant')) {
+
+                    e.target.closest('.variant-item').remove();
+                }
+            });
+
+            document.querySelector('form')
+                .addEventListener('submit', function() {
+
+                    document.querySelectorAll('.variant-price')
+                        .forEach(function(input) {
+
+                            input.value = input.value.replace(/\./g, '');
+                        });
+                });
+
             var quill = new Quill('#editor', {
                 theme: 'snow',
                 placeholder: 'Tulis deskripsi produk...',

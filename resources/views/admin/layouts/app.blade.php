@@ -39,13 +39,12 @@
             }
         }
     </script>
-
     <link rel="stylesheet" href="{{ asset('css/admin/layouts/app.css') }}">
 </head>
 
 <body class="bg-cream text-brown">
 
-    @include('components.ai-chat-widget')
+    {{-- @include('components.ai-chat-widget') --}}
 
     <div class="cur-ring" id="cur-ring"></div>
     <div class="cur-dot" id="cur-dot"></div>

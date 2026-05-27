@@ -62,11 +62,11 @@
 
                 <div>
                     <p class="text-xs uppercase tracking-wide text-muted mb-1">
-                        Ukuran
+                        Varian
                     </p>
 
                     <p class="text-sm font-medium text-brown">
-                        {{ $order->size ?: '-' }}
+                        {{ $order->variant ?: '-' }}
                     </p>
                 </div>
 
@@ -92,7 +92,7 @@
 
                 <div>
                     <p class="text-xs uppercase tracking-wide text-muted mb-1">
-                        Dibuat
+                        Tanggal Pesan
                     </p>
 
                     <p class="text-sm font-medium text-brown">
@@ -193,7 +193,7 @@
                         ← Kembali
                     </a>
 
-                    @if ($order->status === 'completed' && $order->customer_phone)
+                    @if ($order->status === 'completed' && filled($order->customer_phone))
                         <a href="{{ route('admin.orders.whatsapp', $order->id) }}" target="_blank"
                             class="px-4 py-2 rounded-xl bg-green-500 text-white text-sm hover:bg-green-600 transition">
 
