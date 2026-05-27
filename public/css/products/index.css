@@ -1278,6 +1278,45 @@
         color: #b08968;
     }
 
+    .price-input-wrap {
+        position: relative;
+        display: flex;
+        align-items: center;
+    }
+
+    .price-input {
+        width: 100%;
+        padding-right: 34px;
+    }
+
+    .price-spinner {
+        position: absolute;
+        right: 8px;
+        top: 50%;
+        transform: translateY(-50%);
+
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+    }
+
+    .spinner-btn {
+        border: none;
+        background: transparent;
+        cursor: pointer;
+
+        font-size: 10px;
+        line-height: 1;
+
+        color: #9b7b6d;
+
+        padding: 0;
+    }
+
+    .spinner-btn:hover {
+        color: #000;
+    }
+
     /* ----------------------------------------------------------------
                                                                                                                                                                            RESPONSIVE
                                                                                                                                                                         ---------------------------------------------------------------- */

@@ -857,7 +857,7 @@
     }
 
     .contact-hero-title {
-        font-size: 56px;
+        font-size: 48px;
         line-height: .94;
     }
 
@@ -914,7 +914,8 @@
     }
 
     .contact-hero-title {
-        font-size: 42px;
+        font-size: 36px;
+        line-height: 1;
     }
 
     .contact-hero-label {
@@ -966,5 +967,80 @@
     .contact-hero-right {
         justify-self: start;
         margin-left: -220px;
+    }
+}
+
+/* ========================================
+   FIX HERO RESPONSIVE TABLET & MOBILE
+======================================== */
+@media (max-width: 768px) {
+
+    .contact-hero {
+        min-height: auto;
+        height: auto;
+        max-height: none;
+
+        grid-template-columns: 1fr;
+
+        gap: 40px;
+
+        padding: 120px 32px 72px;
+
+        align-items: flex-start;
+    }
+
+    .contact-hero::before {
+        width: 380px;
+        height: 380px;
+
+        right: -120px;
+        top: -120px;
+    }
+
+    .contact-hero-title {
+        font-size: clamp(44px, 10vw, 68px);
+
+        line-height: 0.95;
+
+        max-width: 100%;
+    }
+
+    .contact-hero-right {
+
+        /* RESET STYLE DESKTOP */
+        transform: none !important;
+        margin-left: 0 !important;
+
+        justify-self: stretch;
+
+        width: 100%;
+        max-width: 100%;
+
+        opacity: 1;
+    }
+
+    .contact-hero-desc {
+        max-width: 100%;
+
+        font-size: 14px;
+        line-height: 1.8;
+
+        margin-bottom: 28px;
+    }
+
+    .contact-hero-channels {
+        width: 100%;
+    }
+
+    .contact-channel-link {
+        width: 100%;
+
+        padding: 16px 18px;
+    }
+
+    .contact-form-section {
+        grid-template-columns: 1fr;
+
+        gap: 56px;
     }
 }
