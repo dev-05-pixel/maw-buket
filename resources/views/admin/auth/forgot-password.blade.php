@@ -31,15 +31,6 @@
 
         <div class="fp-card" role="main">
 
-            {{-- Icon --}}
-            <div class="fp-icon-wrap" aria-hidden="true">
-                <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
-                    aria-hidden="true">
-                    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
-                    <polyline points="22,6 12,13 2,6" />
-                </svg>
-            </div>
-
             {{-- FORM STATE --}}
             <div id="fp-form-state">
                 <h1 class="fp-title">
@@ -49,18 +40,6 @@
                     Tidak perlu khawatir. Masukkan alamat email administrator Anda dan kami akan mengirimkan tautan
                     untuk mereset password.
                 </p>
-
-                {{-- Flash messages --}}
-                @if (session('success'))
-                    <div class="alert-success" role="alert">
-                        <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
-                            aria-hidden="true">
-                            <path d="M22 11.08V12a10 10 0 11-5.93-9.14" />
-                            <polyline points="22 4 12 14.01 9 11.01" />
-                        </svg>
-                        {{ session('success') }}
-                    </div>
-                @endif
 
                 @if (session('error') || $errors->any())
                     <div class="alert-error" role="alert">
@@ -166,9 +145,6 @@
     </div>
 
     <script>
-        // ================================================================
-        //  FORM SUBMIT (demo behavior — replace with real backend)
-        // ================================================================
         const fpForm = document.getElementById('fp-form');
         const fpSubmit = document.getElementById('fp-submit-btn');
         const fpEmail = document.getElementById('fp-email');
@@ -176,48 +152,74 @@
         const successState = document.getElementById('fp-success-state');
         const sentEmailEl = document.getElementById('sent-email');
 
-        // Check if Filament already handled a success (session based)
+        function showSuccess(email) {
+            if (formState) {
+                formState.style.display = 'none';
+            }
+
+            successState.classList.add('show');
+
+            if (sentEmailEl && email) {
+                sentEmailEl.textContent = email;
+            }
+
+            startTimer('resend-timer-2', 'resend-btn-2');
+        }
+
+        function startTimer(timerId, btnId) {
+            let secs = 60;
+
+            const timerEl = document.getElementById(timerId);
+            const btnEl = document.getElementById(btnId);
+
+            if (!timerEl || !btnEl) return;
+
+            const interval = setInterval(() => {
+                secs--;
+
+                timerEl.textContent = secs;
+
+                if (secs <= 0) {
+                    clearInterval(interval);
+                    btnEl.textContent = 'Kirim ulang email';
+                    btnEl.disabled = false;
+                }
+            }, 1000);
+
+            btnEl.addEventListener('click', function() {
+                this.disabled = true;
+                secs = 60;
+                timerEl.textContent = secs;
+
+                if (fpForm) {
+                    fpForm.submit();
+                }
+            }, {
+                once: true
+            });
+        }
+
+        if (fpForm) {
+            fpForm.addEventListener('submit', function() {
+                const emailVal = fpEmail.value.trim();
+
+                if (!emailVal || !emailVal.includes('@')) {
+                    return;
+                }
+
+                fpSubmit.disabled = true;
+                fpSubmit.innerHTML = '<span>Mengirim...</span>';
+
+                document.getElementById('resend-section').style.display = 'block';
+
+                startTimer('resend-timer', 'resend-btn');
+            });
+        }
+
         @if (session('success'))
-            <
-            script >
-                showSuccess('{{ session('email') }}');
+            showSuccess(@json(session('email')));
+        @endif
     </script>
-    @endif
-
-    if (fpForm) {
-    fpForm.addEventListener('submit', function(e) {
-    const emailVal = fpEmail.value.trim();
-    if (!emailVal || !emailVal.includes('@')) return;
-
-    fpSubmit.disabled = true;
-    fpSubmit.innerHTML = '<span>Mengirim...</span>';
-
-    // Show resend section after form submits
-    // (for demo only — real behavior handled server-side)
-    document.getElementById('resend-section').style.display = 'block';
-    startTimer('resend-timer', 'resend-btn');
-    });
-    }
-
-    function showSuccess(email) {
-    if (formState) formState.style.display = 'none';
-    successState.classList.add('show');
-    if (sentEmailEl && email) sentEmailEl.textContent = email;
-    startTimer('resend-timer-2', 'resend-btn-2');
-    }
-
-    function startTimer(timerId, btnId) {
-    let secs = 60;
-    const timerEl = document.getElementById(timerId)
-    const btnEl = document.getElementById(btnId);
-    if (!timerEl || !btnEl) return;
-
-    const interval = setInterval(() => {
-    secs--;
-    timerEl.textContent = secs;
-    if (secs <= 0) { clearInterval(interval); btnEl.textContent = 'Kirim ulang email'; btnEl.disabled=false; } },
-        1000); btnEl.addEventListener('click', function() { this.disabled=true; secs=60; timerEl.textContent=secs; //
-        Re-trigger form submission or AJAX if (fpForm) fpForm.submit(); }, { once: true }); } </script>
 
 </body>
 
