@@ -16,19 +16,94 @@ if (descToggle && descBox) {
         }
     });
 }
-// ================================================================
-//  GALLERY SWITCHING
-// ================================================================
-const waBtn = document.getElementById("wa-order");
 
+// ================================================================
+// WHATSAPP ORDER
+// ================================================================
+
+const waBtn = document.getElementById("wa-order");
+const productPrice = document.getElementById("product-price");
+
+function formatRupiah(number) {
+    return new Intl.NumberFormat("id-ID").format(number);
+}
+
+const sizeButtons = document.querySelectorAll(".size-btn");
+const colorButtons = document.querySelectorAll(".color-tag-detail");
+
+const selectedSizeText = document.getElementById("selected-size");
+const selectedColorText = document.getElementById("selected-color");
+
+let selectedVariant = waBtn.dataset.variant;
+let selectedPrice = waBtn.dataset.price;
+let selectedColor = waBtn.dataset.color;
+
+// ================================================================
+// VARIANT SELECT
+// ================================================================
+
+sizeButtons.forEach((button) => {
+    button.addEventListener("click", () => {
+        sizeButtons.forEach((btn) => {
+            btn.classList.remove("active");
+            btn.setAttribute("aria-pressed", "false");
+        });
+
+        button.classList.add("active");
+        button.setAttribute("aria-pressed", "true");
+
+        selectedVariant = button.dataset.variant;
+        selectedPrice = button.dataset.price;
+
+        if (selectedSizeText) {
+            selectedSizeText.textContent = selectedVariant;
+        }
+
+        if (productPrice) {
+            productPrice.textContent = "Rp " + formatRupiah(selectedPrice);
+        }
+
+        waBtn.dataset.variant = selectedVariant;
+        waBtn.dataset.price = selectedPrice;
+    });
+});
+
+// ================================================================
+// COLOR SELECT
+// ================================================================
+
+colorButtons.forEach((button) => {
+    button.addEventListener("click", () => {
+        colorButtons.forEach((btn) => {
+            btn.classList.remove("active");
+        });
+
+        button.classList.add("active");
+
+        selectedColor = button.dataset.color;
+
+        if (selectedColorText) {
+            selectedColorText.textContent = selectedColor;
+        }
+
+        waBtn.dataset.color = selectedColor;
+    });
+});
+
+// order whatsapp
 if (waBtn) {
     waBtn.addEventListener("click", async function (e) {
         e.preventDefault();
-
         const productId = this.dataset.id;
+        const productPrice = parseInt(this.dataset.price) || 0;
 
-        const size =
-            document.querySelector(".size-btn.active")?.dataset.size || "-";
+        if (productPrice <= 0) {
+            alert("Harga produk belum tersedia.");
+            return;
+        }
+
+        const variant =
+            document.querySelector(".size-btn.active")?.dataset.variant || "-";
 
         const color =
             document.querySelector(".color-tag-detail.active")?.dataset.color ||
@@ -37,6 +112,7 @@ if (waBtn) {
         try {
             const response = await fetch("/orders/store", {
                 method: "POST",
+
                 headers: {
                     "Content-Type": "application/json",
                     Accept: "application/json",
@@ -44,16 +120,16 @@ if (waBtn) {
                         .querySelector('meta[name="csrf-token"]')
                         .getAttribute("content"),
                 },
+
                 body: JSON.stringify({
                     product_id: productId,
-                    size: size,
+                    price: productPrice,
+                    variant: variant,
                     color: color,
                 }),
             });
 
             const result = await response.json();
-
-            console.log(result);
 
             if (response.ok && result.success) {
                 window.open(result.wa_url, "_blank");
@@ -62,83 +138,11 @@ if (waBtn) {
             }
         } catch (error) {
             console.error(error);
+
             alert("Terjadi kesalahan saat membuat pesanan.");
         }
     });
 }
-
-const mainImg = document.getElementById("gallery-main");
-const thumbs = document.querySelectorAll(".gallery-thumb");
-const dots = document.querySelectorAll(".gallery-nav-dot");
-
-function switchImage(index, src) {
-    mainImg.classList.add("switching");
-    setTimeout(() => {
-        mainImg.src = src;
-        mainImg.classList.remove("switching");
-    }, 350);
-
-    thumbs.forEach((t, i) => {
-        t.classList.toggle("active", i === index);
-    });
-    dots.forEach((d, i) => {
-        d.classList.toggle("active", i === index);
-    });
-}
-
-thumbs.forEach((thumb, index) => {
-    thumb.addEventListener("click", () => {
-        switchImage(index, thumb.dataset.full);
-    });
-});
-
-dots.forEach((dot, index) => {
-    dot.addEventListener("click", () => {
-        const correspondingThumb = thumbs[index];
-        if (correspondingThumb) {
-            switchImage(index, correspondingThumb.dataset.full);
-        }
-    });
-});
-
-// ================================================================
-//  SIZE BUTTONS
-// ================================================================
-document.querySelectorAll(".size-btn").forEach((btn) => {
-    btn.addEventListener("click", function () {
-        document.querySelectorAll(".size-btn").forEach((b) => {
-            b.classList.remove("active");
-            b.setAttribute("aria-pressed", "false");
-        });
-        this.classList.add("active");
-        this.setAttribute("aria-pressed", "true");
-    });
-});
-
-// ================================================================
-//  ACCORDION
-// ================================================================
-document.querySelectorAll(".accordion-trigger").forEach((trigger) => {
-    trigger.addEventListener("click", function () {
-        const isOpen = this.getAttribute("aria-expanded") === "true";
-        const contentId = this.getAttribute("aria-controls");
-        const content = document.getElementById(contentId);
-
-        // Close all
-        document.querySelectorAll(".accordion-trigger").forEach((t) => {
-            t.setAttribute("aria-expanded", "false");
-        });
-        document.querySelectorAll(".accordion-content").forEach((c) => {
-            c.classList.remove("open");
-        });
-
-        // Open clicked (if was closed)
-        if (!isOpen) {
-            this.setAttribute("aria-expanded", "true");
-            content.classList.add("open");
-        }
-    });
-});
 
 // ================================================================
 //  SHARE BUTTON
@@ -165,44 +169,4 @@ document.getElementById("share-btn").addEventListener("click", async () => {
         document.body.appendChild(toast);
         setTimeout(() => toast.remove(), 2200);
     }
-});
-
-/* =========================================
-   COLOR TAG SELECT
-========================================= */
-const colorTags = document.querySelectorAll(".color-tag-detail");
-const selectedColor = document.getElementById("selected-color");
-
-colorTags.forEach((tag) => {
-    tag.addEventListener("click", () => {
-        colorTags.forEach((t) => t.classList.remove("active"));
-
-        tag.classList.add("active");
-
-        if (selectedColor) {
-            selectedColor.textContent = tag.dataset.color;
-        }
-    });
-});
-
-/* =========================================
-   SIZE SELECT
-========================================= */
-const sizeButtons = document.querySelectorAll(".size-btn");
-const selectedSize = document.getElementById("selected-size");
-
-sizeButtons.forEach((btn) => {
-    btn.addEventListener("click", () => {
-        sizeButtons.forEach((b) => {
-            b.classList.remove("active");
-            b.setAttribute("aria-pressed", "false");
-        });
-
-        btn.classList.add("active");
-        btn.setAttribute("aria-pressed", "true");
-
-        if (selectedSize) {
-            selectedSize.textContent = btn.dataset.size;
-        }
-    });
 });
