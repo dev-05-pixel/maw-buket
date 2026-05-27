@@ -17,14 +17,13 @@ class Product extends Model
         'name',
         'category',
         'description',
-        'price',
         'image',
         'color',
-        'size',
+        'variants',
     ];
 
     protected $casts = [
-        'price' => 'decimal:2',
+        'variants' => 'array',
     ];
 
     /*

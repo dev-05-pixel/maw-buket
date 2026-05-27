@@ -21,7 +21,7 @@ class Order extends Model
         'product_id',
         'product_name',
         'product_price',
-        'size',
+        'variant',
         'color',
         'customer_phone',
         'status',
