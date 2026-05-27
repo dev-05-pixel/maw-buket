@@ -59,7 +59,7 @@
                 @endforeach
             </div>
 
-            <form method="GET" class="catalog-search">
+            <div class="catalog-search">
 
                 {{-- pertahankan category --}}
                 @foreach ((array) request('category') as $category)
@@ -74,9 +74,10 @@
                         <path d="M21 21l-4.35-4.35" />
                         <circle cx="11" cy="11" r="6" />
                     </svg>
-                    <input type="text" name="search" placeholder="Cari bouquet..." value="{{ request('search') }}">
+                    <input type="text" name="search" id="catalog-search-input" placeholder="Cari bouquet..."
+                        value="{{ request('search') }}">
                 </div>
-            </form>
+            </div>
 
             <div class="filter-right">
                 <button type="button" class="mobile-filter-toggle" id="mobile-filter-toggle" aria-label="Buka filter">
@@ -160,11 +161,21 @@
                     <p class="sidebar-title">Kategori</p>
 
                     <div class="checkbox-group">
+                        @php
+                            $selectedCategories = (array) request()->input('category', ['Semua']);
+                        @endphp
                         @foreach ($categories as $cat)
-                            <label class="checkbox-label">
+                            @php
+                                $isChecked =
+                                    $cat === 'Semua'
+                                        ? count($selectedCategories) === count($categories) ||
+                                            in_array('Semua', $selectedCategories)
+                                        : in_array($cat, $selectedCategories);
+                            @endphp
 
+                            <label class="checkbox-label">
                                 <input type="checkbox" name="category[]" value="{{ $cat }}"
-                                    {{ empty(request()->input('category')) || in_array($cat, (array) request()->input('category')) ? 'checked' : '' }}>
+                                    class="category-checkbox" {{ $isChecked ? 'checked' : '' }}>
 
                                 {{ $cat }}
 
@@ -182,18 +193,45 @@
 
                 <div class="sidebar-section reveal delay-1">
                     <p class="sidebar-title">Harga</p>
+
                     <div class="price-inputs">
+
                         <div class="price-input-wrap">
                             <span class="price-input-prefix">Rp</span>
-                            <input id="priceMin" type="number" name="min_price" value="{{ request('min_price') }}"
-                                class="price-input" placeholder="Min" step="1000" min="0">
+
+                            <input id="priceMin" type="text" inputmode="numeric" name="min_price"
+                                value="{{ request('min_price') ? number_format((int) request('min_price'), 0, ',', '.') : '' }}"
+                                class="price-input" placeholder="Min" autocomplete="off">
+
+                            <div class="price-spinner">
+                                <button type="button" class="spinner-btn spinner-up" data-target="priceMin">
+                                    ▲
+                                </button>
+
+                                <button type="button" class="spinner-btn spinner-down" data-target="priceMin">
+                                    ▼
+                                </button>
+                            </div>
                         </div>
 
                         <div class="price-input-wrap">
                             <span class="price-input-prefix">Rp</span>
-                            <input id="priceMax" type="number" name="max_price" value="{{ request('max_price') }}"
-                                class="price-input" placeholder="Max" step="1000" min="0">
+
+                            <input id="priceMax" type="text" inputmode="numeric" name="max_price"
+                                value="{{ request('max_price') ? number_format((int) request('max_price'), 0, ',', '.') : '' }}"
+                                class="price-input" placeholder="Max" autocomplete="off">
+
+                            <div class="price-spinner">
+                                <button type="button" class="spinner-btn spinner-up" data-target="priceMax">
+                                    ▲
+                                </button>
+
+                                <button type="button" class="spinner-btn spinner-down" data-target="priceMax">
+                                    ▼
+                                </button>
+                            </div>
                         </div>
+
                     </div>
                 </div>
 
@@ -207,11 +245,15 @@
 
                         @foreach ($visibleColors as $color)
                             <label class="color-tag">
-                                <input type="checkbox" name="color[]" value="{{ $color['name'] }}" hidden
+
+                                <input type="checkbox" name="color[]" value="{{ $color['name'] }}"
+                                    class="color-checkbox"
                                     {{ in_array($color['name'], (array) request('color')) ? 'checked' : '' }}>
+
                                 <span class="color-tag-text">
                                     {{ $color['name'] }}
                                 </span>
+
                             </label>
                         @endforeach
                     </div>
@@ -236,19 +278,6 @@
                             </div>
                         </details>
                     @endif
-                </div>
-
-                <div class="sidebar-section reveal delay-3">
-                    <p class="sidebar-title">Ukuran</p>
-                    <div class="checkbox-group">
-                        @foreach (['Mini (S)', 'Standar (M)', 'Besar (L)', 'Grand (XL)'] as $size)
-                            <label class="checkbox-label">
-                                <input type="checkbox" name="size[]" value="{{ $size }}"
-                                    {{ in_array($size, (array) request('size')) ? 'checked' : '' }}>
-                                {{ $size }}
-                            </label>
-                        @endforeach
-                    </div>
                 </div>
 
                 <div class="sidebar-actions">
@@ -297,13 +326,27 @@
                                     </a>
 
                                     <div class="product-card-quick">
-                                        <a href="#" class="product-quick-btn wa-order"
+
+                                        @php
+                                            $waVariants = is_string($product->variants)
+                                                ? json_decode($product->variants, true)
+                                                : $product->variants ?? [];
+
+                                            $waPrice = collect($waVariants)
+                                                ->pluck('price')
+                                                ->map(fn($p) => (int) preg_replace('/[^0-9]/', '', $p))
+                                                ->filter(fn($p) => $p > 0)
+                                                ->min();
+                                        @endphp
+
+                                        <button type="button" class="product-quick-btn wa-order"
                                             data-id="{{ $product->id }}" data-name="{{ $product->name }}"
-                                            data-price="{{ $product->price }}"
+                                            data-price="{{ $waPrice }}"
                                             data-url="{{ route('products.show', $product->id) }}"
                                             data-store-url="{{ route('orders.store') }}">
+
                                             Pesan via WhatsApp
-                                        </a>
+                                        </button>
                                     </div>
                                 </div>
 
@@ -316,9 +359,34 @@
                                             {{ $product->name }}
                                         </a>
                                     </h2>
-                                    <p class="product-card-price">
-                                        Rp {{ number_format($product->price, 0, ',', '.') }}
-                                    </p>
+                                    @php
+                                        $variants = is_string($product->variants)
+                                            ? json_decode($product->variants, true)
+                                            : $product->variants ?? [];
+
+                                        $prices = collect($variants)
+                                            ->pluck('price')
+                                            ->map(function ($p) {
+                                                $p = preg_replace('/[^0-9]/', '', $p);
+
+                                                return (int) $p;
+                                            })
+                                            ->filter(fn($p) => $p > 0);
+                                    @endphp
+
+                                    @if ($prices->count())
+                                        <p class="product-card-price">
+                                            Rp {{ number_format($prices->min(), 0, ',', '.') }}
+
+                                            @if ($prices->min() != $prices->max())
+                                                - {{ number_format($prices->max(), 0, ',', '.') }}
+                                            @endif
+                                        </p>
+                                    @else
+                                        <p class="product-card-price">
+                                            Harga belum tersedia
+                                        </p>
+                                    @endif
                                 </div>
                             </article>
                         @endforeach

@@ -56,18 +56,44 @@
         {{-- INFO --}}
         <div class="info-side reveal-right">
 
-            <p class="product-category-tag">{{ $product->category ?? 'Buket Segar' }}</p>
+            @php
+                $variants = is_string($product->variants)
+                    ? json_decode($product->variants, true)
+                    : $product->variants ?? [];
 
-            <h1 class="product-name">{{ $product->name ?? 'Blushing Garden' }}</h1>
+                $prices = collect($variants)
+                    ->pluck('price')
+                    ->map(function ($price) {
+                        return (int) preg_replace('/[^0-9]/', '', $price);
+                    })
+                    ->filter(fn($price) => $price > 0);
+
+                $minPrice = $prices->min();
+                $defaultVariant = $variants[0] ?? null;
+            @endphp
+
+            <p class="product-category-tag">
+                {{ $product->category ?? 'Buket Segar' }}
+            </p>
+
+            <h1 class="product-name">
+                {{ $product->name ?? 'Blushing Garden' }}
+            </h1>
 
             <div class="product-price-block">
                 <div>
-                    <span class="product-price">
-                        Rp {{ number_format($product->price, 0, ',', '.') }}
+                    <span class="product-price" id="product-price">
+                        @if ($minPrice)
+                            Rp {{ number_format($minPrice, 0, ',', '.') }}
+                        @else
+                            Harga belum tersedia
+                        @endif
                     </span>
                 </div>
+
                 <p class="product-price-note">
-                    Harga belum termasuk ongkos kirim. Pengiriman same-day tersedia.
+                    Harga belum termasuk ongkos kirim.
+                    Pengiriman same-day tersedia.
                 </p>
             </div>
 
@@ -84,7 +110,9 @@
 
                 @if ($showToggle)
                     <div class="desc-fade"></div>
-                    <button id="desc-toggle" class="desc-toggle">Lihat Selengkapnya</button>
+                    <button id="desc-toggle" class="desc-toggle">
+                        Lihat Selengkapnya
+                    </button>
                 @endif
             @else
                 <p class="product-desc" style="color:#9ca3af;">
@@ -93,26 +121,34 @@
             @endif
 
             {{-- SIZE OPTIONS --}}
-            @if ($product->size)
-                @php
-                    $sizes = array_map('trim', explode(',', $product->size));
-                @endphp
-
+            @if (!empty($variants))
                 <div class="option-group">
+
                     <p class="option-label">
-                        Ukuran —
+                        Varian —
                         <span id="selected-size">
-                            {{ $sizes[0] }}
+                            {{ $defaultVariant['name'] ?? 'Default' }}
                         </span>
                     </p>
 
-                    <div class="size-options" role="group" aria-label="Pilihan ukuran">
-                        @foreach ($sizes as $i => $size)
-                            <button class="size-btn {{ $i === 0 ? 'active' : '' }}"
-                                aria-pressed="{{ $i === 0 ? 'true' : 'false' }}" data-size="{{ $size }}">
-                                {{ $size }}
+                    <div class="size-options" role="group" aria-label="Pilihan varian">
+
+                        @foreach ($variants as $i => $variant)
+                            @php
+                                $variantSize = $variant['name'] ?? 'Default';
+
+                                $variantPrice = isset($variant['price'])
+                                    ? (int) preg_replace('/[^0-9]/', '', $variant['price'])
+                                    : 0;
+                            @endphp
+
+                            <button type="button" class="size-btn {{ $i === 0 ? 'active' : '' }}"
+                                aria-pressed="{{ $i === 0 ? 'true' : 'false' }}" data-variant="{{ $variantSize }}"
+                                data-price="{{ $variantPrice }}">
+                                {{ $variantSize }}
                             </button>
                         @endforeach
+
                     </div>
                 </div>
             @endif
@@ -124,6 +160,7 @@
                 @endphp
 
                 <div class="option-group">
+
                     <p class="option-label">
                         Warna Dominan —
                         <span id="selected-color">
@@ -132,21 +169,26 @@
                     </p>
 
                     <div class="color-tags">
+
                         @foreach ($colors as $i => $color)
                             <button type="button" class="color-tag-detail {{ $i === 0 ? 'active' : '' }}"
                                 data-color="{{ $color }}">
                                 {{ $color }}
                             </button>
                         @endforeach
+
                     </div>
                 </div>
             @endif
 
             {{-- CTA --}}
             <div class="product-cta">
+
                 <div class="product-cta-btns">
+
                     <a id="wa-order" href="#" class="nav-cta wa-order" data-id="{{ $product->id }}"
-                        data-name="{{ $product->name }}" data-price="{{ $product->price }}"
+                        data-name="{{ $product->name }}" data-price="{{ $minPrice ?? 0 }}"
+                        data-variant="{{ $defaultVariant['name'] ?? '' }}" data-color="{{ $colors[0] ?? '' }}"
                         data-url="{{ route('products.show', $product->id) }}"
                         data-store-url="{{ route('orders.store') }}">
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
@@ -155,28 +197,10 @@
                             <path
                                 d="M12 0C5.373 0 0 5.373 0 12c0 2.127.558 4.122 1.532 5.853L.054 23.704a.5.5 0 00.609.637l5.99-1.514A11.94 11.94 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22a9.956 9.956 0 01-5.193-1.458l-.37-.22-3.833.968.985-3.77-.242-.389A9.966 9.966 0 012 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z" />
                         </svg>
+
                         Pesan via WhatsApp
                     </a>
-
-                    <button class="cta-share-btn" aria-label="Bagikan produk" id="share-btn">
-                        <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
-                            aria-hidden="true">
-                            <circle cx="18" cy="5" r="3" />
-                            <circle cx="6" cy="12" r="3" />
-                            <circle cx="18" cy="19" r="3" />
-                            <line x1="8.59" y1="13.51" x2="15.42" y2="17.49" />
-                            <line x1="15.41" y1="6.51" x2="8.59" y2="10.49" />
-                        </svg>
-                    </button>
                 </div>
-
-                <p class="cta-contact-note">
-                    <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
-                        aria-hidden="true">
-                        <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                    Custom warna & ukuran tersedia. Hubungi kami untuk konsultasi gratis.
-                </p>
             </div>
         </div>
     </div>
@@ -185,60 +209,115 @@
      RELATED PRODUCTS
 ================================================================ --}}
     <section class="related-section" aria-label="Produk terkait">
-        <div class="related-header reveal">
-            <div>
-                <span class="section-label">Mungkin Kamu Suka</span>
-                <h2 class="related-title">
-                    Koleksi <em>Serupa</em>
-                </h2>
-            </div>
-            <a href="{{ url('/products') }}" class="btn-outline">
-                Lihat Semua
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                    <path d="M5 12h14M12 5l7 7-7 7" />
-                </svg>
-            </a>
-        </div>
+        @if ($relatedProducts->count())
+            <section class="related-section" aria-label="Produk terkait">
+                <div class="related-header reveal">
+                    <div>
+                        <span class="section-label">
+                            Mungkin Kamu Suka
+                        </span>
 
-        <div class="related-grid">
-            @php
-                $related = [
-                    ['seed' => 'rel-1', 'name' => 'Eternal Rose', 'cat' => 'Buket Kering', 'price' => 'Rp 220.000'],
-                    [
-                        'seed' => 'rel-2',
-                        'name' => 'Cotton Candy Cloud',
-                        'cat' => 'Mini Bouquet',
-                        'price' => 'Rp 115.000',
-                    ],
-                    ['seed' => 'rel-3', 'name' => 'Lavender Fields', 'cat' => 'Buket Kering', 'price' => 'Rp 205.000'],
-                    ['seed' => 'rel-4', 'name' => 'Sunrise Tulip', 'cat' => 'Buket Segar', 'price' => 'Rp 175.000'],
-                ];
-            @endphp
-
-            @foreach ($relatedProducts as $item)
-                <a href="{{ route('products.show', $item->id) }}" class="product-card">
-
-                    <div class="product-card-img-wrap">
-                        <img src="{{ asset('storage/' . $item->image) }}" class="product-card-img"
-                            alt="{{ $item->name }}">
+                        <h2 class="related-title">
+                            Koleksi <em>Serupa</em>
+                        </h2>
                     </div>
 
-                    <p class="product-card-category">
-                        {{ $item->category }}
+                    <a href="{{ url('/products') }}" class="btn-outline">
+                        Lihat Semua
+
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+
+                            <path d="M5 12h14M12 5l7 7-7 7" />
+                        </svg>
+                    </a>
+                </div>
+
+                <div class="related-grid">
+                    @foreach ($relatedProducts as $item)
+                        <a href="{{ route('products.show', $item->id) }}" class="product-card">
+
+                            <div class="product-card-img-wrap">
+                                <img src="{{ asset('storage/' . $item->image) }}" class="product-card-img"
+                                    alt="{{ $item->name }}">
+                            </div>
+
+                            <p class="product-card-category">
+                                {{ $item->category }}
+                            </p>
+
+                            <h3 class="product-card-name">
+                                {{ $item->name }}
+                            </h3>
+
+                            @php
+                                $relatedVariants = is_string($item->variants)
+                                    ? json_decode($item->variants, true)
+                                    : $item->variants ?? [];
+
+                                $relatedPrices = collect($relatedVariants)
+                                    ->pluck('price')
+                                    ->map(fn($p) => (int) preg_replace('/[^0-9]/', '', $p))
+                                    ->filter(fn($p) => $p > 0);
+
+                                $relatedMin = $relatedPrices->min();
+                                $relatedMax = $relatedPrices->max();
+                            @endphp
+
+                            <p class="product-card-price">
+                                @if ($relatedPrices->count())
+                                    Rp {{ number_format($relatedMin, 0, ',', '.') }}
+
+                                    @if ($relatedMin != $relatedMax)
+                                        - {{ number_format($relatedMax, 0, ',', '.') }}
+                                    @endif
+                                @else
+                                    Harga belum tersedia
+                                @endif
+                            </p>
+                        </a>
+                    @endforeach
+                </div>
+            </section>
+        @else
+            <section class="related-empty-state">
+                <div class="related-empty-decoration decoration-1"></div>
+                <div class="related-empty-decoration decoration-2"></div>
+                <div class="related-empty-box">
+                    <svg width="72" height="72" viewBox="0 0 24 24" fill="none"
+                        xmlns="http://www.w3.org/2000/svg">
+
+                        <path
+                            d="M5 8.5C5 6.567 6.567 5 8.5 5H15.5C17.433 5 19 6.567 19 8.5V15.5C19 17.433 17.433 19 15.5 19H8.5C6.567 19 5 17.433 5 15.5V8.5Z"
+                            stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
+
+                        <path d="M5 10C5 10 7.2 14 12 14C16.8 14 19 10 19 10" stroke="currentColor" stroke-width="1.8"
+                            stroke-linecap="round" stroke-linejoin="round" />
+
+                    </svg>
+                    <h2>
+                        Belum Ada Koleksi Serupa
+                    </h2>
+
+                    <p>
+                        Produk lain dengan kategori yang sama
+                        belum tersedia saat ini.
                     </p>
 
-                    <h3 class="product-card-name">
-                        {{ $item->name }}
-                    </h3>
+                    <a href="{{ url('/products') }}" class="btn-outline">
 
-                    <p class="product-card-price">
-                        Rp {{ number_format($item->price, 0, ',', '.') }}
-                    </p>
+                        Lihat Koleksi Lain
 
-                </a>
-            @endforeach
-        </div>
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+
+                            <path d="M5 12h14M12 5l7 7-7 7" />
+
+                        </svg>
+                    </a>
+                </div>
+            </section>
+        @endif
     </section>
 
 @endsection

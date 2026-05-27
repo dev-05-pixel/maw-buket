@@ -216,9 +216,35 @@
                         <h3 class="product-card-name">
                             {{ $product->name }}
                         </h3>
-                        <p class="product-card-price">
-                            Rp {{ number_format($product->price, 0, ',', '.') }}
-                        </p>
+                        @php
+                            $variants = is_string($product->variants)
+                                ? json_decode($product->variants, true)
+                                : $product->variants ?? [];
+
+                            $prices = collect($variants)
+                                ->pluck('price')
+                                ->map(function ($price) {
+                                    $price = preg_replace('/[^0-9]/', '', (string) $price);
+
+                                    return (int) $price;
+                                })
+                                ->filter(fn($price) => $price > 0)
+                                ->values();
+                        @endphp
+
+                        @if ($prices->count())
+                            <p class="product-card-price">
+                                Rp {{ number_format($prices->min(), 0, ',', '.') }}
+
+                                @if ($prices->min() != $prices->max())
+                                    - {{ number_format($prices->max(), 0, ',', '.') }}
+                                @endif
+                            </p>
+                        @else
+                            <p class="product-card-price">
+                                Harga belum tersedia
+                            </p>
+                        @endif
                     </a>
                 </article>
 
