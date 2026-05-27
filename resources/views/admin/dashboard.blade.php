@@ -320,10 +320,37 @@
                             </p>
                         </div>
 
+                        @php
+                            $variants = is_string($product->variants)
+                                ? json_decode($product->variants, true)
+                                : $product->variants ?? [];
+
+                            $prices = collect($variants)
+                                ->pluck('price')
+                                ->map(function ($price) {
+                                    $price = preg_replace('/[^0-9]/', '', (string) $price);
+
+                                    return (int) $price;
+                                })
+                                ->filter(fn($price) => $price > 0)
+                                ->values();
+                        @endphp
+
                         <div class="text-right">
-                            <p class="text-sm font-bold text-brown">
-                                Rp {{ number_format($product->price, 0, ',', '.') }}
-                            </p>
+
+                            @if ($prices->count())
+                                <p class="text-sm font-bold text-brown">
+                                    Rp {{ number_format($prices->min(), 0, ',', '.') }}
+
+                                    @if ($prices->min() != $prices->max())
+                                        - {{ number_format($prices->max(), 0, ',', '.') }}
+                                    @endif
+                                </p>
+                            @else
+                                <p class="text-sm font-bold text-brown">
+                                    Harga belum tersedia
+                                </p>
+                            @endif
 
                             <p class="text-[11px] text-muted mt-1">
                                 {{ $product->created_at->diffForHumans() }}
