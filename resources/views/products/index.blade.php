@@ -460,14 +460,34 @@
                         @endif
 
                         {{-- Page Numbers --}}
-                        @foreach ($products->getUrlRange(1, $products->lastPage()) as $page => $url)
-                            @if ($page == $products->currentPage())
-                                <span class="page-btn active">{{ $page }}</span>
-                            @else
-                                <a href="{{ $url }}" class="page-btn">{{ $page }}</a>
-                            @endif
-                        @endforeach
+                        @php
+                            $current = $products->currentPage();
+                            $last = $products->lastPage();
 
+                            // tampilkan maksimal 3 nomor
+                            if ($last <= 3) {
+                                $start = 1;
+                                $end = $last;
+                            } else {
+                                $start = max(1, $current - 1);
+                                $end = min($last, $start + 2);
+
+                                // jaga agar tetap 3 item
+                                if ($end - $start < 2) {
+                                    $start = max(1, $end - 2);
+                                }
+                            }
+                        @endphp
+
+                        @for ($i = $start; $i <= $end; $i++)
+                            @if ($i == $current)
+                                <span class="page-btn active">{{ $i }}</span>
+                            @else
+                                <a href="{{ $products->url($i) }}" class="page-btn">
+                                    {{ $i }}
+                                </a>
+                            @endif
+                        @endfor
                         {{-- Next --}}
                         @if ($products->hasMorePages())
                             <a href="{{ $products->nextPageUrl() }}" class="page-btn prev-next">

@@ -410,12 +410,21 @@
                             </svg>
                         @endfor
                     </div>
+
                     <span class="testimonial-quote-mark">
                         &ldquo;
                     </span>
-                    <p class="testimonial-text">
+
+                    <p class="testimonial-text collapsed">
                         {{ $t->message }}
                     </p>
+
+                    @if (strlen($t->message) > 180)
+                        <button type="button" class="read-more-btn">
+                            Baca Selengkapnya
+                        </button>
+                    @endif
+
                     <div class="testimonial-author">
                         <div class="testimonial-avatar-letter">
                             {{ strtoupper(substr($t->name, 0, 1)) }}

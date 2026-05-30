@@ -82,11 +82,12 @@
             <nav class="flex-1 p-3 space-y-0.5 text-sm overflow-hidden">
 
                 {{-- ================= MAIN ================= --}}
-                <p class="hidden lg:block text-[10px] font-semibold tracking-widest text-muted uppercase px-3 pt-4 pb-2">
+                <p
+                    class="hidden lg:block text-[10px] font-semibold tracking-widest text-muted uppercase px-3 pt-4 pb-2">
                     Utama
                 </p>
 
-                <a href="/admin/dashboard"
+                <a href="{{ route('admin.dashboard') }}"
                     class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-brown-m hover:bg-cream {{ request()->is('admin/dashboard') ? 'active' : '' }}">
 
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
@@ -101,11 +102,12 @@
                 </a>
 
                 {{-- ================= KATALOG ================= --}}
-                <p class="hidden lg:block text-[10px] font-semibold tracking-widest text-muted uppercase px-3 pt-5 pb-2">
+                <p
+                    class="hidden lg:block text-[10px] font-semibold tracking-widest text-muted uppercase px-3 pt-5 pb-2">
                     Katalog
                 </p>
 
-                <a href="/admin/products"
+                <a href="{{ route('admin.products.index') }}"
                     class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-brown-m hover:bg-cream {{ request()->is('admin/products*') ? 'active' : '' }}">
 
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
@@ -118,7 +120,8 @@
                 </a>
 
                 {{-- ================= TRANSAKSI ================= --}}
-                <p class="hidden lg:block text-[10px] font-semibold tracking-widest text-muted uppercase px-3 pt-5 pb-2">
+                <p
+                    class="hidden lg:block text-[10px] font-semibold tracking-widest text-muted uppercase px-3 pt-5 pb-2">
                     Transaksi
                 </p>
 
@@ -126,7 +129,7 @@
                     $pendingOrders = \App\Models\Order::where('status', 'pending')->count();
                 @endphp
 
-                <a href="/admin/orders"
+                <a href="{{ route('admin.orders.index') }}"
                     class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-brown-m hover:bg-cream {{ request()->is('admin/orders*') ? 'active' : '' }}">
 
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
@@ -148,11 +151,12 @@
                 </a>
 
                 {{-- ================= TESTIMONI ================= --}}
-                <p class="hidden lg:block text-[10px] font-semibold tracking-widest text-muted uppercase px-3 pt-5 pb-2">
+                <p
+                    class="hidden lg:block text-[10px] font-semibold tracking-widest text-muted uppercase px-3 pt-5 pb-2">
                     Website
                 </p>
 
-                <a href="/admin/testimonials"
+                <a href="{{ route('admin.testimonials.index') }}"
                     class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-brown-m hover:bg-cream {{ request()->is('admin/testimonials*') ? 'active' : '' }}">
 
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
@@ -164,7 +168,8 @@
                 </a>
 
                 {{-- ================= PESAN ================= --}}
-                <p class="hidden lg:block text-[10px] font-semibold tracking-widest text-muted uppercase px-3 pt-5 pb-2">
+                <p
+                    class="hidden lg:block text-[10px] font-semibold tracking-widest text-muted uppercase px-3 pt-5 pb-2">
                     Pesan Masuk
                 </p>
 
@@ -174,7 +179,7 @@
                     $unreadCount = \App\Models\ContactMessage::where('is_read', false)->count();
                 @endphp
 
-                <a href="/admin/messages"
+                <a href="{{ route('admin.messages.index') }}"
                     class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-brown-m hover:bg-cream {{ request()->is('admin/messages*') ? 'active' : '' }}">
 
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
@@ -193,11 +198,12 @@
                 </a>
 
                 {{-- ================= FAQ ================= --}}
-                <p class="hidden lg:block text-[10px] font-semibold tracking-widest text-muted uppercase px-3 pt-5 pb-2">
+                <p
+                    class="hidden lg:block text-[10px] font-semibold tracking-widest text-muted uppercase px-3 pt-5 pb-2">
                     Knowledge Base
                 </p>
 
-                <a href="/admin/faqs"
+                <a href="{{ route('admin.faqs.index') }}"
                     class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-brown-m hover:bg-cream {{ request()->is('admin/faqs*') ? 'active' : '' }}">
 
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
@@ -214,7 +220,7 @@
 
             {{-- Logout --}}
             <div class="p-4 border-t border-cream-d flex-shrink-0">
-                <form method="POST" action="/admin/logout">
+                <form method="POST" action="{{ route('filament.admin.auth.logout') }}">
                     @csrf
                     <button type="submit"
                         class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-muted hover:bg-red-50 hover:text-red-500 transition-colors">
@@ -252,17 +258,106 @@
                 </div>
 
                 <div class="flex items-center gap-3">
-                    <a href="/admin/messages"
-                        class="relative p-2 rounded-lg hover:bg-cream transition text-muted hover:text-brown">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                            stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9" />
-                            <path d="M13.73 21a2 2 0 01-3.46 0" />
-                        </svg>
-                        @if (isset($unreadCount) && $unreadCount > 0)
-                            <span class="absolute top-1.5 right-1.5 w-2 h-2 bg-rose rounded-full"></span>
-                        @endif
-                    </a>
+                    <div class="relative">
+
+                        <button onclick="toggleNotificationDropdown()" aria-label="Notifikasi" aria-expanded="false"
+                            class="relative p-2 rounded-lg hover:bg-cream transition text-muted hover:text-brown">
+
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+                                stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
+                                stroke-linejoin="round">
+                                <path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9" />
+                                <path d="M13.73 21a2 2 0 01-3.46 0" />
+                            </svg>
+
+                            @if (isset($notifications) && $notifications->count())
+                                <span
+                                    class="absolute -top-1 -right-1
+                                    min-w-[18px]
+                                    h-[18px]
+                                    px-1
+                                    rounded-full
+                                    bg-rose
+                                    text-white
+                                    text-[10px]
+                                    font-semibold
+                                    flex items-center justify-center">
+
+                                    {{ $notifications->count() }}
+
+                                </span>
+                            @endif
+
+                        </button>
+
+                        <div id="notification-dropdown" class="notification-dropdown">
+
+                            <div class="notification-header">
+                                Notifikasi Terbaru
+                            </div>
+
+                            @forelse($notifications ?? [] as $notification)
+                                <a href="{{ $notification['url'] }}" class="notification-item">
+
+                                    <div class="notification-icon">
+
+                                        @if ($notification['type'] === 'message')
+                                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+                                                stroke="currentColor" stroke-width="2">
+                                                <path
+                                                    d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+                                            </svg>
+                                        @elseif($notification['type'] === 'order')
+                                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+                                                stroke="currentColor" stroke-width="2">
+                                                <rect x="3" y="6" width="18" height="14" rx="2" />
+                                                <path d="M3 10h18" />
+                                            </svg>
+                                        @elseif($notification['type'] === 'product')
+                                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+                                                stroke="currentColor" stroke-width="2">
+                                                <path d="M20 7H4" />
+                                                <rect x="3" y="7" width="18" height="13" rx="2" />
+                                            </svg>
+                                        @endif
+
+                                    </div>
+
+                                    <div class="notification-content">
+
+                                        <p class="notification-title">
+                                            {{ $notification['title'] }}
+                                        </p>
+
+                                        <p class="notification-text">
+                                            {{ Str::limit($notification['message'], 40) }}
+                                        </p>
+
+                                        <p class="notification-time">
+                                            {{ $notification['time']->diffForHumans() }}
+                                        </p>
+
+                                    </div>
+
+                                </a>
+
+                            @empty
+
+                                <div class="notification-empty">
+                                    Tidak ada notifikasi
+                                </div>
+                            @endforelse
+
+                            @if (!empty($notifications) && $notifications->count())
+                                <div class="notification-footer">
+                                    <a href="{{ route('admin.dashboard') }}">
+                                        Lihat Semua Aktivitas →
+                                    </a>
+                                </div>
+                            @endif
+
+                        </div>
+                    </div>
                     <div class="w-8 h-8 rounded-full bg-rose-l flex items-center justify-center">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#B85C52"
                             stroke-width="2" stroke-linecap="round">
@@ -358,9 +453,16 @@
             ring.style.top = ry + 'px';
             requestAnimationFrame(anim);
         })();
-        document.querySelectorAll('a,button,input,select,textarea,[role="button"]').forEach(el => {
-            el.addEventListener('mouseenter', () => document.body.classList.add('cur-hover'));
-            el.addEventListener('mouseleave', () => document.body.classList.remove('cur-hover'));
+        document.addEventListener('mouseover', (e) => {
+            if (e.target.closest('a,button,input,select,textarea,[role="button"]')) {
+                document.body.classList.add('cur-hover');
+            }
+        });
+
+        document.addEventListener('mouseout', (e) => {
+            if (e.target.closest('a,button,input,select,textarea,[role="button"]')) {
+                document.body.classList.remove('cur-hover');
+            }
         });
 
         // ── Toast ──
@@ -402,6 +504,32 @@
         }
         document.addEventListener('keydown', e => {
             if (e.key === 'Escape') closeDeleteModal();
+        });
+
+        function toggleNotificationDropdown() {
+
+            document
+                .getElementById('notification-dropdown')
+                .classList
+                .toggle('show');
+        }
+
+        document.addEventListener('click', function(e) {
+
+            const dropdown =
+                document.getElementById('notification-dropdown');
+
+            const trigger =
+                e.target.closest('[onclick="toggleNotificationDropdown()"]');
+
+            if (!dropdown) return;
+
+            if (
+                !e.target.closest('#notification-dropdown') &&
+                !trigger
+            ) {
+                dropdown.classList.remove('show');
+            }
         });
     </script>
 
