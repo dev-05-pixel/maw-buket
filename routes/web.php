@@ -16,6 +16,7 @@ use App\Http\Controllers\Admin\MessageController;
 use App\Http\Controllers\Admin\TestimonialController as AdminTestimonialController;
 use App\Http\Controllers\Admin\OrderController as AdminOrderController;
 use App\Http\Controllers\Admin\FaqController;
+use App\Http\Controllers\Admin\NotificationsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -118,6 +119,10 @@ Route::prefix('admin')
             ->name('testimonials.toggle');
         Route::delete('/testimonials/{testimonial}', [AdminTestimonialController::class, 'destroy'])
             ->name('testimonials.destroy');
+        Route::get(
+            '/testimonials/{testimonial}',
+            [AdminTestimonialController::class, 'show']
+        )->name('testimonials.show');
 
         /*
         | ORDERS
@@ -148,7 +153,7 @@ Route::prefix('admin')
             [AdminOrderController::class, 'whatsappReply']
         )->name('orders.whatsapp');
 
-           /*
+        /*
         | FAQ
         */
         Route::resource('faqs', FaqController::class);
@@ -158,5 +163,10 @@ Route::prefix('admin')
         */
         Route::post('/chat-ai/chat', [\App\Http\Controllers\Admin\AiChatController::class, 'chat'])
             ->name('ai.chat');
-    });
 
+        // NOTIFICATIONS
+        Route::get(
+            '/notifications/{notification}',
+            [NotificationsController::class, 'open']
+        )->name('notifications.open');
+    });
