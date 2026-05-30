@@ -545,6 +545,9 @@
 
     /* Product card — general (shared w/ home) */
     .product-card {
+        display: flex;
+        flex-direction: column;
+        height: 100%;
         position: relative;
         cursor: none;
         transition: transform 0.4s var(--ease-out-expo);
@@ -704,6 +707,7 @@
     }
 
     .product-card-meta {
+        display: block;
         padding: 0 4px;
     }
 
@@ -714,6 +718,9 @@
         text-transform: uppercase;
         color: var(--rose);
         margin-bottom: 6px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
 
     .product-card-name {
@@ -723,7 +730,12 @@
         color: var(--charcoal);
         margin-bottom: 8px;
         transition: color 0.3s ease;
-        line-height: 1.2;
+        line-height: 1.3;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
 
     .product-card:hover .product-card-name {
@@ -731,6 +743,7 @@
     }
 
     .product-card-bottom {
+        margin-top: 0;
         display: flex;
         align-items: center;
         justify-content: space-between;
@@ -1975,5 +1988,64 @@
             flex-wrap: wrap;
             align-items: center;
             gap: 10px;
+        }
+    }
+
+    @media (max-width: 480px) {
+
+        .products-main {
+            padding-inline: 0;
+        }
+
+        .products-area {
+            padding-inline: 16px;
+        }
+
+        .products-listing {
+            gap: 24px;
+        }
+
+        .product-card {
+            width: 100%;
+        }
+
+        .product-card-meta {
+            padding: 16px;
+        }
+    }
+
+    @media (max-width: 360px) {
+
+        .products-area {
+            padding-inline: 20px;
+        }
+
+    }
+
+    @media (max-width: 480px) {
+
+        .pagination-wrap {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 8px;
+            padding: 24px 16px;
+        }
+
+        .page-btn {
+            min-width: 42px;
+            height: 42px;
+            padding: 0 12px;
+            font-size: 14px;
+        }
+
+        .prev-next {
+            padding-inline: 14px;
+        }
+
+        .page-dots {
+            display: flex;
+            align-items: center;
+            padding: 0 4px;
         }
     }
