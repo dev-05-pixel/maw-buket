@@ -283,7 +283,7 @@
                                     font-semibold
                                     flex items-center justify-center">
 
-                                    {{ $notifications->count() }}
+                                    {{ $unreadNotifications > 10 ? '10+' : $unreadNotifications }}
 
                                 </span>
                             @endif
@@ -297,27 +297,36 @@
                             </div>
 
                             @forelse($notifications ?? [] as $notification)
-                                <a href="{{ $notification['url'] }}" class="notification-item">
+                                <a href="{{ route('admin.notifications.open', $notification->id) }}"
+                                    class="notification-item {{ !$notification->is_read ? 'unread' : '' }}">
 
                                     <div class="notification-icon">
 
-                                        @if ($notification['type'] === 'message')
+                                        @if ($notification->type === 'message')
                                             <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
                                                 stroke="currentColor" stroke-width="2">
                                                 <path
                                                     d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
                                             </svg>
-                                        @elseif($notification['type'] === 'order')
+                                        @elseif($notification->type === 'order')
                                             <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
                                                 stroke="currentColor" stroke-width="2">
                                                 <rect x="3" y="6" width="18" height="14" rx="2" />
                                                 <path d="M3 10h18" />
                                             </svg>
-                                        @elseif($notification['type'] === 'product')
+                                        @elseif($notification->type === 'product')
                                             <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
                                                 stroke="currentColor" stroke-width="2">
                                                 <path d="M20 7H4" />
                                                 <rect x="3" y="7" width="18" height="13" rx="2" />
+                                            </svg>
+                                        @elseif($notification->type === 'testimonial')
+                                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+                                                stroke="currentColor" stroke-width="2">
+                                                <path
+                                                    d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+                                                <path d="M8 10h8" />
+                                                <path d="M8 14h5" />
                                             </svg>
                                         @endif
 
@@ -326,15 +335,15 @@
                                     <div class="notification-content">
 
                                         <p class="notification-title">
-                                            {{ $notification['title'] }}
+                                            {{ $notification->title }}
                                         </p>
 
                                         <p class="notification-text">
-                                            {{ Str::limit($notification['message'], 40) }}
+                                            {{ Str::limit($notification->message, 40) }}
                                         </p>
 
                                         <p class="notification-time">
-                                            {{ $notification['time']->diffForHumans() }}
+                                            {{ $notification->created_at->diffForHumans() }}
                                         </p>
 
                                     </div>
