@@ -54,13 +54,27 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 });
 
-const textarea = document.getElementById('testimonialMessage');
-    const charCount = document.getElementById('charCount');
+const textarea = document.getElementById("testimonialMessage");
+const charCount = document.getElementById("charCount");
 
-    function updateCount() {
-        charCount.textContent = textarea.value.length;
-    }
+function updateCount() {
+    charCount.textContent = textarea.value.length;
+}
 
-    textarea.addEventListener('input', updateCount);
+textarea.addEventListener("input", updateCount);
 
-    updateCount();
+updateCount();
+
+document.querySelectorAll(".read-more-btn").forEach((btn) => {
+    btn.addEventListener("click", function () {
+        const text = this.previousElementSibling;
+
+        if (text.classList.contains("collapsed")) {
+            text.classList.remove("collapsed");
+            this.textContent = "Tampilkan Lebih Sedikit";
+        } else {
+            text.classList.add("collapsed");
+            this.textContent = "Baca Selengkapnya";
+        }
+    });
+});
