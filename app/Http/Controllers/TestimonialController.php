@@ -6,6 +6,7 @@ use App\Models\Testimonial;
 use Illuminate\Http\Request;
 use Stevebauman\Location\Facades\Location;
 use Illuminate\Support\Str;
+use App\Models\Notification;
 use Illuminate\Support\Facades\RateLimiter;
 
 class TestimonialController extends Controller
@@ -64,7 +65,7 @@ class TestimonialController extends Controller
         // =========================================
         // SAVE
         // =========================================
-        Testimonial::create([
+        $testimonial = Testimonial::create([
             'id' => strtoupper(substr(uniqid(), -12)),
             'name' => $request->name,
             'message' => $request->message,
@@ -72,6 +73,15 @@ class TestimonialController extends Controller
             'location' => $location,
             'avatar_letter' => strtoupper(substr($request->name, 0, 1)),
             'ip_address' => $request->ip(),
+        ]);
+
+        Notification::create([
+            'id' => (string) Str::ulid(),
+            'type' => 'testimonial',
+            'reference_id' => $testimonial->id,
+            'reference_type' => Testimonial::class,
+            'title' => 'Testimonial Baru',
+            'message' => $testimonial->name,
         ]);
 
         return redirect()

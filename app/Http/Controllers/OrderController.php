@@ -6,6 +6,7 @@ use App\Models\Order;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use App\Models\Notification;
 
 class OrderController extends Controller
 {
@@ -30,6 +31,15 @@ class OrderController extends Controller
             'variant' => $request->variant,
             'color' => $request->color,
             'status' => 'pending',
+        ]);
+
+        Notification::create([
+            'id' => (string) Str::ulid(),
+            'type' => 'order',
+            'reference_id' => $order->id,
+            'reference_type' => Order::class,
+            'title' => 'Pesanan Baru',
+            'message' => $order->product_name,
         ]);
 
         $greetings = [

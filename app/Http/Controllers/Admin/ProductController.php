@@ -7,6 +7,7 @@ use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use App\Models\Notification;
 
 class ProductController extends Controller
 {
@@ -89,7 +90,7 @@ class ProductController extends Controller
                 ->withInput();
         }
 
-        Product::create([
+        $product = Product::create([
             'id'          => $id,
             'name'        => $request->name,
             'category'    => $request->category,
@@ -97,6 +98,15 @@ class ProductController extends Controller
             'image'       => $imagePath,
             'color'       => $color,
             'variants'    => $variants,
+        ]);
+
+        Notification::create([
+            'id' => (string) Str::ulid(),
+            'type' => 'product',
+            'reference_id' => $product->id,
+            'reference_type' => Product::class,
+            'title' => 'Produk Baru',
+            'message' => $product->name,
         ]);
 
         return redirect()

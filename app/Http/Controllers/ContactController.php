@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\ContactMessage;
 use Illuminate\Http\Request;
+use App\Models\Notification;
+use Illuminate\Support\Str;
 
 class ContactController extends Controller
 {
@@ -23,7 +25,16 @@ class ContactController extends Controller
             'message'    => 'required|string|max:600',
         ]);
 
-        ContactMessage::create($validated);
+        $message = ContactMessage::create($validated);
+
+        Notification::create([
+            'id' => (string) Str::ulid(),
+            'type' => 'message',
+            'reference_id' => $message->id,
+            'reference_type' => ContactMessage::class,
+            'title' => 'Pesan Masuk',
+            'message' => $message->name,
+        ]);
 
         return response()->json(['success' => true]);
     }

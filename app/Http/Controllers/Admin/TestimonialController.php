@@ -14,6 +14,14 @@ class TestimonialController extends Controller
         return view('admin.testimonials.index', compact('testimonials'));
     }
 
+    public function show(Testimonial $testimonial)
+    {
+        return view(
+            'admin.testimonials.show',
+            compact('testimonial')
+        );
+    }
+
     public function toggle(Testimonial $testimonial)
     {
         $testimonial->update([
