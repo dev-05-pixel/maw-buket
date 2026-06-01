@@ -315,30 +315,169 @@ body.cur-hover .cur-ring {
     background: #F7F3EE;
 }
 
-@media (max-width: 425px) {
+/* ==================================================
+   Profile Expand
+================================================== */
+
+.profile-pill {
+    position: relative;
+
+    height: 42px;
+
+    width: 42px;
+    min-width: 42px;
+
+    border-radius: 999px;
+
+    background: #F6D4D0;
+
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+
+    overflow: hidden;
+
+    transition: width .35s cubic-bezier(.19, 1, .22, 1);
+
+    z-index: 60;
+}
+
+.profile-pill.open {
+    width: 150px;
+}
+
+.profile-avatar {
+    width: 42px;
+    height: 42px;
+
+    border-radius: 999px;
+
+    background: #D4847A;
+
+    color: white;
+
+    font-size: 15px;
+    font-weight: 700;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    flex-shrink: 0;
+
+    position: relative;
+    z-index: 2;
+}
+
+.profile-name {
+    position: absolute;
+
+    left: 18px;
+
+    font-size: 13px;
+    font-weight: 600;
+
+    color: #7A4D47;
+
+    opacity: 0;
+
+    transform: translateX(10px);
+
+    transition:
+        opacity .2s ease,
+        transform .3s ease;
+
+    white-space: nowrap;
+
+    max-width: 80px;
+
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.profile-pill.open .profile-name {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+@media (max-width: 767px) {
 
     .notification-dropdown {
-        width: 340px;
-        right: -10px;
+        position: fixed;
+
+        top: 80px;
+
+        left: 50%;
+        right: auto;
+
+        width: calc(100vw - 32px);
+        max-width: 420px;
+
+        transform: translateX(-50%) translateY(10px);
+
+        margin: 0;
     }
 
+    .notification-dropdown.show {
+        transform: translateX(-50%) translateY(0);
+    }
 }
+
+/* ==================================================
+   Mobile Header Fix
+================================================== */
 
 @media (max-width: 375px) {
 
-    .notification-dropdown {
-        width: calc(100vw - 20px);
-        right: -8px;
+    .topbar {
+        gap: 10px;
     }
 
-}
-
-@media (max-width: 320px) {
-
-    .notification-dropdown {
-        width: calc(100vw - 16px);
-        right: -6px;
-        border-radius: 14px;
+    .topbar-left {
+        min-width: 0;
+        flex: 1;
     }
 
+    .topbar-title-group {
+        overflow: hidden;
+        transition: opacity .2s ease;
+    }
+
+    .topbar .flex.items-center.gap-4 {
+        min-width: 0;
+        flex: 1;
+    }
+
+    .topbar.profile-open .topbar-title-group {
+        opacity: 0;
+        visibility: hidden;
+        width: 0;
+        margin: 0;
+        overflow: hidden;
+    }
+
+    /* Langsung sembunyikan subtext */
+    .topbar-subtitle {
+        display: none;
+    }
+
+    /* Kecilkan title */
+    .topbar-title {
+        font-size: 14px;
+    }
+
+    /* Notification + profile rapat */
+    .topbar-right {
+        gap: 8px;
+        flex-shrink: 0;
+    }
+
+    /* Supaya expand tidak terlalu panjang */
+    .profile-pill.open {
+        width: 125px;
+    }
+
+    .profile-name {
+        max-width: 60px;
+    }
 }

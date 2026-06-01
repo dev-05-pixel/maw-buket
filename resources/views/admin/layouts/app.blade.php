@@ -62,7 +62,7 @@
 
             {{-- Brand — tinggi = topbar --}}
             <div class="sidebar-brand px-6 border-b border-cream-d flex items-center">
-                <div class="flex items-center gap-3">
+                <div class="topbar-right flex items-center gap-3">
                     <div class="w-8 h-8 rounded-lg bg-rose flex items-center justify-center flex-shrink-0">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white"
                             stroke-width="2" stroke-linecap="round">
@@ -239,9 +239,19 @@
         {{-- ══════════════════ MAIN ══════════════════ --}}
         <main class="flex-1 flex flex-col min-w-0 md:ml-64">
 
+            @php
+                $fullEmail = session('admin_email', 'admin@example.com');
+
+                $username = explode('@', $fullEmail)[0];
+
+                $username = Str::limit($username, 10, '');
+
+                $initial = strtoupper(substr($username, 0, 1));
+            @endphp
+
             {{-- Topbar — tinggi = sidebar brand --}}
             <header
-                class="topbar bg-white border-b border-cream-d px-6 flex items-center justify-between sticky top-0 z-30">
+                class="topbar bg-white border-b border-cream-d px-4 md:px-6 flex items-center justify-between sticky top-0 z-30">
                 <div class="flex items-center gap-4">
                     <button onclick="openSidebar()" class="md:hidden text-brown-m p-1">
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
@@ -251,13 +261,18 @@
                             <line x1="3" y1="18" x2="21" y2="18" />
                         </svg>
                     </button>
-                    <div>
-                        <h1 class="text-base font-semibold text-brown leading-none">@yield('header')</h1>
-                        <p class="text-xs text-muted mt-0.5">@yield('subheader', 'Maw Bouquet Admin')</p>
+                    <div class="topbar-title-group">
+                        <h1 class="topbar-title text-base font-semibold text-brown leading-none">
+                            @yield('header')
+                        </h1>
+
+                        <p class="topbar-subtitle text-xs text-muted mt-0.5">
+                            @yield('subheader', 'Maw Bouquet Admin')
+                        </p>
                     </div>
                 </div>
 
-                <div class="flex items-center gap-3">
+                <div class="topbar-right flex items-center gap-3">
                     <div class="relative">
 
                         <button onclick="toggleNotificationDropdown()" aria-label="Notifikasi" aria-expanded="false"
@@ -367,14 +382,19 @@
 
                         </div>
                     </div>
-                    <div class="w-8 h-8 rounded-full bg-rose-l flex items-center justify-center">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#B85C52"
-                            stroke-width="2" stroke-linecap="round">
-                            <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2" />
-                            <circle cx="12" cy="7" r="4" />
-                        </svg>
+                    <div class="relative overflow-visible flex items-center justify-end">
+                        <button id="profile-toggle" onclick="toggleProfileExpand()" class="profile-pill">
+
+                            <div class="profile-name">
+                                {{ $username }}
+                            </div>
+
+                            <div class="profile-avatar">
+                                {{ $initial }}
+                            </div>
+
+                        </button>
                     </div>
-                </div>
             </header>
 
             {{-- Flash toast --}}
@@ -538,6 +558,39 @@
                 !trigger
             ) {
                 dropdown.classList.remove('show');
+            }
+        });
+
+        function toggleProfileExpand() {
+
+            const profile =
+                document.getElementById('profile-toggle');
+
+            const topbar =
+                document.querySelector('.topbar');
+
+            profile.classList.toggle('open');
+
+            if (profile.classList.contains('open')) {
+                topbar.classList.add('profile-open');
+            } else {
+                topbar.classList.remove('profile-open');
+            }
+        }
+
+        document.addEventListener('click', function(e) {
+
+            const profile =
+                document.getElementById('profile-toggle');
+
+            const topbar =
+                document.querySelector('.topbar');
+
+            if (!profile) return;
+
+            if (!e.target.closest('#profile-toggle')) {
+                profile.classList.remove('open');
+                topbar.classList.remove('profile-open');
             }
         });
     </script>
