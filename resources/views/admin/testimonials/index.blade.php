@@ -103,21 +103,20 @@
 
                                     <a href="{{ route('admin.testimonials.show', $item->id) }}"
                                         class="px-3 py-2 rounded-xl text-xs
-        bg-blue-50 text-blue-600
-        hover:bg-blue-100 transition">
-
+                                                bg-blue-50 text-blue-600
+                                                hover:bg-blue-100 transition">
                                         Detail
                                     </a>
 
                                     <button
-                                        onclick="openDeleteModal({
-            action: '{{ route('admin.testimonials.destroy', $item->id) }}',
-            title: 'Hapus testimonial?',
-            desc: 'Testimonial akan dihapus permanen.'
-        })"
+                                            onclick="openDeleteModal({
+                                            action: '{{ route('admin.testimonials.destroy', $item->id) }}',
+                                            title: 'Hapus testimonial?',
+                                            desc: 'Testimonial akan dihapus permanen.'
+                                        })"
                                         class="px-3 py-2 rounded-xl text-xs
-        bg-red-50 text-red-500
-        hover:bg-red-100 transition">
+                                            bg-red-50 text-red-500
+                                            hover:bg-red-100 transition">
 
                                         Hapus
                                     </button>
