@@ -158,121 +158,185 @@ describe('Form Kontak', function () {
     describe('Warning Field Form', () => {
 
 
-        it('TC-KON-05: Input tidak dapat dikirim jika nama dikosongkan', async () => {
+        it('TC-KON-05: Validasi muncul jika nama dikosongkan', async () => {
 
             await bukaKontak(driver);
 
-            await isiFormLengkap(driver);
+            // isi field lain
+            await isiInput(
+                driver,
+                By.id('phone'),
+                '08123456789'
+            );
 
+            await isiInput(
+                driver,
+                By.id('email'),
+                'test@gmail.com'
+            );
+
+            await isiInput(
+                driver,
+                By.id('message'),
+                'Testing validasi nama kosong'
+            );
+
+            // submit
+            const submitBtn = await driver.findElement(
+                By.css("button[type='submit']")
+            );
+
+            await scrollKe(driver, submitBtn);
+
+            await submitBtn.click();
+
+            await driver.sleep(2000);
+
+            // ambil validation bawaan HTML5
             const nama = await driver.findElement(
                 By.id('name')
             );
 
-            await nama.clear();
+            const validasi = await nama.getAttribute(
+                'validationMessage'
+            );
 
-            const btn = await driver.findElement(
+            assert.ok(
+                validasi.length > 0,
+                'Validasi nama tidak muncul'
+            );
+
+        });
+
+        it('TC-KON-06: Validasi muncul jika telepon dikosongkan', async () => {
+
+            await bukaKontak(driver);
+
+            await isiInput(driver, By.id('name'), 'Testing');
+            await isiInput(driver, By.id('email'), 'test@gmail.com');
+            await isiInput(driver, By.id('message'), 'Testing pesan');
+
+            // phone kosong
+
+            const submitBtn = await driver.findElement(
                 By.css("button[type='submit']")
             );
 
-            await btn.click();
+            await scrollKe(driver, submitBtn);
+
+            await submitBtn.click();
 
             await driver.sleep(2000);
 
-            const value = await nama.getAttribute('validationMessage');
+            await ambilScreenshot(driver, 'TC-KON-06');
 
-            assert.strictEqual(value, '');
+            const phone = await driver.findElement(
+                By.id('phone')
+            );
 
+            const validasi = await phone.getAttribute(
+                'validationMessage'
+            );
+
+            assert.ok(
+                validasi.length > 0,
+                'Validasi telepon tidak muncul'
+            );
 
         });
 
-
-        it('TC-KON-06: Input tidak dapat dikirim jika telepon dikosongkan', async () => {
+        it('TC-KON-07: Validasi muncul jika pesan dikosongkan', async () => {
 
             await bukaKontak(driver);
 
-            await isiFormLengkap(driver);
+            await isiInput(driver, By.id('name'), 'Testing');
+            await isiInput(driver, By.id('phone'), '08123456789');
+            await isiInput(driver, By.id('email'), 'test@gmail.com');
 
-            const phone = await driver.findElement(By.id('phone'));
+            // message kosong
 
-            await phone.clear();
-
-            await driver.findElement(
+            const submitBtn = await driver.findElement(
                 By.css("button[type='submit']")
-            ).click();
+            );
 
-            await driver.sleep(1000);
+            await scrollKe(driver, submitBtn);
 
-            const validasi = await phone.getAttribute('validationMessage');
+            await submitBtn.click();
 
-            assert.ok(validasi.length > 0);
+            await driver.sleep(2000);
+
+            await ambilScreenshot(driver, 'TC-KON-07');
+
+            const pesan = await driver.findElement(
+                By.id('message')
+            );
+
+            const validasi = await pesan.getAttribute(
+                'validationMessage'
+            );
+
+            assert.ok(
+                validasi.length > 0,
+                'Validasi pesan tidak muncul'
+            );
 
         });
-        it('TC-KON-07: Input tidak dapat dikirim jika pesan dikosongkan', async () => {
+        it('TC-KON-08: Validasi muncul jika format email salah', async () => {
 
             await bukaKontak(driver);
 
-            await isiFormLengkap(driver);
+            await isiInput(driver, By.id('name'), 'Testing');
+            await isiInput(driver, By.id('phone'), '08123456789');
 
-            const pesan = await driver.findElement(By.id('message'));
+            // email salah
+            await isiInput(driver, By.id('email'), 'salah-email');
 
-            await pesan.clear();
+            await isiInput(driver, By.id('message'), 'Testing pesan');
 
-            await driver.findElement(
+            const submitBtn = await driver.findElement(
                 By.css("button[type='submit']")
-            ).click();
+            );
 
-            await driver.sleep(1000);
+            await scrollKe(driver, submitBtn);
 
-            const validasi = await pesan.getAttribute('validationMessage');
+            await submitBtn.click();
 
-            assert.ok(validasi.length > 0);
+            await driver.sleep(2000);
+
+            await ambilScreenshot(driver, 'TC-KON-08');
+
+            const email = await driver.findElement(
+                By.id('email')
+            );
+
+            const validasi = await email.getAttribute(
+                'validationMessage'
+            );
+
+            assert.ok(
+                validasi.length > 0,
+                'Validasi email tidak muncul'
+            );
 
         });
-        it('TC-KON-08: Input tidak dapat dikirim jika format email salah', async () => {
+        it('TC-KON-09: Validasi muncul jika pesan tidak dapat melebihi 600 karakter', async () => {
 
             await bukaKontak(driver);
 
-            await isiFormLengkap(driver);
-
-            const email = await driver.findElement(By.id('email'));
-
-            await email.clear();
-
-            await email.sendKeys('email-salah');
-
-            await driver.findElement(
-                By.css("button[type='submit']")
-            ).click();
-
-            await driver.sleep(1000);
-
-            const validasi = await email.getAttribute('validationMessage');
-
-            assert.ok(validasi.length > 0);
-
-        });
-
-        it('TC-KON-09: Input tidak dapat dikirim jika pesan tidak dapat melebihi 600 karakter', async () => {
-
-            await bukaKontak(driver);
-
-            await isiFormLengkap(driver);
-
-            const pesan = await driver.findElement(By.id('message'));
-
-            await pesan.clear();
+            const pesan = await driver.findElement(
+                By.id('message')
+            );
 
             await pesan.sendKeys('A'.repeat(700));
 
-            await driver.findElement(
-                By.css("button[type='submit']")
-            ).click();
+            const value = await pesan.getAttribute('value');
 
-            await driver.sleep(1000);
+            await ambilScreenshot(driver, 'TC-KON-09');
 
-            const panjang = await pesan.getAttribute('value');
-
-            assert.ok(panjang.length > 600);
+            assert.ok(
+                value.length <= 600,
+                'Pesan melebihi batas 600 karakter'
+            );
 
         });
     });

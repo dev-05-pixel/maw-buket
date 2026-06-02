@@ -7,7 +7,7 @@ module.exports = {
   BASE_URL: 'http://127.0.0.1:8000',
 
   // Kredensial admin Firebase
-  ADMIN_EMAIL:    'devmossteam05@gmail.com',
+  ADMIN_EMAIL:    'devmossteam@gmail.com',
   ADMIN_PASSWORD: '12345678',
 
   // Timeout (milidetik)

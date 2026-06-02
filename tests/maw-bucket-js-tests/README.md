@@ -87,6 +87,11 @@ npm run test:navigasi    # Responsivitas & navigasi
 ### Dengan laporan HTML
 ```powershell
 npm run test:report
+```
+### Langsung buat report
+```
+npm run report
+
 # Buka: reports/laporan_pengujian.html
 ```
 
