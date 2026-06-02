@@ -39,32 +39,25 @@
      FILTER BAR
 ================================================================ --}}
     <form method="GET" action="{{ route('products.index') }}">
-        @foreach ((array) request('category') as $category)
-            <input type="hidden" name="category[]" value="{{ $category }}">
-        @endforeach
         <div class="filter-bar" role="toolbar" aria-label="Filter produk">
             <div class="filter-tabs" role="tablist" aria-label="Kategori">
                 @php
-                    $activeCategory = request('category', 'Semua');
+                    $activeCategory = (array) request('category', ['Semua']);
                 @endphp
 
                 @foreach ($categories as $cat)
                     <a href="{{ $cat == 'Semua'
                         ? route('products.index', request()->except('category'))
                         : route('products.index', array_merge(request()->query(), ['category' => $cat])) }}"
-                        data-filter="{{ $cat }}" class="filter-tab {{ $activeCategory === $cat ? 'active' : '' }}"
-                        role="tab" aria-selected="{{ $activeCategory === $cat ? 'true' : 'false' }}">
+                        data-filter="{{ $cat }}"
+                        class="filter-tab {{ in_array($cat, $activeCategory) ? 'active' : '' }}" role="tab"
+                        aria-selected="{{ in_array($cat, $activeCategory) ? 'true' : 'false' }}">
                         {{ $cat }}
                     </a>
                 @endforeach
             </div>
 
             <div class="catalog-search">
-
-                {{-- pertahankan category --}}
-                @foreach ((array) request('category') as $category)
-                    <input type="hidden" name="category[]" value="{{ $category }}">
-                @endforeach
 
                 {{-- pertahankan sorting --}}
                 <input type="hidden" name="sort" value="{{ request('sort') }}">
@@ -99,7 +92,7 @@
                         @foreach ($categories as $cat)
                             @if ($cat !== 'Semua')
                                 <option value="{{ route('products.index', ['category' => $cat]) }}"
-                                    {{ request('category') == $cat ? 'selected' : '' }}>
+                                    {{ in_array($cat, (array) request('category', [])) ? 'selected' : '' }}>
                                     {{ $cat }}
                                 </option>
                             @endif
@@ -145,12 +138,10 @@
                 </div>
             </div>
         </div>
-    </form>
 
-    {{-- ================================================================
+        {{-- ================================================================
      MAIN CONTENT: SIDEBAR + PRODUCTS
 ================================================================ --}}
-    <form method="GET" action="{{ route('products.index') }}">
         <div class="sidebar-overlay" id="sidebar-overlay"></div>
         <div class="products-main">
 
@@ -175,7 +166,8 @@
 
                             <label class="checkbox-label">
                                 <input type="checkbox" name="category[]" value="{{ $cat }}"
-                                    class="category-checkbox" {{ $isChecked ? 'checked' : '' }}>
+                                    class="category-checkbox" {{ $cat === 'Semua' ? 'id="cat-semua"' : '' }}
+                                    {{ $isChecked ? 'checked' : '' }}>
 
                                 {{ $cat }}
 
@@ -262,17 +254,13 @@
                     @if ($hiddenColors->count())
                         <details class="colors-dropdown">
                             <summary>Warna lainnya</summary>
-                            <div class="colors-dropdown-list">
+                            <div class="color-tags {{ $hiddenColors->count() > 20 ? 'colors-dropdown-scroll' : '' }}">
                                 @foreach ($hiddenColors as $color)
-                                    <label class="checkbox-label">
+                                    <label class="color-tag">
                                         <input type="checkbox" name="color[]" value="{{ $color['name'] }}"
+                                            class="color-checkbox"
                                             {{ in_array($color['name'], (array) request('color')) ? 'checked' : '' }}>
-                                        <span class="inline-block w-3 h-3 rounded-full mr-2"
-                                            style="
-                                background: {{ $color['hex'] }};
-                                {{ strtolower($color['hex']) == '#ffffff' ? 'border:1px solid #ddd' : '' }}
-                            "></span>
-                                        {{ $color['name'] }}
+                                        <span class="color-tag-text">{{ $color['name'] }}</span>
                                     </label>
                                 @endforeach
                             </div>
@@ -303,9 +291,22 @@
                         @if (request()->filled('category'))
                             @foreach ((array) request('category') as $category)
                                 @if ($category !== 'Semua')
+                                    @php
+                                        $remaining = array_values(
+                                            array_filter((array) request('category'), fn($c) => $c !== $category),
+                                        );
+
+                                        $query = request()->except('category');
+
+                                        if (!empty($remaining)) {
+                                            $query['category'] = $remaining;
+                                        }
+                                    @endphp
+
                                     <span class="filter-chip">
                                         {{ $category }}
-                                        <a href="{{ route('products.index') }}" class="filter-chip-remove">
+
+                                        <a href="{{ route('products.index', $query) }}" class="filter-chip-remove">
                                             ×
                                         </a>
                                     </span>
@@ -464,22 +465,22 @@
                             $current = $products->currentPage();
                             $last = $products->lastPage();
 
-                            // tampilkan maksimal 3 nomor
-                            if ($last <= 3) {
-                                $start = 1;
-                                $end = $last;
-                            } else {
-                                $start = max(1, $current - 1);
-                                $end = min($last, $start + 2);
+                            $pages = [];
 
-                                // jaga agar tetap 3 item
-                                if ($end - $start < 2) {
-                                    $start = max(1, $end - 2);
+                            if ($last <= 3) {
+                                $pages = range(1, $last);
+                            } else {
+                                if ($current <= 2) {
+                                    $pages = [1, 2, 3];
+                                } elseif ($current >= $last - 1) {
+                                    $pages = [$last - 2, $last - 1, $last];
+                                } else {
+                                    $pages = [$current - 1, $current, $current + 1];
                                 }
                             }
                         @endphp
 
-                        @for ($i = $start; $i <= $end; $i++)
+                        @foreach ($pages as $i)
                             @if ($i == $current)
                                 <span class="page-btn active">{{ $i }}</span>
                             @else
@@ -487,7 +488,15 @@
                                     {{ $i }}
                                 </a>
                             @endif
-                        @endfor
+                        @endforeach
+
+                        @if ($last > 3 && end($pages) < $last)
+                            <span class="page-dots">...</span>
+
+                            <a href="{{ $products->url($last) }}" class="page-btn">
+                                {{ $last }}
+                            </a>
+                        @endif
                         {{-- Next --}}
                         @if ($products->hasMorePages())
                             <a href="{{ $products->nextPageUrl() }}" class="page-btn prev-next">

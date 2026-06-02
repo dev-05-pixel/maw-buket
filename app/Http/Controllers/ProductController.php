@@ -21,44 +21,42 @@ class ProductController extends Controller
         $query = Product::query();
 
         if ($request->filled('search')) {
-
             $search = trim($request->search);
-
             $query->where(function ($q) use ($search) {
-
                 $q->where('name', 'like', "%{$search}%")
                     ->orWhere('category', 'like', "%{$search}%")
                     ->orWhere('color', 'like', "%{$search}%");
             });
         }
 
-        $selectedCategories = array_filter(
-            (array) $request->category,
-            fn($item) => $item !== 'Semua'
-        );
+        // FIX BUG 1: trim dan buang 'Semua' dengan benar
+        $selectedCategories = collect((array) $request->category)
+            ->map(fn($item) => trim($item))
+            ->filter(fn($item) => $item !== 'Semua' && $item !== '')
+            ->values()
+            ->toArray();
 
         if (!empty($selectedCategories)) {
             $query->whereIn('category', $selectedCategories);
         }
 
+        // FIX BUG 3: filter warna
         if ($request->filled('color')) {
-
-            $selectedColors = (array) $request->color;
+            $selectedColors = collect((array) $request->color)
+                ->map(fn($color) => strtolower(trim($color)))
+                ->filter();
 
             $query->where(function ($q) use ($selectedColors) {
-
                 foreach ($selectedColors as $color) {
-
                     $q->orWhereRaw(
-                        "FIND_IN_SET(?, REPLACE(color, ', ', ','))",
-                        [$color]
+                        'LOWER(color) LIKE ?',
+                        ['%' . $color . '%']
                     );
                 }
             });
         }
 
         $products = $query->get()->map(function ($product) {
-
             $variants = is_string($product->variants)
                 ? json_decode($product->variants, true)
                 : ($product->variants ?? []);
@@ -66,9 +64,7 @@ class ProductController extends Controller
             $prices = collect($variants)
                 ->pluck('price')
                 ->map(function ($price) {
-
                     $price = preg_replace('/[^0-9]/', '', (string) $price);
-
                     return (int) $price;
                 })
                 ->filter(fn($price) => $price > 0)
@@ -80,36 +76,31 @@ class ProductController extends Controller
             return $product;
         });
 
+        // FIX BUG 2: strip titik/koma sebelum cast ke int
         if ($request->filled('min_price')) {
-
-            $products = $products->filter(function ($product) use ($request) {
-
-                return $product->min_price >= (int) $request->min_price;
+            $minPrice = (int) str_replace(['.', ','], '', $request->min_price);
+            $products = $products->filter(function ($product) use ($minPrice) {
+                return $product->max_price >= $minPrice;
             });
         }
 
         if ($request->filled('max_price')) {
-
-            $products = $products->filter(function ($product) use ($request) {
-
-                return $product->max_price <= (int) $request->max_price;
+            $maxPrice = (int) str_replace(['.', ','], '', $request->max_price);
+            $products = $products->filter(function ($product) use ($maxPrice) {
+                return $product->min_price <= $maxPrice;
             });
         }
 
         switch ($request->sort) {
-
             case 'price-asc':
                 $products = $products->sortBy('min_price');
                 break;
-
             case 'price-desc':
                 $products = $products->sortByDesc('min_price');
                 break;
-
             case 'name-asc':
                 $products = $products->sortBy('name');
                 break;
-
             default:
                 $products = $products->sortByDesc('created_at');
                 break;
@@ -118,9 +109,7 @@ class ProductController extends Controller
         $products = $products->values();
 
         $perPage = 12;
-
         $currentPage = request()->get('page', 1);
-
         $pagedProducts = new \Illuminate\Pagination\LengthAwarePaginator(
             $products->forPage($currentPage, $perPage),
             $products->count(),
@@ -132,20 +121,14 @@ class ProductController extends Controller
             ]
         );
 
-        $categoryCounts = Product::select(
-            'category',
-            DB::raw('count(*) as total')
-        )
+        $categoryCounts = Product::select('category', DB::raw('count(*) as total'))
             ->groupBy('category')
             ->pluck('total', 'category')
             ->toArray();
 
         $totalProducts = Product::count();
 
-        $rawColors = Product::whereNotNull('color')
-            ->pluck('color')
-            ->toArray();
-
+        $rawColors = Product::whereNotNull('color')->pluck('color')->toArray();
         $colors = collect($rawColors)
             ->flatMap(fn($item) => explode(',', $item))
             ->map(fn($item) => trim($item))
@@ -177,6 +160,16 @@ class ProductController extends Controller
             'Black'       => '#2C2421',
             'Gold'        => '#D4AF37',
             'Silver'      => '#C0C0C0',
+            'Terracotta'  => '#C97E5A',
+            'Burnt Orange' => '#CC5500',
+            'Olive Green' => '#6B7C3E',
+            'Beige'       => '#F5F0E8',
+            'Nude Beige'  => '#E8D5C4',
+            'Soft Brown'  => '#A0785A',
+            'Ivory Cream' => '#F8F4EC',
+            'Mustard'     => '#E3A020',
+            'Coklat'      => '#7B5B3A',
+            'Crimson Red' => '#B22222',
         ];
 
         $colors = $colors->map(fn($color) => [

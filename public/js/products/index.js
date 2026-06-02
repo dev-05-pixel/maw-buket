@@ -55,18 +55,26 @@ document.querySelectorAll(".wa-order").forEach((btn) => {
 // ================================================================
 
 const categoryCheckboxes = document.querySelectorAll(".category-checkbox");
-
 const allCheckbox = document.querySelector('.category-checkbox[value="Semua"]');
+
+function syncSemua() {
+    const checkedNonAll = [...categoryCheckboxes].filter(
+        (item) => item.value !== "Semua" && item.checked,
+    );
+    if (allCheckbox) {
+        allCheckbox.disabled = checkedNonAll.length > 0;
+    }
+}
 
 categoryCheckboxes.forEach((checkbox) => {
     checkbox.addEventListener("change", function () {
         if (this.value === "Semua") {
+            // Re-enable semua dulu, baru atur ulang
             categoryCheckboxes.forEach((item) => {
                 item.checked = false;
+                item.disabled = false;
             });
-
             this.checked = true;
-
             return;
         }
 
@@ -78,23 +86,16 @@ categoryCheckboxes.forEach((checkbox) => {
             (item) => item.value !== "Semua" && item.checked,
         );
 
-        const nonAll = [...categoryCheckboxes].filter(
-            (item) => item.value !== "Semua",
-        );
-
-        if (checkedNonAll.length === nonAll.length) {
-            categoryCheckboxes.forEach((item) => {
-                item.checked = false;
-            });
-
-            allCheckbox.checked = true;
-        }
-
         if (checkedNonAll.length === 0) {
             allCheckbox.checked = true;
+            allCheckbox.disabled = false;
+        } else {
+            allCheckbox.disabled = true;
         }
     });
 });
+
+syncSemua();
 
 // ================================================================
 // VIEW TOGGLE
@@ -244,121 +245,113 @@ if (mobileToggle && sidebar && sidebarOverlay) {
 const minInput = document.getElementById("priceMin");
 const maxInput = document.getElementById("priceMax");
 
+function parseNumber(value) {
+    return parseInt(String(value).replace(/\D/g, "")) || 0;
+}
+
+function formatRupiah(value) {
+    if (!value || value <= 0) {
+        return "";
+    }
+
+    return new Intl.NumberFormat("id-ID").format(value);
+}
+
+function setFormattedValue(input, value) {
+    input.value = formatRupiah(value);
+    input.dataset.value = value;
+}
+
+// ================================================================
+// SETUP INPUT
+// ================================================================
+
+function syncLogic(changed) {
+    if (!minInput || !maxInput) {
+        return;
+    }
+
+    let min = parseNumber(minInput.value);
+    let max = parseNumber(maxInput.value);
+
+    if (!min || !max) {
+        return;
+    }
+
+    if (min > max) {
+        if (changed === "min") {
+            setFormattedValue(maxInput, min);
+        } else {
+            setFormattedValue(minInput, max);
+        }
+    }
+}
+
 if (minInput && maxInput) {
     // ================================================================
     // HELPER
     // ================================================================
 
-    function parseNumber(value) {
-        return parseInt(String(value).replace(/\D/g, "")) || 0;
-    }
-
-    function formatRupiah(value) {
-        if (!value || value <= 0) {
-            return "";
-        }
-
-        return new Intl.NumberFormat("id-ID").format(value);
-    }
-
-    function setFormattedValue(input, value) {
-        input.value = formatRupiah(value);
-        input.dataset.value = value;
-    }
-
-    function syncLogic(source) {
-        let min = parseNumber(minInput.value);
-
-        let max = parseNumber(maxInput.value);
-
-        if (source === "max" && max > 0) {
-            min = max;
-
-            setFormattedValue(minInput, min);
-        }
-
-        if (min > max && min > 0) {
-            max = min;
-
-            setFormattedValue(maxInput, max);
-        }
-    }
-
-    // ================================================================
-    // SETUP INPUT
-    // ================================================================
-
     function setupPriceInput(input, type) {
-        // format awal
         const initialValue = parseNumber(input.value);
-
         if (initialValue > 0) {
             setFormattedValue(input, initialValue);
         }
 
-        // hanya angka
         input.addEventListener("input", function () {
-            let value = parseNumber(this.value);
-
-            // bulatkan ke kelipatan 1000
-            value = Math.round(value / 1000) * 1000;
-
-            setFormattedValue(this, value);
-
-            syncLogic(type);
+            // Simpan posisi kursor
+            const raw = this.value.replace(/\D/g, "");
+            const value = parseInt(raw) || 0;
+            // Format tapi jangan ganggu input yang sedang diketik
+            // Hanya format setelah user berhenti (pakai blur),
+            // saat input cukup tampilkan angka saja
+            this.value = raw
+                ? new Intl.NumberFormat("id-ID").format(value)
+                : "";
+            this.dataset.rawValue = value;
+            // JANGAN panggil syncLogic saat mengetik untuk hindari overwrite
         });
 
-        // arrow up / down
         input.addEventListener("keydown", function (e) {
-            if (e.key !== "ArrowUp" && e.key !== "ArrowDown") {
-                return;
-            }
-
+            if (e.key !== "ArrowUp" && e.key !== "ArrowDown") return;
             e.preventDefault();
-
-            let currentValue = parseNumber(this.value);
-
-            if (e.key === "ArrowUp") {
-                currentValue += 1000;
-            }
-
-            if (e.key === "ArrowDown") {
+            let currentValue =
+                parseInt(this.dataset.rawValue || "0") ||
+                parseNumber(this.value);
+            if (e.key === "ArrowUp") currentValue += 1000;
+            if (e.key === "ArrowDown")
                 currentValue = Math.max(0, currentValue - 1000);
-            }
-
             setFormattedValue(this, currentValue);
-
-            syncLogic(type);
+            this.dataset.rawValue = currentValue;
         });
 
-        // mouse spinner bawaan input number
         input.addEventListener("wheel", function (e) {
-            if (document.activeElement !== this) {
-                return;
-            }
-
+            if (document.activeElement !== this) return;
             e.preventDefault();
-
-            let currentValue = parseNumber(this.value);
-
-            if (e.deltaY < 0) {
-                currentValue += 1000;
-            } else {
-                currentValue = Math.max(0, currentValue - 1000);
-            }
-
+            let currentValue =
+                parseInt(this.dataset.rawValue || "0") ||
+                parseNumber(this.value);
+            if (e.deltaY < 0) currentValue += 1000;
+            else currentValue = Math.max(0, currentValue - 1000);
             setFormattedValue(this, currentValue);
-
-            syncLogic(type);
+            this.dataset.rawValue = currentValue;
         });
 
-        // blur format ulang
+        input.addEventListener("focus", function () {
+            // Tampilkan angka mentah saat focus agar mudah diedit
+            const raw =
+                parseInt(this.dataset.rawValue || "0") ||
+                parseNumber(this.value);
+            this.value = raw > 0 ? raw : "";
+            this.dataset.rawValue = raw;
+        });
+
         input.addEventListener("blur", function () {
-            const value = parseNumber(this.value);
-
+            const value =
+                parseInt(this.dataset.rawValue || "0") ||
+                parseNumber(this.value);
             setFormattedValue(this, value);
-
-            syncLogic(type);
+            this.dataset.rawValue = value;
         });
     }
 
@@ -369,12 +362,19 @@ if (minInput && maxInput) {
     // BEFORE SUBMIT
     // ================================================================
 
-    document.querySelectorAll("form").forEach((form) => {
-        form.addEventListener("submit", () => {
-            minInput.value = parseNumber(minInput.value);
-            maxInput.value = parseNumber(maxInput.value);
+    const mainForm = document.querySelector('form[action*="products"]');
+    if (mainForm && minInput && maxInput) {
+        mainForm.addEventListener("submit", function () {
+            const rawMin =
+                parseInt(minInput.dataset.rawValue || "0") ||
+                parseNumber(minInput.value);
+            const rawMax =
+                parseInt(maxInput.dataset.rawValue || "0") ||
+                parseNumber(maxInput.value);
+            minInput.value = rawMin > 0 ? rawMin : "";
+            maxInput.value = rawMax > 0 ? rawMax : "";
         });
-    });
+    }
 }
 
 // ================================================================
@@ -384,24 +384,18 @@ if (minInput && maxInput) {
 document.querySelectorAll(".spinner-btn").forEach((btn) => {
     btn.addEventListener("click", function () {
         const targetId = this.dataset.target;
-
         const input = document.getElementById(targetId);
-
         if (!input) return;
 
-        let value = parseNumber(input.value);
+        let value =
+            parseInt(input.dataset.rawValue || "0") || parseNumber(input.value);
 
-        if (this.classList.contains("spinner-up")) {
-            value += 1000;
-        }
-
-        if (this.classList.contains("spinner-down")) {
+        if (this.classList.contains("spinner-up")) value += 1000;
+        if (this.classList.contains("spinner-down"))
             value = Math.max(0, value - 1000);
-        }
 
         setFormattedValue(input, value);
-
-        syncLogic(targetId === "priceMin" ? "min" : "max");
+        input.dataset.rawValue = value;
     });
 });
 
