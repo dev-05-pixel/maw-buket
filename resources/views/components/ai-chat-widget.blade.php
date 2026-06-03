@@ -368,7 +368,7 @@
             try {
 
                 const res = await fetch(
-                    "http://103.157.27.202:5000/chat", {
+                    `${AI_FLASK_URL}/chat`, {
                         method: "POST",
 
                         headers: {
@@ -415,7 +415,7 @@
                 // =========================
                 // FALLBACK WHATSAPP
                 // =========================
-                if (data.fallback === true) {
+                if (data.fallback) {
 
                     this.addMessage(`
         <div class="space-y-3">

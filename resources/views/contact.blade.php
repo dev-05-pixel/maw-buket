@@ -38,14 +38,14 @@
                     </span>
                     <div class="contact-channel-info">
                         <p class="contact-channel-name">WhatsApp</p>
-                        <p class="contact-channel-val">+62 8xx-xxxx-xxxx</p>
+                        <p class="contact-channel-val">+6282257031231</p>
                     </div>
                     <span class="contact-channel-arrow" aria-hidden="true"><svg viewBox="0 0 24 24" stroke-linecap="round"
                             stroke-linejoin="round" stroke-width="2">
                             <path d="M5 12h14M12 5l7 7-7 7" />
                         </svg></span>
                 </a>
-                <a href="mailto:hello@mawbouquet.id" class="contact-channel-link" role="listitem">
+                <a href="mailto:mawbouquet@gmail.com" class="contact-channel-link" role="listitem">
                     <span class="contact-channel-icon channel-mail" aria-hidden="true">
                         <svg viewBox="0 0 24 24" fill="none" stroke="var(--sage)" stroke-width="1.8"
                             stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
@@ -55,7 +55,7 @@
                     </span>
                     <div class="contact-channel-info">
                         <p class="contact-channel-name">Email</p>
-                        <p class="contact-channel-val">hello@mawbouquet.id</p>
+                        <p class="contact-channel-val">mawbouquet@gmail.com</p>
                     </div>
                     <span class="contact-channel-arrow" aria-hidden="true"><svg viewBox="0 0 24 24" stroke-linecap="round"
                             stroke-linejoin="round" stroke-width="2">
@@ -83,7 +83,7 @@
                     </div>
                     <div>
                         <p class="contact-detail-label">WhatsApp</p>
-                        <p class="contact-detail-value">+62 8xx-xxxx-xxxx</p>
+                        <p class="contact-detail-value">+6282257031231</p>
                         <p class="contact-detail-sub">Respons tercepat via WhatsApp</p>
                     </div>
                 </div>
@@ -97,7 +97,7 @@
                     </div>
                     <div>
                         <p class="contact-detail-label">Email</p>
-                        <p class="contact-detail-value">hello@mawbouquet.id</p>
+                        <p class="contact-detail-value">mawbouquet@gmail.com</p>
                         <p class="contact-detail-sub">Dibalas dalam 24 jam kerja</p>
                     </div>
                 </div>
