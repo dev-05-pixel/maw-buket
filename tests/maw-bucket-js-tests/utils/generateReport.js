@@ -12,6 +12,11 @@ const MODULE_NAMES = {
   '04_admin_produk.test.js'      : 'Admin — Manajemen Produk',
   '05_admin_pesan.test.js'       : 'Admin — Manajemen Pesan',
   '06_responsif_navigasi.test.js': 'Responsivitas & Navigasi',
+  '07_product_detail.test.js'    : 'Product Detail',
+  '08_dashboard_admin.test.js'   : 'Dashboard Admin',
+  '09_testimonial_admin.test.js' : 'Testimonial Admin',
+  '10_pesan_admin.test.js'      : 'Pesan Admin',
+  '11_detail_pesan_admin.test.js': 'Detail Pesan Admin',
 };
 
 function bacaSemuaTestCase() {
@@ -66,14 +71,42 @@ const MIME = { '.png': 'image/png', '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg' 
 
 function bacaScreenshots() {
   const map = {};
-  for (const file of fs.readdirSync(screenshotDir)) {
-    const ext  = path.extname(file).toLowerCase();
-    const mime = MIME[ext];
-    if (!mime) continue;
-    const kunci = path.basename(file, ext).toUpperCase();
-    const b64   = fs.readFileSync(path.join(screenshotDir, file)).toString('base64');
-    map[kunci]  = `data:${mime};base64,${b64}`;
+  
+  // Check if directory exists
+  if (!fs.existsSync(screenshotDir)) {
+    console.log('⚠️ Screenshot directory not found, creating...');
+    fs.mkdirSync(screenshotDir, { recursive: true });
+    return map;
   }
+  
+  try {
+    const files = fs.readdirSync(screenshotDir);
+    for (const file of files) {
+      try {
+        const ext  = path.extname(file).toLowerCase();
+        const mime = MIME[ext];
+        if (!mime) continue;
+        
+        const filePath = path.join(screenshotDir, file);
+        const stats = fs.statSync(filePath);
+        
+        // Skip files larger than 5MB to prevent memory issues
+        if (stats.size > 5 * 1024 * 1024) {
+          console.log(`⚠️ Skipping large file: ${file} (${(stats.size/1024/1024).toFixed(2)}MB)`);
+          continue;
+        }
+        
+        const kunci = path.basename(file, ext).toUpperCase();
+        const b64   = fs.readFileSync(filePath).toString('base64');
+        map[kunci]  = `data:${mime};base64,${b64}`;
+      } catch (err) {
+        console.log(`⚠️ Error reading file ${file}: ${err.message}`);
+      }
+    }
+  } catch (err) {
+    console.log(`⚠️ Error reading screenshot directory: ${err.message}`);
+  }
+  
   return map;
 }
 
@@ -298,5 +331,10 @@ const html = `<!DOCTYPE html>
 </body>
 </html>`;
 
-fs.writeFileSync(outputFile, html);
-console.log(`✅ laporan_pengujian.html berhasil dibuat (${testCases.length} kasus uji, ${Object.keys(screenshotMap).length} screenshot)`);
+try {
+  fs.writeFileSync(outputFile, html, 'utf8');
+  console.log(`✅ laporan_pengujian.html berhasil dibuat (${testCases.length} kasus uji, ${Object.keys(screenshotMap).length} screenshot)`);
+} catch (err) {
+  console.error(`❌ Gagal membuat laporan: ${err.message}`);
+  process.exit(1);
+}
