@@ -113,21 +113,21 @@ describe('Responsivitas & Navigasi', function () {
         ];
 
         for (const { nama, path, tcId } of HALAMAN) {
-    it(`${tcId}: Halaman ${nama} dapat diakses tanpa error`, async () => {
-        await bukaHalaman(driver, path);
-        await driver.sleep(2500);
-        await driver.executeScript("window.scrollTo(0, 0)");
+            it(`${tcId}: Halaman ${nama} dapat diakses tanpa error`, async () => {
+                await bukaHalaman(driver, path);
+                await driver.sleep(2500);
+                await driver.executeScript("window.scrollTo(0, 0)");
 
-        // screenshot DULU sebelum assert
-        await ambilScreenshot(driver, `${tcId}_${nama.replace(' ', '_')}`);
+                // screenshot DULU sebelum assert
+                await ambilScreenshot(driver, `${tcId}_${nama.replace(' ', '_')}`);
 
-        const currentUrl = await driver.getCurrentUrl();
-assert.ok(
-    currentUrl.includes(path),
-    `Halaman ${nama} tidak ditemukan: ${currentUrl}`
-);
-    });
-}
+                const currentUrl = await driver.getCurrentUrl();
+                assert.ok(
+                    currentUrl.includes(path),
+                    `Halaman ${nama} tidak ditemukan: ${currentUrl}`
+                );
+            });
+        }
 
         it('TC-NAV-05: Tombol back browser berfungsi antar halaman', async () => {
             await bukaHalaman(driver, '/');
@@ -239,7 +239,7 @@ assert.ok(
             assert.ok(url.includes('/admin/products'));
 
         });
-        it('TC-NAV-06: Dari dashboard admin bisa navigasi ke halaman pesan', async () => {
+        it('TC-NAV-07: Dari dashboard admin bisa navigasi ke halaman pesan', async () => {
 
             await bukaHalaman(driver, '/admin/dashboard');
 
@@ -251,7 +251,7 @@ assert.ok(
 
             await driver.sleep(2000);
 
-            await ambilScreenshot(driver, 'TC-NAV-06');
+            await ambilScreenshot(driver, 'TC-NAV-07');
 
             const url = await driver.getCurrentUrl();
 
@@ -259,7 +259,7 @@ assert.ok(
 
         });
 
-        it('TC-NAV-07: Sidebar/navbar admin tersedia di semua halaman admin', async () => {
+        it('TC-NAV-08: Sidebar/navbar admin tersedia di semua halaman admin', async () => {
 
             const halamanAdmin = [
                 '/admin/dashboard',
@@ -288,7 +288,7 @@ assert.ok(
 
                 await ambilScreenshot(
                     driver,
-                    `TC-NAV-07_${path.replace(/\//g, '_')}`
+                    `TC-NAV-08_${path.replace(/\//g, '_')}`
                 );
 
                 assert.ok(

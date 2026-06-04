@@ -1,7 +1,3 @@
-// ============================================================
-//  utils/helpers.js — Fungsi pembantu pengujian
-// ============================================================
-
 const { By, until, Select } = require('selenium-webdriver');
 const fs                    = require('fs');
 const path                  = require('path');

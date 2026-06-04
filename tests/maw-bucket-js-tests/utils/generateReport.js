@@ -5,10 +5,6 @@ const screenshotDir = path.join(__dirname, '../reports/screenshots');
 const testsDir      = path.join(__dirname, '../tests');
 const outputFile    = path.join(__dirname, '../reports/laporan_pengujian.html');
 
-// ─────────────────────────────────────────────────────────────
-// 1. BACA SEMUA TEST CASE (ID + Deskripsi) dari folder tests/
-// ─────────────────────────────────────────────────────────────
-
 const MODULE_NAMES = {
   '01_halaman_publik.test.js'    : 'Halaman Publik',
   '02_form_kontak.test.js'       : 'Form Kontak',
