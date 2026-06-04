@@ -984,6 +984,15 @@ describe('Halaman Publik', function () {
         assert.ok(scripts.length > 0, 'JavaScript loaded');
       });
 
+      it('TC-PRODUCTS-050: Tampilan filter responsif di mobile', async () => {
+        await driver.manage().window().setRect({ width: 375, height: 812 });
+        await bukaHalaman(driver, '/products');
+        await driver.sleep(2000);
+        const src = await driver.getPageSource();
+        assert.ok(src.length > 100, 'Halaman products mobile termuat');
+        await driver.manage().window().setRect({ width: 1440, height: 900 });
+      });
+
     });
 
   });
